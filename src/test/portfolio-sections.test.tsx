@@ -18,8 +18,12 @@ describe("Portfolio new sections & elements", () => {
     expect(screen.getByText("View the work →")).toBeInTheDocument();
     expect(screen.getByText("Get in touch")).toBeInTheDocument();
 
-    // Terminal replaced the infra-flow diagram in Hero, with macOS window chrome dots and no background grid
+    // Terminal replaced the infra-flow diagram in Hero, with macOS window chrome dots, always-on constellation canvas, and no background grid
     expect(container.querySelector(".blueprint-grid")).toBeNull();
+    const heroCanvas = container.querySelector('[data-constellation-canvas="hero"]');
+    expect(heroCanvas).not.toBeNull();
+    expect(heroCanvas?.getAttribute("data-constellation-active")).toBe("true");
+    expect(heroCanvas?.className).toContain("pointer-events-none");
     expect(container.querySelector("[data-terminal-window]")).not.toBeNull();
     expect(container.querySelectorAll("[data-terminal-dot]").length).toBe(3);
     expect(screen.getByText("shanto@platform:~")).toBeInTheDocument();
@@ -329,6 +333,9 @@ describe("Portfolio new sections & elements", () => {
       expect(card.className).not.toMatch(/tone-m-|tone-d-/);
       expect(card.querySelector(".work-cat-tick")).not.toBeNull();
       expect(card.querySelector(".work-case-link")?.textContent).toBe("View case study →");
+      const cardCanvas = card.querySelector('[data-constellation-canvas="card"]');
+      expect(cardCanvas).not.toBeNull();
+      expect(cardCanvas?.getAttribute("data-constellation-active")).toBe("false");
     });
 
     const firstCard = cards[0];
@@ -339,6 +346,26 @@ describe("Portfolio new sections & elements", () => {
     });
 
     expect(firstCard?.querySelector(".flow-node.is-on")).not.toBeNull();
+    expect(
+      firstCard
+        ?.querySelector('[data-constellation-canvas="card"]')
+        ?.getAttribute("data-constellation-active"),
+    ).toBe("true");
+    // Other cards remain inactive at rest
+    expect(
+      cards[1]
+        ?.querySelector('[data-constellation-canvas="card"]')
+        ?.getAttribute("data-constellation-active"),
+    ).toBe("false");
+
+    act(() => {
+      fireEvent.mouseLeave(firstCard!);
+    });
+    expect(
+      firstCard
+        ?.querySelector('[data-constellation-canvas="card"]')
+        ?.getAttribute("data-constellation-active"),
+    ).toBe("false");
     vi.useRealTimers();
   });
 

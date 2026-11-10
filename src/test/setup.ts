@@ -29,3 +29,19 @@ Object.defineProperty(window, "IntersectionObserver", {
   writable: true,
   value: MockIntersectionObserver,
 });
+
+if (typeof HTMLCanvasElement !== "undefined") {
+  HTMLCanvasElement.prototype.getContext = (() => ({
+    clearRect: () => {},
+    beginPath: () => {},
+    moveTo: () => {},
+    lineTo: () => {},
+    stroke: () => {},
+    arc: () => {},
+    fill: () => {},
+    setTransform: () => {},
+    lineWidth: 1,
+    strokeStyle: "",
+    fillStyle: "",
+  })) as unknown as typeof HTMLCanvasElement.prototype.getContext;
+}

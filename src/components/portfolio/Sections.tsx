@@ -43,7 +43,7 @@ export function HowIWork() {
   const reduce = Boolean(useReducedMotion());
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-28">
+    <div className="mx-auto max-w-6xl px-5 py-28">
       <p className="font-mono text-xs uppercase tracking-[0.25em] text-signal">
         Process / Execution model
       </p>
@@ -133,7 +133,7 @@ export function Toolchain() {
   const [hot, setHot] = useState<string | null>(null);
   const reduce = Boolean(useReducedMotion());
   return (
-    <div className="mx-auto max-w-7xl px-5 py-28">
+    <div className="mx-auto max-w-6xl px-5 py-28">
       <p className="font-mono text-xs uppercase tracking-[0.25em] dim">02 / The toolchain</p>
       <h2 className="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
         Every layer, <span className="text-signal">deployed</span> with intent.
@@ -218,7 +218,7 @@ export function Certifications() {
   const reduce = Boolean(useReducedMotion());
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-28">
+    <div className="mx-auto max-w-6xl px-5 py-28">
       <p className="font-mono text-xs uppercase tracking-[0.25em] text-signal">Verified skills</p>
       <h2 className="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
         Certifications
@@ -431,7 +431,7 @@ export function Experience() {
   }, [rawProgress, reduce]);
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-28">
+    <div className="mx-auto max-w-6xl px-5 py-28">
       <p className="font-mono text-xs uppercase tracking-[0.25em] text-signal">
         Professional journey
       </p>
@@ -489,7 +489,7 @@ const PRINCIPLES = [
 export function About() {
   const reduce = Boolean(useReducedMotion());
   return (
-    <div className="mx-auto grid max-w-7xl gap-16 px-5 py-28 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+    <div className="mx-auto grid max-w-6xl gap-16 px-5 py-28 lg:grid-cols-[1.2fr_1fr] lg:items-center">
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.25em] dim">03 / Principles</p>
         <h2 className="mt-4 text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
@@ -579,7 +579,7 @@ export function Testimonials() {
   const reduce = Boolean(useReducedMotion());
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-28">
+    <div className="mx-auto max-w-6xl px-5 py-28">
       <p className="font-mono text-xs uppercase tracking-[0.25em] text-signal">Social proof</p>
       <h2 className="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
         What people say
@@ -620,7 +620,7 @@ export function Testimonials() {
 
 export function Contact() {
   return (
-    <div className="mx-auto max-w-7xl px-5 py-32">
+    <div className="mx-auto max-w-6xl px-5 py-32">
       <p className="font-mono text-xs uppercase tracking-[0.25em]">04 / Scale</p>
       <h2 className="mt-6 text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
         Ready to scale what you've built?

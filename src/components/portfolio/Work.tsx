@@ -1,5 +1,6 @@
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { ConstellationCanvas } from "./ConstellationCanvas";
 import { useTyped } from "./hooks";
 
 const PROJECTS = [
@@ -195,57 +196,60 @@ function Card({ p, i }: { p: (typeof PROJECTS)[number]; i: number }) {
       data-cursor-interactive="true"
       className="work-card section-surface group flex flex-col rounded-3xl border hairline p-7 focus-visible:outline-none"
     >
-      <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest">
-        <span className="flex items-center text-signal">
-          <span className="work-cat-tick" aria-hidden="true" />
-          <span>
-            {p.stage} / {p.cat}
+      <ConstellationCanvas variant="card" active={hovered} className="z-0 rounded-[inherit]" />
+      <div className="relative z-10 flex flex-1 flex-col">
+        <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest">
+          <span className="flex items-center text-signal">
+            <span className="work-cat-tick" aria-hidden="true" />
+            <span>
+              {p.stage} / {p.cat}
+            </span>
           </span>
-        </span>
-        <span className="dim">Project / {String(i + 1).padStart(2, "0")}</span>
-      </div>
-      <h3 className="mt-5 text-2xl font-bold tracking-tight">{p.title}</h3>
-      <p className="mt-1 dim">{p.frame}</p>
-      <dl className="mt-6 grid gap-5 text-sm sm:grid-cols-2">
-        {[
-          ["Problem", p.p],
-          ["Approach", p.a],
-        ].map(([k, v]) => (
-          <div key={k}>
-            <dt className="font-mono text-[10px] uppercase tracking-widest dim">{k}</dt>
-            <dd className="mt-1.5 leading-snug">{v}</dd>
-          </div>
-        ))}
-      </dl>
-      <p className="mt-6 font-medium text-signal">✓ Outcome: {p.o}</p>
-      <ul className="mt-5 flex flex-wrap gap-2">
-        {p.tags.map((t, j) => (
-          <motion.li
-            key={t}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={reduce ? { duration: 0.2 } : { delay: 0.4 + j * 0.1 }}
-            className="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase transition-colors duration-250 group-hover:border-signal"
-          >
-            {t}
-          </motion.li>
-        ))}
-      </ul>
-      <MiniProjectFlow nodes={p.flow} active={hovered} reduce={reduce} />
-      <div className="mt-4 border-t hairline pt-4 font-mono text-[11px] leading-5">
-        <div className="truncate dim">{cmd.out}</div>
-        <div className="work-result-line truncate text-signal">
-          {res.out}
-          {!res.done && <span className="cursor">▋</span>}
+          <span className="dim">Project / {String(i + 1).padStart(2, "0")}</span>
         </div>
-      </div>
-      <div className="mt-3 flex justify-end">
-        <a
-          href="/case-studies"
-          className="work-case-link font-mono text-[11px] font-bold uppercase tracking-wider text-signal"
-        >
-          View case study →
-        </a>
+        <h3 className="mt-5 text-2xl font-bold tracking-tight">{p.title}</h3>
+        <p className="mt-1 dim">{p.frame}</p>
+        <dl className="mt-6 grid gap-5 text-sm sm:grid-cols-2">
+          {[
+            ["Problem", p.p],
+            ["Approach", p.a],
+          ].map(([k, v]) => (
+            <div key={k}>
+              <dt className="font-mono text-[10px] uppercase tracking-widest dim">{k}</dt>
+              <dd className="mt-1.5 leading-snug">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-6 font-medium text-signal">✓ Outcome: {p.o}</p>
+        <ul className="mt-5 flex flex-wrap gap-2">
+          {p.tags.map((t, j) => (
+            <motion.li
+              key={t}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={reduce ? { duration: 0.2 } : { delay: 0.4 + j * 0.1 }}
+              className="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase transition-colors duration-250 group-hover:border-signal"
+            >
+              {t}
+            </motion.li>
+          ))}
+        </ul>
+        <MiniProjectFlow nodes={p.flow} active={hovered} reduce={reduce} />
+        <div className="mt-4 border-t hairline pt-4 font-mono text-[11px] leading-5">
+          <div className="truncate dim">{cmd.out}</div>
+          <div className="work-result-line truncate text-signal">
+            {res.out}
+            {!res.done && <span className="cursor">▋</span>}
+          </div>
+        </div>
+        <div className="mt-3 flex justify-end">
+          <a
+            href="/case-studies"
+            className="work-case-link font-mono text-[11px] font-bold uppercase tracking-wider text-signal"
+          >
+            View case study →
+          </a>
+        </div>
       </div>
     </motion.article>
   );
@@ -253,7 +257,7 @@ function Card({ p, i }: { p: (typeof PROJECTS)[number]; i: number }) {
 
 export function Work() {
   return (
-    <div className="mx-auto max-w-7xl px-5 py-28">
+    <div className="mx-auto max-w-6xl px-5 py-28">
       <p className="font-mono text-xs uppercase tracking-[0.25em] dim">01 / The work</p>
       <h2 className="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
         Six systems, each <span className="text-signal">tested</span> in production.

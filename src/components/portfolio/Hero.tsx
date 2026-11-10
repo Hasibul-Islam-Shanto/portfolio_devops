@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { ConstellationCanvas } from "./ConstellationCanvas";
 import { HeroTerminal } from "./HeroTerminal";
 
 export function Hero() {
@@ -11,8 +12,9 @@ export function Hero() {
   let wordIndex = 0;
 
   return (
-    <div className="relative flex min-h-screen w-full items-center bg-[#10151F] pt-28 pb-12 lg:min-h-[100dvh] lg:pt-20 lg:pb-10">
-      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 py-4 lg:grid-cols-[1.04fr_1.15fr] lg:items-center lg:gap-14">
+    <div className="relative flex min-h-screen w-full items-center overflow-hidden bg-[#10151F] pt-28 pb-12 lg:min-h-[100dvh] lg:pt-20 lg:pb-10">
+      <ConstellationCanvas variant="hero" active className="z-0" />
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-10 px-5 py-4 lg:grid-cols-[1.04fr_1.15fr] lg:items-center lg:gap-14">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.25em] dim">
             00 / Platform engineer · Dhaka → Remote
@@ -76,7 +78,7 @@ export function Hero() {
       <a
         href="#test"
         data-cursor-label="↓"
-        className="scroll-cue absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-widest dim"
+        className="scroll-cue absolute bottom-4 left-1/2 z-10 -translate-x-1/2 font-mono text-[10px] uppercase tracking-widest dim"
       >
         scroll ↓
       </a>
