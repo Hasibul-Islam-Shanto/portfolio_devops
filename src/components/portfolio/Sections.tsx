@@ -68,7 +68,7 @@ export function HowIWork() {
               className="relative flex flex-col"
             >
               <div className="flex items-center">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center border hairline bg-surface font-mono text-sm font-bold text-signal">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border hairline bg-surface font-mono text-sm font-bold text-signal">
                   {step.num}
                 </div>
                 {!isLast && (
@@ -166,15 +166,15 @@ export function Toolchain() {
                 onFocus={() => setHot(g.name)}
                 tabIndex={0}
                 data-cursor-interactive="true"
-                className={`relative border-2 p-6 transition-all duration-300 focus-visible:outline-none ${on ? "border-signal -translate-y-1" : "hairline"}`}
+                className={`relative rounded-3xl border-2 p-6 transition-all duration-300 focus-visible:outline-none ${on ? "border-signal -translate-y-1" : "hairline"}`}
               >
                 {featured && (
-                  <span className="absolute right-3 top-3 bg-signal px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase text-signal-foreground">
+                  <span className="absolute right-3.5 top-3.5 rounded-full bg-signal px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase text-signal-foreground">
                     Core
                   </span>
                 )}
                 <div
-                  className={`flex h-14 w-14 items-center justify-center border-2 transition-colors duration-300 ${on ? "border-signal text-signal" : "hairline"}`}
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-colors duration-300 ${on ? "border-signal text-signal" : "hairline"}`}
                 >
                   <Icon className="h-7 w-7" strokeWidth={1.5} aria-hidden />
                 </div>
@@ -237,11 +237,11 @@ export function Certifications() {
             }
             tabIndex={0}
             data-cursor-interactive="true"
-            className="group flex flex-col justify-between border hairline p-6 transition-colors duration-300 hover:border-signal focus-visible:border-signal focus-visible:outline-none"
+            className="group flex flex-col justify-between rounded-3xl border hairline p-6 transition-colors duration-300 hover:border-signal focus-visible:border-signal focus-visible:outline-none"
           >
             <div>
               {/* Generic shield line-icon placeholder: swap for the real certification body's icon later */}
-              <div className="flex h-12 w-12 items-center justify-center border hairline bg-surface text-signal transition-colors duration-300 group-hover:border-signal">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border hairline bg-surface text-signal transition-colors duration-300 group-hover:border-signal">
                 <ShieldCheck className="h-6 w-6" strokeWidth={1.5} aria-hidden />
               </div>
               <h3 className="mt-6 text-base font-bold leading-snug tracking-tight sm:text-lg">
@@ -317,15 +317,15 @@ function ExperienceCard({
 
   return (
     <li ref={rowRef} className="relative grid gap-3 pl-6 md:grid-cols-[20%_1fr] md:gap-8">
-      {/* Left column: square marker on the vertical rail + date range */}
+      {/* Left column: rounded marker on the vertical rail + date range */}
       <div className="relative pt-1">
         <motion.span
           initial={reduce ? { opacity: 0, scale: 1 } : { opacity: 0, scale: 0 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={
-            reduce ? { duration: 0.2 } : { delay, duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }
+            reduce ? { duration: 0.2 } : { delay, duration: 0.35, ease: [0.16, 1, 0.3, 1] }
           }
-          className={` -left-6 top-2 block h-3 w-3 bg-signal ${
+          className={`-left-6 top-2 block h-3 w-3 rounded-full bg-signal ${
             item.current ? "ring-2 ring-current/25" : ""
           }`}
           style={{ position: "absolute" }}
@@ -349,18 +349,18 @@ function ExperienceCard({
         }
         tabIndex={0}
         data-cursor-interactive="true"
-        className={`panel group border p-6 transition-colors duration-300 hover:border-signal focus-visible:border-signal focus-visible:outline-none md:p-7 ${
+        className={`panel group rounded-3xl border p-6 transition-colors duration-300 hover:border-signal focus-visible:border-signal focus-visible:outline-none md:p-7 ${
           item.current ? "border-2 border-signal" : "hairline"
         }`}
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2.5">
             <h3 className="text-xl font-bold tracking-tight md:text-2xl">{item.company}</h3>
-            <span className="border hairline px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-signal">
+            <span className="rounded-full border hairline px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-signal">
               {item.orgTag}
             </span>
           </div>
-          <span className="border hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider dim">
+          <span className="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase tracking-wider dim">
             {item.location}
           </span>
         </div>
@@ -370,7 +370,10 @@ function ExperienceCard({
         <ul className="mt-5 space-y-2.5 text-sm leading-relaxed">
           {item.bullets.map((bullet, bIdx) => (
             <li key={bIdx} className="flex items-start gap-3">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 bg-signal" aria-hidden="true" />
+              <span
+                className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-signal"
+                aria-hidden="true"
+              />
               <span>{bullet}</span>
             </li>
           ))}
@@ -380,7 +383,7 @@ function ExperienceCard({
           {item.tags.map((t, tIdx) => (
             <li
               key={tIdx}
-              className="border hairline px-2.5 py-1 font-mono text-[10px] uppercase transition-colors group-hover:border-signal"
+              className="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase transition-colors group-hover:border-signal"
             >
               {t}
             </li>
@@ -459,7 +462,7 @@ export function Experience() {
           href="#"
           data-cursor-cta="true"
           data-cursor-label="CV ↗"
-          className="inline-block bg-signal px-6 py-3 font-mono text-sm font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5"
+          className="inline-block rounded-full bg-signal px-6 py-3 font-mono text-sm font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5"
         >
           View Full Experience →
         </a>
@@ -594,7 +597,7 @@ export function Testimonials() {
                 : { duration: 0.6, delay: i * 0.15, ease: [0.2, 0.8, 0.2, 1] }
             }
             data-cursor-interactive="true"
-            className={`${item.dark ? "mode-dark" : "mode-light"} section-surface relative flex flex-col justify-between border hairline p-7 transition-colors duration-300 hover:border-signal`}
+            className={`${item.dark ? "mode-dark" : "mode-light"} section-surface relative flex flex-col justify-between rounded-3xl border hairline p-7 transition-colors duration-300 hover:border-signal`}
           >
             <div>
               <span

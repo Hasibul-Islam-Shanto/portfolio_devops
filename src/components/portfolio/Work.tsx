@@ -135,7 +135,7 @@ function MiniProjectFlow({
         {/* Traveling coral-red signal dot */}
         {!reduce && step >= 0 && step < nodes.length && (
           <motion.span
-            className="flow-dot absolute top-3.5 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2"
+            className="flow-dot absolute top-3.5 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
             initial={false}
             animate={{ left: `calc(0.875rem + (100% - 1.75rem) * ${pos})` }}
             transition={{ duration: MINI_STEP_MS / 1000, ease: "linear" }}
@@ -148,7 +148,7 @@ function MiniProjectFlow({
           return (
             <div key={label} className="relative z-10 flex flex-col items-center gap-1.5">
               <div
-                className={`flow-node flex h-7 w-7 items-center justify-center border bg-surface text-[10px] font-bold ${
+                className={`flow-node flex h-7 w-7 items-center justify-center rounded-lg border bg-surface text-[10px] font-bold ${
                   isOn ? "is-on" : isDone ? "border-signal text-signal" : "hairline dim"
                 }`}
               >
@@ -193,7 +193,7 @@ function Card({ p, i }: { p: (typeof PROJECTS)[number]; i: number }) {
       onBlur={() => setHovered(false)}
       tabIndex={0}
       data-cursor-interactive="true"
-      className="work-card section-surface group flex flex-col border hairline p-7 focus-visible:outline-none"
+      className="work-card section-surface group flex flex-col rounded-3xl border hairline p-7 focus-visible:outline-none"
     >
       <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest">
         <span className="flex items-center text-signal">
@@ -225,7 +225,7 @@ function Card({ p, i }: { p: (typeof PROJECTS)[number]; i: number }) {
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={reduce ? { duration: 0.2 } : { delay: 0.4 + j * 0.1 }}
-            className="border hairline px-2.5 py-1 font-mono text-[10px] uppercase transition-colors duration-250 group-hover:border-signal"
+            className="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase transition-colors duration-250 group-hover:border-signal"
           >
             {t}
           </motion.li>
@@ -258,7 +258,7 @@ export function Work() {
       <h2 className="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
         Six systems, each <span className="text-signal">tested</span> in production.
       </h2>
-      <div className="mt-14 grid md:grid-cols-2">
+      <div className="mt-14 grid gap-6 md:grid-cols-2">
         {PROJECTS.map((p, i) => (
           <Card key={p.title} p={p} i={i} />
         ))}

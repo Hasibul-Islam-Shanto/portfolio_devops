@@ -214,12 +214,6 @@
 .panel {
   background: color-mix(in oklab, var(--s-fg) 4%, transparent);
 }
-.blueprint-grid {
-  background-image:
-    linear-gradient(color-mix(in oklab, var(--s-fg) 6%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklab, var(--s-fg) 6%, transparent) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
 .terminal {
   background: var(--night);
   color: var(--paper);
@@ -254,6 +248,9 @@
 }
 .cursor {
   animation: blink 1s steps(1) infinite;
+}
+.terminal-cursor-blink {
+  animation: blink 1.06s steps(1) infinite;
 }
 @keyframes pulse-ring {
   0% {
@@ -320,11 +317,25 @@ a {
 .font-mono {
   font-variant-numeric: tabular-nums;
 }
+@keyframes monitor-sine-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.22;
+  }
+}
+.monitor-pulse {
+  animation: monitor-sine-pulse 1.6s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
   .cursor,
+  .terminal-cursor-blink,
+  .monitor-pulse,
   .pulse-ring,
   .spin-slow,
   .spin-rev,
@@ -351,13 +362,14 @@ a {
     transform: none !important;
   }
 }
-/* ===== Square everything: no border radius anywhere ===== */
-*,
-*::before,
-*::after {
-  border-radius: 0 !important;
+/* ===== Portfolio rounded-corner system ===== */
+/* Large containers (nav, hero terminal, major cards): 20–24px
+   Medium elements (buttons, pills, tags): 12–16px or 9999px pill
+   Small elements (inputs, small badges): 8px */
+:root {
+  --radius: 0.75rem;
 }
-/* Explicit circular exception for the custom cursor dot, ring, and CTA click ripple */
+/* Explicit circular helper for the custom cursor dot, ring, and CTA click ripple */
 .cursor-round,
 .cursor-round::before,
 .cursor-round::after {
@@ -386,7 +398,7 @@ a {
   transform: translate3d(-50%, -50%, 0) scale(0.4);
   opacity: 0;
   transition:
-    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity 200ms ease-out;
 }
 .cursor-dot.is-visible {
@@ -429,7 +441,7 @@ a {
     border-color 280ms ease-out,
     box-shadow 280ms ease-out,
     opacity 260ms ease-out,
-    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cursor-ring::before {
   content: "";
@@ -530,18 +542,23 @@ a {
 .float-header {
   transition:
     padding 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 400ms,
+    box-shadow 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
     backdrop-filter 400ms,
-    background-color 400ms;
-  background: var(--night);
-  box-shadow: 0 10px 30px -18px color-mix(in oklab, var(--ink) 70%, transparent);
+    background-color 400ms,
+    border-color 400ms;
+  background: color-mix(in oklab, var(--paper) 6%, var(--night));
+  border-color: color-mix(in oklab, var(--paper) 14%, transparent);
+  box-shadow:
+    0 12px 32px -12px color-mix(in oklab, var(--ink) 75%, transparent),
+    inset 0 1px 0 0 color-mix(in oklab, var(--paper) 8%, transparent);
 }
 .float-header.is-scrolled {
-  background: color-mix(in oklab, var(--night) 82%, transparent);
-  backdrop-filter: blur(14px);
+  background: color-mix(in oklab, var(--paper) 7%, color-mix(in oklab, var(--night) 86%, transparent));
+  backdrop-filter: blur(16px);
+  border-color: color-mix(in oklab, var(--signal) 30%, color-mix(in oklab, var(--paper) 16%, transparent));
   box-shadow:
-    0 22px 50px -18px color-mix(in oklab, var(--ink) 90%, transparent),
-    0 0 0 1px color-mix(in oklab, var(--signal) 25%, transparent);
+    0 22px 50px -16px color-mix(in oklab, var(--ink) 92%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--signal) 22%, transparent);
 }
 .flow-node {
   transition:
@@ -579,6 +596,7 @@ a {
   --s-bg: var(--night);
   --s-fg: var(--paper);
   position: relative;
+  border-radius: 1.5rem;
   background-color: var(--night);
   color: var(--paper);
   border-color: color-mix(in oklab, var(--paper) 15%, transparent);
@@ -592,6 +610,7 @@ a {
   content: "";
   position: absolute;
   pointer-events: none;
+  border-radius: inherit;
   width: 0;
   height: 0;
   opacity: 0;
