@@ -214,12 +214,6 @@
 .panel {
   background: color-mix(in oklab, var(--s-fg) 4%, transparent);
 }
-.blueprint-grid {
-  background-image:
-    linear-gradient(color-mix(in oklab, var(--s-fg) 6%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklab, var(--s-fg) 6%, transparent) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
 .terminal {
   background: var(--night);
   color: var(--paper);
@@ -254,6 +248,9 @@
 }
 .cursor {
   animation: blink 1s steps(1) infinite;
+}
+.terminal-cursor-blink {
+  animation: blink 1.06s steps(1) infinite;
 }
 @keyframes pulse-ring {
   0% {
@@ -320,11 +317,25 @@ a {
 .font-mono {
   font-variant-numeric: tabular-nums;
 }
+@keyframes monitor-sine-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.22;
+  }
+}
+.monitor-pulse {
+  animation: monitor-sine-pulse 1.6s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
   .cursor,
+  .terminal-cursor-blink,
+  .monitor-pulse,
   .pulse-ring,
   .spin-slow,
   .spin-rev,
@@ -335,14 +346,30 @@ a {
   .glow-hover:hover {
     transform: none;
   }
+  .work-card:hover,
+  .work-card:focus-visible,
+  .work-card:focus-within {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .work-card::before,
+  .work-card::after,
+  .work-cat-tick,
+  .work-case-link {
+    transition: none !important;
+  }
+  .work-case-link {
+    transform: none !important;
+  }
 }
-/* ===== Square everything: no border radius anywhere ===== */
-*,
-*::before,
-*::after {
-  border-radius: 0 !important;
+/* ===== Portfolio rounded-corner system ===== */
+/* Large containers (nav, hero terminal, major cards): 20–24px
+   Medium elements (buttons, pills, tags): 12–16px or 9999px pill
+   Small elements (inputs, small badges): 8px */
+:root {
+  --radius: 0.75rem;
 }
-/* Explicit circular exception for the custom cursor dot, ring, and CTA click ripple */
+/* Explicit circular helper for the custom cursor dot, ring, and CTA click ripple */
 .cursor-round,
 .cursor-round::before,
 .cursor-round::after {
@@ -371,7 +398,7 @@ a {
   transform: translate3d(-50%, -50%, 0) scale(0.4);
   opacity: 0;
   transition:
-    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity 200ms ease-out;
 }
 .cursor-dot.is-visible {
@@ -381,6 +408,9 @@ a {
 .cursor-dot.has-label {
   transform: translate3d(-50%, -50%, 0) scale(0.35);
   opacity: 0.25;
+}
+.cursor-dot.is-inverted {
+  background-color: var(--night);
 }
 .cursor-dot.is-pressed {
   transform: translate3d(-50%, -50%, 0) scale(0.72);
@@ -411,7 +441,7 @@ a {
     border-color 280ms ease-out,
     box-shadow 280ms ease-out,
     opacity 260ms ease-out,
-    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cursor-ring::before {
   content: "";
@@ -452,6 +482,13 @@ a {
   box-shadow:
     0 8px 28px color-mix(in oklab, var(--signal) 58%, transparent),
     0 0 0 1px color-mix(in oklab, var(--ink) 35%, transparent);
+}
+.cursor-ring.has-label.is-inverted {
+  background: var(--night);
+  border-color: color-mix(in oklab, var(--cream) 65%, transparent);
+  box-shadow:
+    0 8px 28px color-mix(in oklab, var(--ink) 65%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--cream) 35%, transparent);
 }
 .cursor-ring.is-pressed {
   transform: translate3d(-50%, -50%, 0) scale(0.85);
@@ -505,18 +542,23 @@ a {
 .float-header {
   transition:
     padding 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 400ms,
+    box-shadow 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
     backdrop-filter 400ms,
-    background-color 400ms;
-  background: var(--night);
-  box-shadow: 0 10px 30px -18px color-mix(in oklab, var(--ink) 70%, transparent);
+    background-color 400ms,
+    border-color 400ms;
+  background: color-mix(in oklab, var(--paper) 6%, var(--night));
+  border-color: color-mix(in oklab, var(--paper) 14%, transparent);
+  box-shadow:
+    0 12px 32px -12px color-mix(in oklab, var(--ink) 75%, transparent),
+    inset 0 1px 0 0 color-mix(in oklab, var(--paper) 8%, transparent);
 }
 .float-header.is-scrolled {
-  background: color-mix(in oklab, var(--night) 82%, transparent);
-  backdrop-filter: blur(14px);
+  background: color-mix(in oklab, var(--paper) 7%, color-mix(in oklab, var(--night) 86%, transparent));
+  backdrop-filter: blur(16px);
+  border-color: color-mix(in oklab, var(--signal) 30%, color-mix(in oklab, var(--paper) 16%, transparent));
   box-shadow:
-    0 22px 50px -18px color-mix(in oklab, var(--ink) 90%, transparent),
-    0 0 0 1px color-mix(in oklab, var(--signal) 25%, transparent);
+    0 22px 50px -16px color-mix(in oklab, var(--ink) 92%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--signal) 22%, transparent);
 }
 .flow-node {
   transition:
@@ -547,22 +589,100 @@ a {
 .rail-float .text-signal {
   text-shadow: 0 0 1px var(--ink);
 }
-/* Work cards: alternate per item on one column, checkerboard on two. */
-.tone-m-0 {
+/* Work cards: permanent ink-navy (#10151F) surface with warm sand (#EFE6D8) text.
+   Hover/focus adds a 2px coral-red perimeter border draw-in, -4px lift + soft coral shadow,
+   category tick mark, result glow pulse, and bottom-right "View case study →" link. */
+.work-card {
   --s-bg: var(--night);
   --s-fg: var(--paper);
+  position: relative;
+  border-radius: 1.5rem;
+  background-color: var(--night);
+  color: var(--paper);
+  border-color: color-mix(in oklab, var(--paper) 15%, transparent);
+  transition:
+    transform 250ms ease-out,
+    box-shadow 250ms ease-out,
+    border-color 250ms ease-out;
 }
-.tone-m-1 {
-  --s-bg: var(--cream);
-  --s-fg: var(--ink);
+.work-card::before,
+.work-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  z-index: 20;
+  transition:
+    width 125ms ease-out 125ms,
+    height 125ms ease-out,
+    opacity 60ms ease-out 200ms;
 }
-@media (min-width: 768px) {
-  .tone-d-0 {
-    --s-bg: var(--night);
-    --s-fg: var(--paper);
-  }
-  .tone-d-1 {
-    --s-bg: var(--cream);
-    --s-fg: var(--ink);
-  }
+.work-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--signal);
+  border-right: 2px solid var(--signal);
+}
+.work-card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--signal);
+  border-left: 2px solid var(--signal);
+}
+.work-card:hover,
+.work-card:focus-visible,
+.work-card:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(232, 80, 58, 0.18);
+}
+.work-card:is(:hover, :focus-visible, :focus-within)::before,
+.work-card:is(:hover, :focus-visible, :focus-within)::after {
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  opacity: 1;
+  transition:
+    width 130ms ease-out,
+    height 120ms ease-out 130ms,
+    opacity 40ms ease-out;
+}
+.work-cat-tick {
+  display: inline-block;
+  width: 0;
+  height: 2px;
+  margin-right: 0;
+  background-color: var(--signal);
+  opacity: 0;
+  vertical-align: middle;
+  transition:
+    width 250ms ease-out,
+    margin-right 250ms ease-out,
+    opacity 250ms ease-out;
+}
+.work-card:is(:hover, :focus-visible, :focus-within) .work-cat-tick {
+  width: 10px;
+  margin-right: 6px;
+  opacity: 1;
+}
+.work-result-line {
+  transition:
+    text-shadow 250ms ease-out,
+    filter 250ms ease-out;
+}
+.work-card:is(:hover, :focus-visible, :focus-within) .work-result-line {
+  text-shadow: 0 0 12px color-mix(in oklab, var(--signal) 55%, transparent);
+  filter: brightness(1.12);
+}
+.work-case-link {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 250ms ease-out,
+    transform 250ms ease-out;
+}
+.work-card:is(:hover, :focus-visible, :focus-within) .work-case-link {
+  opacity: 1;
+  transform: translateX(0);
 }

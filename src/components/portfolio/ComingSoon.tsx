@@ -13,8 +13,8 @@ export function ComingSoon({
   return (
     <>
       <Header />
-      <main className="section-surface mode-light blueprint-grid flex min-h-screen items-center pt-28 md:pt-20">
-        <div className="mx-auto w-full max-w-7xl px-5 py-24">
+      <main className="section-surface mode-light flex min-h-screen items-center pt-28 md:pt-20">
+        <div className="mx-auto w-full max-w-6xl px-5 py-24">
           <p className="font-mono text-xs uppercase tracking-[0.25em] dim">{eyebrow}</p>
           <h1 className="mt-4 max-w-3xl text-[clamp(32px,4.8vw,58px)] font-bold leading-[1.1] tracking-tight">
             {title}

@@ -22,6 +22,7 @@ export function CustomCursor() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [visible, setVisible] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [inverted, setInverted] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
   const [pressed, setPressed] = useState(false);
   const [ripples, setRipples] = useState<Ripple[]>([]);
@@ -36,6 +37,7 @@ export function CustomCursor() {
   const lastFrameTime = useRef<number>(0);
   const pressStartTime = useRef<number>(0);
   const releaseTimeoutRef = useRef<number>(0);
+  const idleTimeoutRef = useRef<number>(0);
   const rippleIdRef = useRef(0);
 
   useEffect(() => {
@@ -78,12 +80,14 @@ export function CustomCursor() {
     const evaluateTarget = (target: EventTarget | null) => {
       if (!(target instanceof Element)) {
         setHovered(false);
+        setInverted(false);
         setLabel(null);
         return;
       }
       const interactive = target.closest(INTERACTIVE_SELECTOR);
       if (interactive) {
         setHovered(true);
+        setInverted(Boolean(interactive.closest("[data-cursor-invert]")));
         const explicitLabel = interactive.getAttribute("data-cursor-label");
         if (explicitLabel) {
           setLabel(explicitLabel);
@@ -94,6 +98,7 @@ export function CustomCursor() {
         }
       } else {
         setHovered(false);
+        setInverted(false);
         setLabel(null);
       }
     };
@@ -157,6 +162,13 @@ export function CustomCursor() {
         dotOuterRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       }
 
+      if (idleTimeoutRef.current) {
+        window.clearTimeout(idleTimeoutRef.current);
+      }
+      idleTimeoutRef.current = window.setTimeout(() => {
+        setVisible(false);
+      }, 600);
+
       evaluateTarget(e.target);
       startRingLoop();
     };
@@ -206,20 +218,36 @@ export function CustomCursor() {
     };
 
     const onMouseLeaveDoc = () => {
+      if (idleTimeoutRef.current) {
+        window.clearTimeout(idleTimeoutRef.current);
+        idleTimeoutRef.current = 0;
+      }
       setVisible(false);
       setPressed(false);
     };
 
-    const onMouseEnterDoc = () => {
-      if (hasMoved.current) setVisible(true);
+    const onMouseOutWin = (e: MouseEvent) => {
+      if (!e.relatedTarget) {
+        onMouseLeaveDoc();
+      }
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState !== "visible") {
+        onMouseLeaveDoc();
+      }
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("mousedown", onMouseDown, { passive: true });
     window.addEventListener("mouseup", onMouseUp, { passive: true });
+    window.addEventListener("mouseout", onMouseOutWin, { passive: true });
+    window.addEventListener("blur", onMouseLeaveDoc);
+    window.addEventListener("keydown", onMouseLeaveDoc, { passive: true });
+    document.addEventListener("visibilitychange", onVisibilityChange);
     document.documentElement.addEventListener("mouseleave", onMouseLeaveDoc);
-    document.documentElement.addEventListener("mouseenter", onMouseEnterDoc);
+    document.documentElement.addEventListener("pointerleave", onMouseLeaveDoc);
 
     return () => {
       document.documentElement.classList.remove("has-custom-cursor");
@@ -227,8 +255,12 @@ export function CustomCursor() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("mouseout", onMouseOutWin);
+      window.removeEventListener("blur", onMouseLeaveDoc);
+      window.removeEventListener("keydown", onMouseLeaveDoc);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       document.documentElement.removeEventListener("mouseleave", onMouseLeaveDoc);
-      document.documentElement.removeEventListener("mouseenter", onMouseEnterDoc);
+      document.documentElement.removeEventListener("pointerleave", onMouseLeaveDoc);
       if (rafId.current) {
         cancelAnimationFrame(rafId.current);
         rafId.current = 0;
@@ -238,6 +270,9 @@ export function CustomCursor() {
       }
       if (releaseTimeoutRef.current) {
         window.clearTimeout(releaseTimeoutRef.current);
+      }
+      if (idleTimeoutRef.current) {
+        window.clearTimeout(idleTimeoutRef.current);
       }
     };
   }, [enabled, reducedMotion, visible]);
@@ -280,6 +315,7 @@ export function CustomCursor() {
               visible ? "is-visible" : "",
               hovered ? "is-hovered" : "",
               hasLabel ? "has-label" : "",
+              inverted ? "is-inverted" : "",
               pressed ? "is-pressed" : "",
             ]
               .filter(Boolean)
@@ -310,6 +346,7 @@ export function CustomCursor() {
             visible ? "is-visible" : "",
             hovered ? "is-hovered" : "",
             hasLabel && !reducedMotion ? "has-label" : "",
+            inverted ? "is-inverted" : "",
             pressed && !reducedMotion ? "is-pressed" : "",
           ]
             .filter(Boolean)

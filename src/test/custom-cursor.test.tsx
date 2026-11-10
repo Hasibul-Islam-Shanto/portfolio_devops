@@ -107,4 +107,3 @@ describe("CustomCursor", () => {
     window.matchMedia = origMatchMedia;
   });
 });
-
