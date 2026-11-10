@@ -385,27 +385,125 @@ describe("Work", () => {
 });
 
 describe("Toolchain", () => {
-  it("defaults to Infrastructure (Core), follows hover/focus, and resets on leave", async () => {
+  it("renders the 30-tool catalog with header counter and 8 filter tabs", async () => {
     const body = mount("toolchain");
     track(initToolchain());
-    const card = (name: string) => body.querySelector<HTMLElement>(`[data-tool-card="${name}"]`)!;
-    const grid = body.querySelector<HTMLElement>("[data-toolchain]")!;
 
-    expect(body.querySelectorAll("[data-tool-card]").length).toBe(5);
-    expect(text(card("Infrastructure"))).toContain("Core");
-    expect(card("Infrastructure")).toHaveClass("is-on");
-    expect(card("Cloud")).not.toHaveClass("is-on");
+    expect(text(body)).toContain("02 / The toolchain");
+    expect(text(body)).toContain("Every layer, deployed with intent.");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("30 tools");
 
-    card("Cloud").dispatchEvent(new MouseEvent("mouseenter"));
-    expect(card("Cloud")).toHaveClass("is-on");
-    expect(card("Infrastructure")).not.toHaveClass("is-on");
+    const tabs = body.querySelectorAll<HTMLButtonElement>("[data-filter-tab]");
+    expect(tabs.length).toBe(8);
+    const tabNames = Array.from(tabs).map((t) => t.querySelector("span")?.textContent?.trim());
+    expect(tabNames).toEqual([
+      "All",
+      "CI/CD",
+      "IaC & Config",
+      "Containers",
+      "Cloud",
+      "Network & Data",
+      "Observability",
+      "Scripting",
+    ]);
 
-    grid.dispatchEvent(new MouseEvent("mouseleave"));
-    expect(card("Infrastructure")).toHaveClass("is-on");
+    const cards = body.querySelectorAll<HTMLElement>("[data-tool-card]");
+    expect(cards.length).toBe(30);
 
-    card("Orchestration").dispatchEvent(new Event("focus"));
-    expect(card("Orchestration")).toHaveClass("is-on");
-    expect(card("Orchestration").tabIndex).toBe(0);
+    // Initial state: "All" selected, all cards active
+    const allTab = body.querySelector<HTMLButtonElement>('[data-filter-tab="All"]')!;
+    expect(allTab).toHaveClass("is-active");
+    expect(allTab.getAttribute("aria-selected")).toBe("true");
+
+    cards.forEach((card) => {
+      expect(card).toHaveClass("is-active-tool");
+      expect(card).not.toHaveClass("is-ghost-tool");
+      expect(card.getAttribute("aria-hidden")).toBe("false");
+    });
+  });
+
+  it("filters cards by category, updating the live counter and ghosting non-matching cards with stagger", async () => {
+    const body = mount("toolchain");
+    track(initToolchain());
+
+    const containersTab = body.querySelector<HTMLButtonElement>('[data-filter-tab="Containers"]')!;
+    containersTab.click();
+
+    expect(containersTab).toHaveClass("is-active");
+    expect(containersTab.getAttribute("aria-selected")).toBe("true");
+    expect(body.querySelector('[data-filter-tab="All"]')).not.toHaveClass("is-active");
+
+    // Counter updates to 4 tools
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("4 tools");
+
+    const cards = Array.from(body.querySelectorAll<HTMLElement>("[data-tool-card]"));
+    const matching = cards.filter((c) => c.dataset["toolCat"] === "Containers");
+    const nonMatching = cards.filter((c) => c.dataset["toolCat"] !== "Containers");
+
+    expect(matching.length).toBe(4);
+    expect(nonMatching.length).toBe(26);
+
+    matching.forEach((c) => {
+      expect(c).toHaveClass("is-active-tool");
+      expect(c).not.toHaveClass("is-ghost-tool");
+      expect(c.getAttribute("aria-hidden")).toBe("false");
+    });
+
+    nonMatching.forEach((c) => {
+      expect(c).toHaveClass("is-ghost-tool");
+      expect(c).not.toHaveClass("is-active-tool");
+      expect(c.getAttribute("aria-hidden")).toBe("true");
+    });
+
+    // Check stagger delay applied
+    const firstNonMatching = nonMatching[0]!;
+    expect(firstNonMatching.style.getPropertyValue("--filter-delay")).toMatch(/ms$/);
+
+    // Switch back to "All"
+    const allTab = body.querySelector<HTMLButtonElement>('[data-filter-tab="All"]')!;
+    allTab.click();
+
+    expect(allTab).toHaveClass("is-active");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("30 tools");
+    cards.forEach((c) => {
+      expect(c).toHaveClass("is-active-tool");
+      expect(c).not.toHaveClass("is-ghost-tool");
+    });
+  });
+
+  it("supports keyboard navigation on filter tabs (Arrow keys and Enter/Space)", async () => {
+    const body = mount("toolchain");
+    track(initToolchain());
+
+    const tabs = Array.from(body.querySelectorAll<HTMLButtonElement>("[data-filter-tab]"));
+    const allTab = tabs[0]!;
+
+    allTab.focus();
+    allTab.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+
+    // Moved to CI/CD tab
+    expect(tabs[1]).toHaveClass("is-active");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("5 tools");
+
+    // Space/Enter activation
+    tabs[2]!.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    expect(tabs[2]).toHaveClass("is-active");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("4 tools");
+  });
+
+  it("snaps instantly without stagger delays under reduced motion", async () => {
+    mockMatchMedia("prefers-reduced-motion");
+    const body = mount("toolchain");
+    track(initToolchain());
+
+    const cicdTab = body.querySelector<HTMLButtonElement>('[data-filter-tab="CI/CD"]')!;
+    cicdTab.click();
+
+    const cards = Array.from(body.querySelectorAll<HTMLElement>("[data-tool-card]"));
+    cards.forEach((card) => {
+      expect(card.style.getPropertyValue("--filter-delay")).toBe("0ms");
+    });
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("5 tools");
   });
 });
 

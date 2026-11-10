@@ -31,7 +31,7 @@ describe("Astro routes", () => {
       "dark",
       "dark",
       "light",
-      "light",
+      "dark",
       "dark",
       "light",
       "dark",

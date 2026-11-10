@@ -1,73 +1,111 @@
 ---
-import Icon from "./icon.astro";
-import type { IconName } from "./icons";
+import { CATEGORIES, TOOLS } from "./toolchain-data";
 
-const ICONS: Record<string, IconName> = {
-  "CI/CD": "Activity",
-  Infrastructure: "Layers",
-  Orchestration: "Network",
-  Observability: "Eye",
-  Cloud: "Cloud",
-};
-const GROUPS = [
-  { name: "CI/CD", tools: ["GitHub Actions", "GitLab CI", "Buildkite", "Jenkins"] },
-  { name: "Infrastructure", tools: ["Terraform", "Pulumi", "Ansible", "Packer"] },
-  { name: "Orchestration", tools: ["Kubernetes", "Helm", "Argo CD", "Istio"] },
-  { name: "Observability", tools: ["Prometheus", "Grafana", "Loki", "OpenTelemetry"] },
-  { name: "Cloud", tools: ["AWS", "GCP", "Cloudflare", "Vault"] },
-];
-const DEFAULT_GROUP = "Infrastructure";
+const categoryCounts = CATEGORIES.reduce(
+  (acc, cat) => {
+    acc[cat] = cat === "All" ? TOOLS.length : TOOLS.filter((t) => t.category === cat).length;
+    return acc;
+  },
+  {} as Record<string, number>,
+);
 ---
 
 <div class="mx-auto max-w-6xl px-5 py-28">
-  <p class="font-mono text-xs uppercase tracking-[0.25em] dim">02 / The toolchain</p>
-  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
-    Every layer, <span class="text-signal">deployed</span> with intent.
-  </h2>
-  <div
-    data-toolchain
-    data-default-group={DEFAULT_GROUP}
-    class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
-  >
-    {
-      GROUPS.map((g, i) => {
-        const featured = g.name === DEFAULT_GROUP;
-        return (
-          <div data-reveal style={`--reveal-delay: ${i * 0.12}s`}>
-            <div
-              data-tool-card={g.name}
-              tabindex="0"
-              data-cursor-interactive="true"
+  {/* Header row */}
+  <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-[0.25em] text-signal">02 / The toolchain</p>
+      <h2 class="mt-4 max-w-2xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+        Every layer, <span class="text-signal">deployed</span> with intent.
+      </h2>
+    </div>
+    <div
+      class="flex items-center gap-2 font-mono text-xs tracking-wider text-[#efe6d8]/75 self-start md:self-end pb-1"
+      aria-live="polite"
+    >
+      <span class="inline-block h-2 w-2 rounded-full bg-signal" aria-hidden="true"></span>
+      <span data-tool-counter>
+        <span data-count-num>{TOOLS.length}</span> <span data-count-label>tools</span>
+      </span>
+    </div>
+  </div>
+
+  <div data-toolchain class="mt-12">
+    {/* Filter tabs */}
+    <div
+      role="tablist"
+      aria-label="Tool categories"
+      class="flex flex-wrap gap-2 overflow-x-auto pb-2"
+    >
+      {
+        CATEGORIES.map((cat, i) => {
+          const count = categoryCounts[cat] ?? 0;
+          const isInitial = i === 0;
+          return (
+            <button
+              type="button"
+              role="tab"
+              data-filter-tab={cat}
+              aria-selected={isInitial ? "true" : "false"}
+              tabindex={isInitial ? 0 : -1}
               class:list={[
-                "tool-card relative h-full rounded-3xl border-2 p-6 transition-all duration-300 focus-visible:outline-none",
-                featured ? "is-on border-signal -translate-y-1" : "hairline",
+                "tool-tab group relative inline-flex cursor-pointer items-center justify-center rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider select-none",
+                isInitial ? "is-active" : "",
               ]}
             >
-              {featured && (
-                <span class="absolute right-3.5 top-3.5 rounded-full bg-signal px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase text-signal-foreground">
-                  Core
-                </span>
-              )}
+              <span>{cat}</span>
+              <sup class="ml-1 font-mono text-[9px] font-bold opacity-80" aria-label={`${count} tools`}>
+                {count}
+              </sup>
+            </button>
+          );
+        })
+      }
+    </div>
+
+    {/* Tool grid */}
+    <div
+      data-tool-grid
+      class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6"
+    >
+      {
+        TOOLS.map((tool, i) => {
+          const staggerDelay = ((i % 6) * 0.05 + Math.floor(i / 6) * 0.06).toFixed(2);
+          return (
+            <div data-reveal style={`--reveal-delay: ${staggerDelay}s`}>
               <div
-                data-tool-icon
-                class:list={[
-                  "flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-colors duration-300",
-                  featured ? "border-signal text-signal" : "hairline",
-                ]}
+                data-tool-card
+                data-tool-name={tool.name}
+                data-tool-cat={tool.category}
+                tabindex="0"
+                data-cursor-interactive="true"
+                class="tool-catalog-card is-active-tool flex aspect-square flex-col justify-between rounded-2xl p-4 sm:p-5 transition-all focus-visible:outline-none"
               >
-                <Icon name={ICONS[g.name] ?? "Activity"} class="h-7 w-7" strokeWidth={1.5} />
+                {/* Brand Logo / Icon */}
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl border hairline bg-surface/40 transition-colors duration-200">
+                  <svg
+                    viewBox={tool.viewBox ?? "0 0 24 24"}
+                    class="h-6 w-6 transition-transform duration-200"
+                    aria-hidden="true"
+                    set:html={tool.svgInner}
+                  />
+                </div>
+
+                {/* Tool name and tag */}
+                <div class="mt-auto pt-3">
+                  <h3 class="font-display text-sm font-bold tracking-tight text-[#efe6d8] leading-snug">
+                    {tool.name}
+                  </h3>
+                  <p class="mt-1 font-mono text-[10px] lowercase tracking-wider text-[#efe6d8]/60">
+                    {tool.tag}
+                  </p>
+                </div>
               </div>
-              <h3 class="mt-6 font-mono text-xs uppercase tracking-widest text-signal">{g.name}</h3>
-              <ul class="mt-4 space-y-2.5 border-t hairline pt-4 text-base font-medium">
-                {g.tools.map((t) => (
-                  <li>{t}</li>
-                ))}
-              </ul>
             </div>
-          </div>
-        );
-      })
-    }
+          );
+        })
+      }
+    </div>
   </div>
 </div>
 
@@ -75,4 +113,3 @@ const DEFAULT_GROUP = "Infrastructure";
   import { initToolchain } from "../../scripts/toolchain";
   initToolchain();
 </script>
-

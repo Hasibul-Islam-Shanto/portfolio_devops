@@ -210,6 +210,7 @@ Adjust the structure if the existing codebase or current Astro conventions make 
 All component filenames and component names in the Astro migration must use **kebab-case**.
 
 Examples:
+
 - `BaseLayout.astro` → `base-layout.astro`
 - `Header.astro` → `header.astro`
 - `Hero.astro` → `hero.astro`
