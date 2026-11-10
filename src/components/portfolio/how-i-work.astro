@@ -1,0 +1,78 @@
+---
+const PROCESS_STEPS = [
+  {
+    num: "01",
+    title: "Understand",
+    desc: "Map failure domains, SLO targets, and real developer bottlenecks before touching YAML.",
+  },
+  {
+    num: "02",
+    title: "Plan",
+    desc: "Draft small, reversible architecture plans with explicit blast-radius and rollback bounds.",
+  },
+  {
+    num: "03",
+    title: "Delegate / Build",
+    desc: "Codify golden paths, reusable Terraform modules, and automated CI/CD workflows.",
+  },
+  {
+    num: "04",
+    title: "Review",
+    desc: "Enforce policy-as-code checks, dry-run diffs, and failure-injection drills in staging.",
+  },
+  {
+    num: "05",
+    title: "Measure",
+    desc: "Verify deploy lead time, error-budget burn, and p99 latency against production SLOs.",
+  },
+];
+---
+
+<div class="mx-auto max-w-6xl px-5 py-28">
+  <p class="font-mono text-xs uppercase tracking-[0.25em] text-signal">Process / Execution model</p>
+  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    How I <span class="text-signal">work</span> from incident to system.
+  </h2>
+
+  <ol class="mt-14 grid gap-8 md:grid-cols-5 md:gap-5">
+    {
+      PROCESS_STEPS.map((step, i) => {
+        const isLast = i === PROCESS_STEPS.length - 1;
+        return (
+          <li data-reveal style={`--reveal-delay: ${i * 0.1}s`} class="relative flex flex-col">
+            <div class="flex items-center">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border hairline bg-surface font-mono text-sm font-bold text-signal">
+                {step.num}
+              </div>
+              {!isLast && (
+                <div class="hidden flex-1 items-center pl-2 pr-1 md:flex" aria-hidden="true">
+                  <span class="h-px flex-1 bg-current opacity-25" />
+                  <svg viewBox="0 0 8 8" class="h-2 w-2 shrink-0 fill-current opacity-45">
+                    <path d="M0 0 L8 4 L0 8 Z" />
+                  </svg>
+                </div>
+              )}
+            </div>
+            <h3 class="mt-5 text-lg font-bold tracking-tight">{step.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed dim">{step.desc}</p>
+            {!isLast && (
+              <div
+                class="mt-5 flex items-center gap-1.5 font-mono text-[10px] dim md:hidden"
+                aria-hidden="true"
+              >
+                <span class="h-4 w-px bg-current opacity-30" />
+                <span>↓</span>
+              </div>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+
+  <blockquote class="mt-14 border-t hairline pt-8 text-lg italic leading-relaxed md:text-xl">
+    “Every pipeline I ship has one clear owner until it runs quietly in production —{" "}
+    <span class="font-bold not-italic text-signal">if it pages at 3am, it pages me first.</span>”
+  </blockquote>
+</div>
+

@@ -1,0 +1,34 @@
+---
+// Cursor layer markup is static; src/scripts/custom-cursor.ts drives it and removes it on touch devices.
+---
+
+<div
+  class="custom-cursor-layer pointer-events-none fixed inset-0 z-[9999] overflow-hidden"
+  aria-hidden="true"
+>
+  <div data-cursor-ripples></div>
+  <div
+    data-cursor-ring-outer
+    class="fixed left-0 top-0 pointer-events-none will-change-transform"
+    style="transform: translate3d(-100px, -100px, 0)"
+  >
+    <div class="cursor-round cursor-ring flex items-center justify-center">
+      <span
+        class="cursor-ring-label font-mono text-[9px] font-bold uppercase tracking-wider select-none"
+      ></span>
+    </div>
+  </div>
+  <div
+    data-cursor-dot-outer
+    class="fixed left-0 top-0 pointer-events-none will-change-transform"
+    style="transform: translate3d(-100px, -100px, 0)"
+  >
+    <div class="cursor-round cursor-dot"></div>
+  </div>
+</div>
+
+<script>
+  import { initCustomCursor } from "../../scripts/custom-cursor";
+  initCustomCursor();
+</script>
+

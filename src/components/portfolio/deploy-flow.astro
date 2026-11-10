@@ -1,0 +1,94 @@
+---
+import Icon from "./icon.astro";
+import type { IconName } from "./icons";
+
+const NODES: { id: string; name: string; label: string; icon: IconName }[] = [
+  { id: "git", name: "Git", label: "GIT", icon: "SiGit" },
+  { id: "docker", name: "Docker", label: "DOCKER", icon: "SiDocker" },
+  { id: "registry", name: "Registry", label: "REGISTRY", icon: "Layers" },
+  { id: "kubernetes", name: "Kubernetes", label: "K8S", icon: "SiKubernetes" },
+  { id: "pods", name: "Pods", label: "PODS", icon: "Grip" },
+  { id: "prometheus", name: "Prometheus", label: "PROM", icon: "SiPrometheus" },
+  { id: "grafana", name: "Grafana", label: "GRAFANA", icon: "SiGrafana" },
+];
+
+const columns = NODES.flatMap((_, i) =>
+  i < NODES.length - 1
+    ? ["minmax(0, 72px)", "minmax(clamp(4px, 1.5cqw, 12px), 1fr)"]
+    : ["minmax(0, 72px)"],
+).join(" ");
+---
+
+<div
+  data-deploy-flow
+  data-stage-count={NODES.length}
+  class="flex min-h-[360px] w-full max-w-full min-w-0 flex-col justify-center gap-12 py-16 font-mono uppercase tracking-[0.07em] text-[#EFE6D8] lg:min-h-[600px] lg:py-24"
+  style="container-type: inline-size"
+>
+  <div class="flex w-full min-w-0 items-center justify-between gap-3">
+    <span class="truncate text-xs font-semibold tracking-[0.08em] text-[#EFE6D8] sm:text-sm">
+      DEPLOYMENT · CORE-API:V2463
+    </span>
+    <span
+      data-deploy-status
+      aria-live="polite"
+      class="shrink-0 rounded-full border border-[#E8503A] bg-transparent px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-[#E8503A] sm:text-xs"
+    >
+      IN PROGRESS
+    </span>
+  </div>
+
+  <div
+    role="list"
+    aria-label="Deployment pipeline stages"
+    class="grid w-full max-w-full min-w-0 items-center"
+    style={`grid-template-columns: ${columns}`}
+  >
+    {
+      NODES.map((node, i) => (
+        <div class="contents" role="listitem">
+          <div
+            data-stage={node.name}
+            data-state={i === 0 ? "active" : "pending"}
+            title={node.name}
+            aria-label={node.name}
+            style={`grid-column: ${i * 2 + 1}; grid-row: 1`}
+            class="df-tile relative z-10 flex aspect-square w-full min-w-0 items-center justify-center rounded-2xl transition-colors duration-200"
+          >
+            <Icon
+              name={node.icon}
+              class="h-[clamp(14px,3.8cqw,26px)] w-[clamp(14px,3.8cqw,26px)] shrink-0"
+            />
+          </div>
+          {i < NODES.length - 1 && (
+            <div
+              aria-hidden="true"
+              data-connector-index={i}
+              data-connector-active="false"
+              style={`grid-column: ${i * 2 + 2}; grid-row: 1`}
+              class="df-conn h-[2px] w-full self-center transition-colors duration-200"
+            />
+          )}
+        </div>
+      ))
+    }
+    {
+      NODES.map((node, i) => (
+        <span
+          data-stage-label={node.label}
+          data-label-state={i === 0 ? "active" : "pending"}
+          style={`grid-column: ${i * 2 + 1}; grid-row: 2`}
+          class="df-label mt-3 block min-w-0 truncate text-center text-[clamp(7.5px,1.8cqw,11px)] leading-none tracking-[0.06em] transition-colors duration-200"
+        >
+          {node.label}
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { initDeployFlow } from "../../scripts/deploy-flow";
+  initDeployFlow();
+</script>
+

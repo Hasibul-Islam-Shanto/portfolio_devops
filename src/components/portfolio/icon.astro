@@ -1,0 +1,30 @@
+---
+import { ICONS, type IconName } from "./icons";
+
+interface Props {
+  name: IconName;
+  class?: string;
+  size?: number | string;
+  strokeWidth?: number | string;
+}
+
+const { name, class: className, size, strokeWidth } = Astro.props;
+const icon = ICONS[name];
+const stroke = icon.kind === "stroke";
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  class={className}
+  aria-hidden="true"
+  fill={stroke ? "none" : "currentColor"}
+  stroke={stroke ? "currentColor" : undefined}
+  stroke-width={stroke ? (strokeWidth ?? 2) : undefined}
+  stroke-linecap={stroke ? "round" : undefined}
+  stroke-linejoin={stroke ? "round" : undefined}
+  set:html={icon.inner}
+/>
+

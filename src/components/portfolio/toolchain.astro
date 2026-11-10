@@ -1,0 +1,78 @@
+---
+import Icon from "./icon.astro";
+import type { IconName } from "./icons";
+
+const ICONS: Record<string, IconName> = {
+  "CI/CD": "Activity",
+  Infrastructure: "Layers",
+  Orchestration: "Network",
+  Observability: "Eye",
+  Cloud: "Cloud",
+};
+const GROUPS = [
+  { name: "CI/CD", tools: ["GitHub Actions", "GitLab CI", "Buildkite", "Jenkins"] },
+  { name: "Infrastructure", tools: ["Terraform", "Pulumi", "Ansible", "Packer"] },
+  { name: "Orchestration", tools: ["Kubernetes", "Helm", "Argo CD", "Istio"] },
+  { name: "Observability", tools: ["Prometheus", "Grafana", "Loki", "OpenTelemetry"] },
+  { name: "Cloud", tools: ["AWS", "GCP", "Cloudflare", "Vault"] },
+];
+const DEFAULT_GROUP = "Infrastructure";
+---
+
+<div class="mx-auto max-w-6xl px-5 py-28">
+  <p class="font-mono text-xs uppercase tracking-[0.25em] dim">02 / The toolchain</p>
+  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    Every layer, <span class="text-signal">deployed</span> with intent.
+  </h2>
+  <div
+    data-toolchain
+    data-default-group={DEFAULT_GROUP}
+    class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+  >
+    {
+      GROUPS.map((g, i) => {
+        const featured = g.name === DEFAULT_GROUP;
+        return (
+          <div data-reveal style={`--reveal-delay: ${i * 0.12}s`}>
+            <div
+              data-tool-card={g.name}
+              tabindex="0"
+              data-cursor-interactive="true"
+              class:list={[
+                "tool-card relative h-full rounded-3xl border-2 p-6 transition-all duration-300 focus-visible:outline-none",
+                featured ? "is-on border-signal -translate-y-1" : "hairline",
+              ]}
+            >
+              {featured && (
+                <span class="absolute right-3.5 top-3.5 rounded-full bg-signal px-2.5 py-0.5 font-mono text-[9px] font-bold uppercase text-signal-foreground">
+                  Core
+                </span>
+              )}
+              <div
+                data-tool-icon
+                class:list={[
+                  "flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-colors duration-300",
+                  featured ? "border-signal text-signal" : "hairline",
+                ]}
+              >
+                <Icon name={ICONS[g.name] ?? "Activity"} class="h-7 w-7" strokeWidth={1.5} />
+              </div>
+              <h3 class="mt-6 font-mono text-xs uppercase tracking-widest text-signal">{g.name}</h3>
+              <ul class="mt-4 space-y-2.5 border-t hairline pt-4 text-base font-medium">
+                {g.tools.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</div>
+
+<script>
+  import { initToolchain } from "../../scripts/toolchain";
+  initToolchain();
+</script>
+

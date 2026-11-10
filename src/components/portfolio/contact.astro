@@ -1,0 +1,38 @@
+---
+import Icon from "./icon.astro";
+---
+
+<div class="mx-auto max-w-6xl px-5 py-32">
+  <p class="font-mono text-xs uppercase tracking-[0.25em]">04 / Scale</p>
+  <h2 class="mt-6 text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    Ready to scale what you've built?
+  </h2>
+  <div class="mt-12 flex flex-wrap items-center gap-8">
+    <a
+      href="mailto:hello@shanto.dev"
+      data-cursor-cta="true"
+      data-cursor-label="MAIL ↗"
+      class="group inline-flex items-center gap-3 rounded-full bg-surface-foreground px-8 py-4 font-mono text-sm font-bold uppercase text-surface transition-transform hover:-translate-y-1"
+    >
+      Start a conversation
+      <Icon
+        name="ArrowUpRight"
+        class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+      />
+    </a>
+    <div class="font-mono text-sm">
+      <div>hello@shanto.dev</div>
+      <div class="mt-1 flex items-center gap-2">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="pulse-ring absolute inset-0 rounded-full bg-surface-foreground"></span>
+          <span class="relative h-2.5 w-2.5 rounded-full bg-surface-foreground"></span>
+        </span>
+        Available for Q1 2027 · remote
+      </div>
+    </div>
+  </div>
+  <p class="mt-24 border-t border-current/30 pt-6 font-mono text-[11px] uppercase tracking-widest">
+    © 2026 Shanto · uptime 99.99% · built &amp; deployed via pipeline
+  </p>
+</div>
+

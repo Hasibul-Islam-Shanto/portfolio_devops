@@ -1,0 +1,58 @@
+---
+const TESTIMONIALS = [
+  {
+    quote:
+      "[Placeholder quote — ask a former manager or teammate for a short testimonial about working with you]",
+    author: "[Name Surname] — [Role, Company]",
+    dark: true,
+  },
+  {
+    quote:
+      "[Placeholder quote — ask a former manager or teammate for a short testimonial about working with you]",
+    author: "[Name Surname] — [Role, Company]",
+    dark: false,
+  },
+  {
+    quote:
+      "[Placeholder quote — ask a former manager or teammate for a short testimonial about working with you]",
+    author: "[Name Surname] — [Role, Company]",
+    dark: true,
+  },
+];
+---
+
+<div class="mx-auto max-w-6xl px-5 py-28">
+  <p class="font-mono text-xs uppercase tracking-[0.25em] text-signal">Social proof</p>
+  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    What people say
+  </h2>
+  <div class="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
+    {
+      TESTIMONIALS.map((item, i) => (
+        <div data-reveal style={`--reveal-delay: ${i * 0.15}s`}>
+          <blockquote
+            data-cursor-interactive="true"
+            class:list={[
+              item.dark ? "mode-dark" : "mode-light",
+              "section-surface relative flex h-full flex-col justify-between rounded-3xl border hairline p-7 transition-colors duration-300 hover:border-signal",
+            ]}
+          >
+            <div>
+              <span
+                class="block font-display text-6xl font-bold leading-none text-signal opacity-25 select-none"
+                aria-hidden="true"
+              >
+                “
+              </span>
+              <p class="mt-2 text-base leading-relaxed">{item.quote}</p>
+            </div>
+            <footer class="mt-8 border-t hairline pt-4 font-mono text-xs uppercase tracking-wider text-signal">
+              {item.author}
+            </footer>
+          </blockquote>
+        </div>
+      ))
+    }
+  </div>
+</div>
+

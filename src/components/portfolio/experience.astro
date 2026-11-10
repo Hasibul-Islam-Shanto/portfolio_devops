@@ -1,0 +1,147 @@
+---
+const EXPERIENCE_ROLES = [
+  {
+    period: "[Month Year] – Present",
+    company: "[Company Name]",
+    orgTag: "[Team/Org tag]",
+    location: "[Remote / City]",
+    role: "[Job Title]",
+    current: true,
+    bullets: [
+      "[Shipped/built X — describe the system and its measurable impact]",
+      "[Reduced/improved Y by Z% — describe the specific technical change]",
+      "[Automated/scaled W across N environments — describe reliability outcome]",
+    ],
+    tags: ["[Tech]", "[Tech]", "[Tech]", "[Tech]"],
+  },
+  {
+    period: "[Year] – [Year]",
+    company: "[Company Name]",
+    orgTag: "[Team/Org tag]",
+    location: "[Remote / City]",
+    role: "[Job Title]",
+    current: false,
+    bullets: [
+      "[Shipped/built X — describe the system and its measurable impact]",
+      "[Reduced/improved Y by Z% — describe the specific technical change]",
+      "[Standardized CI/CD or infrastructure workflow across engineering teams]",
+    ],
+    tags: ["[Tech]", "[Tech]", "[Tech]", "[Tech]"],
+  },
+  {
+    period: "[Year] – [Year]",
+    company: "[Company Name]",
+    orgTag: "[Team/Org tag]",
+    location: "[Remote / City]",
+    role: "[Job Title]",
+    current: false,
+    bullets: [
+      "[Shipped/built X — describe the system and its measurable impact]",
+      "[Reduced/improved Y by Z% — describe the specific technical change]",
+    ],
+    tags: ["[Tech]", "[Tech]", "[Tech]"],
+  },
+];
+---
+
+<div class="mx-auto max-w-6xl px-5 py-28">
+  <p class="font-mono text-xs uppercase tracking-[0.25em] text-signal">Professional journey</p>
+  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    Experience
+  </h2>
+
+  <ol data-timeline class="relative mt-14 space-y-8">
+    <span class="absolute bottom-2 left-[5.5px] top-2 w-px bg-current opacity-20" aria-hidden="true"
+    ></span>
+    <span
+      data-timeline-progress
+      class="absolute bottom-2 left-[5.5px] top-2 w-px origin-top bg-signal"
+      style="transform: scaleY(0)"
+      aria-hidden="true"></span>
+
+    {
+      EXPERIENCE_ROLES.map((item, i) => (
+        <li class="relative grid gap-3 pl-6 md:grid-cols-[20%_1fr] md:gap-8">
+          <div class="relative pt-1">
+            <span
+              data-reveal="scale"
+              style={`--reveal-delay: ${i * 0.12}s; position: absolute`}
+              class:list={[
+                "-left-6 top-2 block h-3 w-3 rounded-full bg-signal",
+                { "ring-2 ring-current/25": item.current },
+              ]}
+              aria-hidden="true"
+            />
+            <span
+              class:list={[
+                "block font-mono text-xs uppercase tracking-wider",
+                item.current ? "font-bold text-signal" : "dim",
+              ]}
+            >
+              {item.period}
+            </span>
+          </div>
+
+          <div data-reveal="slide" style={`--reveal-delay: ${i * 0.12}s`}>
+            <article
+              tabindex="0"
+              data-cursor-interactive="true"
+              class:list={[
+                "panel group rounded-3xl border p-6 transition-colors duration-300 hover:border-signal focus-visible:border-signal focus-visible:outline-none md:p-7",
+                item.current ? "border-2 border-signal" : "hairline",
+              ]}
+            >
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <h3 class="text-xl font-bold tracking-tight md:text-2xl">{item.company}</h3>
+                  <span class="rounded-full border hairline px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-signal">
+                    {item.orgTag}
+                  </span>
+                </div>
+                <span class="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase tracking-wider dim">
+                  {item.location}
+                </span>
+              </div>
+
+              <p class="mt-1.5 text-base font-medium">{item.role}</p>
+
+              <ul class="mt-5 space-y-2.5 text-sm leading-relaxed">
+                {item.bullets.map((bullet) => (
+                  <li class="flex items-start gap-3">
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-signal" aria-hidden="true" />
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <ul class="mt-6 flex flex-wrap gap-2 border-t hairline pt-4">
+                {item.tags.map((t) => (
+                  <li class="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase transition-colors group-hover:border-signal">
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="mt-10 pl-6 md:pl-[calc(20%+3.5rem)]">
+    <a
+      href="#"
+      data-cursor-cta="true"
+      data-cursor-label="CV ↗"
+      class="inline-block rounded-full bg-signal px-6 py-3 font-mono text-sm font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5"
+    >
+      View Full Experience →
+    </a>
+  </div>
+</div>
+
+<script>
+  import { initExperience } from "../../scripts/experience";
+  initExperience();
+</script>
+
