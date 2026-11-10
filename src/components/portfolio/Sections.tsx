@@ -50,6 +50,7 @@ export function Toolchain() {
                 onMouseEnter={() => setHot(g.name)}
                 onFocus={() => setHot(g.name)}
                 tabIndex={0}
+                data-cursor-interactive="true"
                 className={`relative border-2 p-6 transition-all duration-300 focus-visible:outline-none ${on ? "border-signal -translate-y-1" : "hairline"}`}
               >
                 {featured && (
@@ -164,6 +165,8 @@ export function Contact() {
       <div className="mt-12 flex flex-wrap items-center gap-8">
         <a
           href="mailto:hello@shanto.dev"
+          data-cursor-cta="true"
+          data-cursor-label="MAIL ↗"
           className="group inline-flex items-center gap-3 rounded-full bg-surface-foreground px-8 py-4 font-mono text-sm font-bold uppercase text-surface transition-transform hover:-translate-y-1"
         >
           Start a conversation

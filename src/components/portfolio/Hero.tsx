@@ -30,12 +30,16 @@ export function Hero() {
           <div className="mt-8 flex flex-wrap gap-3">
             <a
               href="#test"
+              data-cursor-cta="true"
+              data-cursor-label="WORK ↓"
               className="rounded-full bg-signal px-6 py-3 font-mono text-sm font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5"
             >
               View the work →
             </a>
             <a
               href="#scale"
+              data-cursor-cta="true"
+              data-cursor-label="TALK"
               className="rounded-full border-2 border-current px-6 py-3 font-mono text-sm font-bold uppercase transition-colors hover:border-signal hover:text-signal"
             >
               Get in touch
@@ -53,6 +57,7 @@ export function Hero() {
       </div>
       <a
         href="#test"
+        data-cursor-label="↓"
         className="scroll-cue absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-widest dim"
       >
         scroll ↓

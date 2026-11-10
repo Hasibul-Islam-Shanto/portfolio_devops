@@ -23,6 +23,8 @@ export function ComingSoon({
           <Link
             to="/"
             hash="test"
+            data-cursor-cta="true"
+            data-cursor-label="WORK"
             className="mt-8 inline-block rounded-full bg-signal px-6 py-3 font-mono text-sm font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5"
           >
             See the projects →

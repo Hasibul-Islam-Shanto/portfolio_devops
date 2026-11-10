@@ -87,6 +87,8 @@ export function Header() {
         <Link
           to="/"
           hash="scale"
+          data-cursor-cta="true"
+          data-cursor-label="HIRE"
           className="shrink-0 rounded-full bg-signal px-4 py-2 font-mono text-xs font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5"
         >
           Hire me

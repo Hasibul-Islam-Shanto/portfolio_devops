@@ -91,6 +91,8 @@ function Card({ p, i }: { p: (typeof PROJECTS)[number]; i: number }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: (i % 2) * 0.15, ease: [0.2, 0.8, 0.2, 1] }}
       tabIndex={0}
+      data-cursor-interactive="true"
+      data-cursor-label="VIEW ↗"
       className={`${tone} section-surface glow-hover group flex flex-col border hairline p-7 focus-visible:outline-2 focus-visible:outline-signal`}
     >
       <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest">

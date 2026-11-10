@@ -342,6 +342,166 @@ a {
 *::after {
   border-radius: 0 !important;
 }
+/* Explicit circular exception for the custom cursor dot, ring, and CTA click ripple */
+.cursor-round,
+.cursor-round::before,
+.cursor-round::after {
+  border-radius: 9999px !important;
+}
+@media (pointer: coarse), (hover: none) {
+  .custom-cursor-layer {
+    display: none !important;
+  }
+}
+@media (pointer: fine) and (hover: hover) {
+  html.has-custom-cursor,
+  html.has-custom-cursor *,
+  html.has-custom-cursor *::before,
+  html.has-custom-cursor *::after {
+    cursor: none !important;
+  }
+}
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--signal);
+  box-shadow:
+    0 2px 8px color-mix(in oklab, var(--signal) 70%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--ink) 32%, transparent);
+  transform: translate3d(-50%, -50%, 0) scale(0.4);
+  opacity: 0;
+  transition:
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 200ms ease-out;
+}
+.cursor-dot.is-visible {
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  opacity: 1;
+}
+.cursor-dot.has-label {
+  transform: translate3d(-50%, -50%, 0) scale(0.35);
+  opacity: 0.25;
+}
+.cursor-dot.is-pressed {
+  transform: translate3d(-50%, -50%, 0) scale(0.72);
+  transition:
+    transform 100ms ease-out,
+    opacity 150ms ease-out;
+}
+.cursor-ring {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--signal) 22%, transparent) 0%,
+    color-mix(in oklab, var(--signal) 8%, transparent) 65%,
+    transparent 100%
+  );
+  border: 1px solid color-mix(in oklab, var(--signal) 48%, transparent);
+  box-shadow:
+    0 4px 18px color-mix(in oklab, var(--signal) 30%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--ink) 18%, transparent);
+  transform: translate3d(-50%, -50%, 0) scale(0.6);
+  opacity: 0;
+  transition:
+    width 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 280ms ease-out,
+    border-color 280ms ease-out,
+    box-shadow 280ms ease-out,
+    opacity 260ms ease-out,
+    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cursor-ring::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  background: color-mix(in oklab, var(--signal) 18%, transparent);
+  filter: blur(6px);
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 280ms ease-out;
+}
+.cursor-ring.is-visible {
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  opacity: 0.86;
+}
+.cursor-ring.is-hovered {
+  width: 56px;
+  height: 56px;
+  opacity: 1;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--signal) 34%, transparent) 0%,
+    color-mix(in oklab, var(--signal) 14%, transparent) 70%,
+    transparent 100%
+  );
+  border-color: color-mix(in oklab, var(--signal) 82%, transparent);
+  box-shadow:
+    0 6px 24px color-mix(in oklab, var(--signal) 44%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--ink) 24%, transparent);
+}
+.cursor-ring.has-label {
+  width: 56px;
+  height: 56px;
+  opacity: 1;
+  background: color-mix(in oklab, var(--signal) 90%, transparent);
+  backdrop-filter: blur(4px);
+  border-color: color-mix(in oklab, var(--cream) 48%, transparent);
+  box-shadow:
+    0 8px 28px color-mix(in oklab, var(--signal) 58%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--ink) 35%, transparent);
+}
+.cursor-ring.is-pressed {
+  transform: translate3d(-50%, -50%, 0) scale(0.85);
+  transition:
+    width 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 280ms ease-out,
+    border-color 280ms ease-out,
+    box-shadow 280ms ease-out,
+    opacity 260ms ease-out,
+    transform 100ms ease-out;
+}
+.cursor-ring-label {
+  color: var(--cream);
+  line-height: 1;
+  opacity: 0;
+  transform: scale(0.75);
+  text-shadow: 0 1px 2px color-mix(in oklab, var(--ink) 45%, transparent);
+  transition:
+    opacity 220ms ease-out,
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cursor-ring-label.is-shown {
+  opacity: 1;
+  transform: scale(1);
+}
+@keyframes cursor-cta-ripple {
+  0% {
+    transform: translate3d(-50%, -50%, 0) scale(0.65);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) scale(2.35);
+    opacity: 0;
+  }
+}
+.cursor-cta-ripple {
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--signal);
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--signal) 48%, transparent) 0%,
+    transparent 72%
+  );
+  box-shadow:
+    0 4px 20px color-mix(in oklab, var(--signal) 65%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--cream) 40%, transparent);
+  animation: cursor-cta-ripple 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 .float-header {
   transition:
     padding 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
