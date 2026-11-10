@@ -5,6 +5,7 @@ import { initDeployPipeline } from "@/scripts/deploy-pipeline";
 import { initWork } from "@/scripts/work";
 import { initToolchain } from "@/scripts/toolchain";
 import { initHeader } from "@/scripts/header";
+import { initExperience } from "@/scripts/experience";
 import { initPipelineRail } from "@/scripts/pipeline-rail";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
 import { mockMatchMedia, mount, track } from "./helpers";
@@ -525,13 +526,64 @@ describe("Static sections", () => {
     expect(text(body).match(/\[Year\]/g)?.length).toBe(4);
   });
 
-  it("renders the Experience timeline with placeholders and CTA", async () => {
+  it("renders the Experience commit-log timeline with standard section heading, placeholders, HEAD badge, and CTA", async () => {
     const body = mount("experience");
-    expect(text(body)).toContain("Professional journey");
-    expect(text(body)).toContain("[Month Year] – Present");
+    expect(text(body)).toContain("04 / Experience");
+    expect(text(body)).toContain("Years spent keeping");
+    expect(text(body)).toContain("systems");
+    expect(text(body)).toContain("honest.");
+    expect(text(body)).toContain("[3] roles");
+    expect(text(body)).toContain("since [year]");
+    expect(text(body)).toContain("[Month Year] → Present");
     expect(text(body).match(/\[Company Name\]/g)?.length).toBe(3);
     expect(text(body).match(/\[Job Title\]/g)?.length).toBe(3);
+    expect(text(body)).toContain("[a3f9c21]");
+    expect(text(body)).toContain("[7be41d0]");
+    expect(text(body)).toContain("[4c19e85]");
+    expect(text(body)).not.toContain("<!--");
+    expect(text(body)).not.toContain("-->");
+
+    const headBadges = Array.from(body.querySelectorAll("span")).filter(
+      (el) => el.textContent?.trim() === "HEAD",
+    );
+    expect(headBadges.length).toBe(1);
+
     expect(text(body)).toContain("View Full Experience →");
+  });
+
+  it("initializes expand/collapse accordion states and toggles commit details", async () => {
+    const body = mount("experience");
+    track(initExperience(body));
+
+    const cards = body.querySelectorAll<HTMLElement>("[data-exp-card]");
+    expect(cards.length).toBe(3);
+    expect(cards[0]?.classList.contains("is-expanded")).toBe(true);
+    expect(cards[1]?.classList.contains("is-expanded")).toBe(false);
+    expect(cards[2]?.classList.contains("is-expanded")).toBe(false);
+
+    const toggles = body.querySelectorAll<HTMLButtonElement>("[data-exp-toggle]");
+    expect(toggles[0]?.getAttribute("aria-expanded")).toBe("true");
+    expect(toggles[1]?.getAttribute("aria-expanded")).toBe("false");
+
+    // Click toggle on past role 1 to expand
+    toggles[1]?.click();
+    expect(cards[1]?.classList.contains("is-expanded")).toBe(true);
+    expect(toggles[1]?.getAttribute("aria-expanded")).toBe("true");
+    expect(toggles[1]?.getAttribute("aria-label")).toContain("Collapse details");
+
+    // Click again to collapse
+    toggles[1]?.click();
+    expect(cards[1]?.classList.contains("is-expanded")).toBe(false);
+    expect(toggles[1]?.getAttribute("aria-expanded")).toBe("false");
+    expect(toggles[1]?.getAttribute("aria-label")).toContain("Expand details");
+  });
+
+  it("sets the timeline progress bar to 1 under reduced motion", async () => {
+    mockMatchMedia("prefers-reduced-motion");
+    const body = mount("experience");
+    track(initExperience(body));
+    const bar = body.querySelector<HTMLElement>("[data-timeline-progress]")!;
+    expect(bar.style.transform).toBe("scaleY(1)");
   });
 
   it("renders the 3 placeholder Testimonials quote cards", async () => {
