@@ -5,7 +5,7 @@ const meta = (doc: Document, selector: string) =>
   doc.querySelector(selector)?.getAttribute("content");
 
 describe("Astro routes", () => {
-  it("/ renders all nine sections in order with the stage anchors and SEO metadata", async () => {
+  it("/ renders all eight sections in order with the stage anchors and SEO metadata", async () => {
     const doc = renderPage("index");
 
     expect(doc.title).toBe("Shanto — DevOps & Platform Engineer");
@@ -24,7 +24,6 @@ describe("Astro routes", () => {
       "",
       "",
       "monitor",
-      "",
       "scale",
     ]);
     expect(sections.map((s) => s.className.match(/mode-(\w+)/)?.[1])).toEqual([
@@ -35,7 +34,6 @@ describe("Astro routes", () => {
       "dark",
       "dark",
       "dark",
-      "light",
       "signal",
     ]);
     expect(doc.querySelectorAll("h1").length).toBe(1);
@@ -52,7 +50,6 @@ describe("Astro routes", () => {
       "mailto:hello@shanto.dev",
       "PLACEHOLDER: Replace certification names",
       "PLACEHOLDER: Replace all company names",
-      "PLACEHOLDER: Replace with 2-3 real testimonials",
     ]) {
       expect(html).toContain(text);
     }
