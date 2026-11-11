@@ -42,6 +42,59 @@ const {
     <script is:inline>
       // Marks that JS is running so reveal animations only hide content when they can also show it.
       document.documentElement.classList.add("js");
+
+      // Synchronous theme initialization to prevent flash of unstyled theme (FOUT)
+      try {
+        const stored = localStorage.getItem("theme");
+        const prefersDark =
+          window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme =
+          stored === "light" || stored === "dark" ? stored : prefersDark ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      } catch {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.documentElement.classList.add("dark");
+      }
+
+      // Early click listener so theme toggling responds instantly even before JS modules hydrate
+      document.addEventListener("click", function (e) {
+        if (e.defaultPrevented) return;
+        var btn = e.target && e.target.closest ? e.target.closest("[data-theme-toggle]") : null;
+        if (!btn) return;
+        e.preventDefault();
+        var current =
+          document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+        var next = current === "light" ? "dark" : "light";
+        var reduced =
+          window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduced) {
+          document.documentElement.classList.add("theme-transitioning");
+          setTimeout(function () {
+            document.documentElement.classList.remove("theme-transitioning");
+          }, 400);
+        }
+        document.documentElement.setAttribute("data-theme", next);
+        document.documentElement.classList.toggle("dark", next === "dark");
+        try {
+          localStorage.setItem("theme", next);
+        } catch (err) {}
+        var toggles = document.querySelectorAll("[data-theme-toggle]");
+        for (var i = 0; i < toggles.length; i++) {
+          toggles[i].setAttribute(
+            "aria-label",
+            "Switch to " + (next === "dark" ? "light" : "dark") + " theme"
+          );
+          toggles[i].setAttribute(
+            "title",
+            "Switch to " + (next === "dark" ? "light" : "dark") + " theme"
+          );
+        }
+      });
     </script>
   </head>
   <body>
@@ -49,6 +102,8 @@ const {
     <slot />
     <script>
       import { initReveal } from "../scripts/reveal";
+      import { initTheme } from "../scripts/theme";
+      initTheme();
       initReveal();
     </script>
   </body>

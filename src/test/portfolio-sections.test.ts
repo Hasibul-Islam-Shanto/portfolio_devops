@@ -741,9 +741,9 @@ describe("Static sections", () => {
 describe("Header", () => {
   it("toggles .is-scrolled past 60% of the viewport height", async () => {
     const body = mount("header");
-    track(initHeader());
+    track(initHeader(body));
     const pills = body.querySelectorAll(".header-pill");
-    expect(pills.length).toBe(3);
+    expect(pills.length).toBe(2);
 
     Object.defineProperty(window, "innerHeight", { value: 1000, configurable: true });
     Object.defineProperty(window, "scrollY", { value: 500, configurable: true });
@@ -761,7 +761,7 @@ describe("Header", () => {
 
   it("links to the page anchors and keeps the active link in sync with the hash", async () => {
     const body = mount("header");
-    track(initHeader());
+    track(initHeader(body));
     const hrefs = Array.from(body.querySelectorAll("nav[aria-label='Main'] a")).map((a) =>
       a.getAttribute("href"),
     );
@@ -777,6 +777,43 @@ describe("Header", () => {
     window.dispatchEvent(new HashChangeEvent("hashchange"));
     expect(current()).toEqual(["/#scale"]);
     window.location.hash = "";
+  });
+
+  it("toggles mobile drawer menu, responds to nav links and Escape key", async () => {
+    const body = mount("header");
+    track(initHeader(body));
+
+    const toggle = body.querySelector<HTMLButtonElement>("[data-mobile-menu-toggle]")!;
+    const menu = body.querySelector<HTMLElement>("[data-mobile-menu]")!;
+    const openIcon = toggle.querySelector('[data-menu-icon="open"]')!;
+    const closeIcon = toggle.querySelector('[data-menu-icon="close"]')!;
+
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(menu.getAttribute("aria-hidden")).toBe("true");
+    expect(menu).toHaveClass("hidden");
+
+    // Open menu
+    toggle.click();
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(menu.getAttribute("aria-hidden")).toBe("false");
+    expect(menu).not.toHaveClass("hidden");
+    expect(menu).toHaveClass("flex");
+    expect(openIcon).toHaveClass("hidden");
+    expect(closeIcon).not.toHaveClass("hidden");
+
+    // Clicking a nav link inside mobile menu closes it
+    const firstLink = menu.querySelector<HTMLAnchorElement>("[data-mobile-nav-link]")!;
+    firstLink.click();
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(menu.getAttribute("aria-hidden")).toBe("true");
+    expect(menu).toHaveClass("hidden");
+
+    // Open again and close with Escape key
+    toggle.click();
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(menu).toHaveClass("hidden");
   });
 });
 

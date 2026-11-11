@@ -13,10 +13,10 @@ export const TERMINAL_PILLS = [
 
 const TYPING_CHAR_MS = 35;
 
-const coral = (t: string) => `<span class="text-[#E8503A]">${t}</span>`;
-const coralBold = (t: string) => `<span class="font-bold text-[#E8503A]">${t}</span>`;
-const dim = (t: string) => `<span class="text-[#5A6072]">${t}</span>`;
-const bold = (t: string) => `<span class="font-bold text-[#EFE6D8]">${t}</span>`;
+const coral = (t: string) => `<span class="text-signal">${t}</span>`;
+const coralBold = (t: string) => `<span class="font-bold text-signal">${t}</span>`;
+const dim = (t: string) => `<span class="text-[var(--terminal-dim)]">${t}</span>`;
+const bold = (t: string) => `<span class="font-bold text-[var(--terminal-fg)]">${t}</span>`;
 const row = (inner: string) => `<div>${inner}</div>`;
 
 /** Returns the HTML for a command's output, "CLEAR" for `clear`, or the not-found message. */
@@ -27,8 +27,8 @@ export function renderCommandOutput(rawCommand: string): string {
     case "clear":
       return "CLEAR";
     case "help":
-      return `<div class="space-y-1 text-[#EFE6D8]">
-        <div class="font-bold text-[#EFE6D8]">AVAILABLE COMMANDS:</div>
+      return `<div class="space-y-1 text-[var(--terminal-fg)]">
+        <div class="font-bold text-[var(--terminal-fg)]">AVAILABLE COMMANDS:</div>
         ${row(`${coral("help")} ${dim("— list available portfolio commands")}`)}
         ${row(`${coral("whoami")} ${dim("— print current operator identity")}`)}
         ${row(`${coral("deploy")} ${dim("— run production rollout pipeline")}`)}
@@ -39,41 +39,41 @@ export function renderCommandOutput(rawCommand: string): string {
         ${row(`${coral("sudo hire shanto")} ${dim("— provision a platform engineer")}`)}
       </div>`;
     case "whoami":
-      return `<div class="text-[#EFE6D8]">shanto</div>`;
+      return `<div class="text-[var(--terminal-fg)]">shanto</div>`;
     case "deploy":
-      return `<div class="space-y-1 text-[#EFE6D8]">
+      return `<div class="space-y-1 text-[var(--terminal-fg)]">
         ${row(`${dim("[01/04]")} building ghcr.io/shanto/core-api:v2463 ... ${coralBold("done")} ${dim("(14.2s)")}`)}
         ${row(`${dim("[02/04]")} cosign verify ${dim("sha256:9c4e1b8f02a4")} ... ${coralBold("verified")}`)}
         ${row(`${dim("[03/04]")} rolling update prod-ap-south-1 (6/6 replicas ${coralBold("ready")})`)}
         ${row(`${dim("[04/04]")} ${bold("slo gate:")} p99=18ms · error_rate=0.00% · ${coralBold("RELEASE #2463 HEALTHY")}`)}
       </div>`;
     case "kubectl get pods":
-      return `<div class="overflow-x-auto text-[#EFE6D8]"><pre class="font-mono text-xs leading-relaxed">${bold("NAME                      READY   STATUS    RESTARTS   AGE\n")}core-api-7d9f8b-x4k2p     2/2     ${coralBold("Running")}${dim("   0          14d\n")}edge-proxy-5c8b9d-m9n1q   2/2     ${coralBold("Running")}${dim("   0          14d\n")}pay-worker-6f4d2c-r7t8v   1/1     ${coralBold("Running")}${dim("   0          9d\n")}otel-agent-8b2f1a-z3w5k   1/1     ${coralBold("Running")}${dim("   0          31d")}</pre></div>`;
+      return `<div class="overflow-x-auto text-[var(--terminal-fg)]"><pre class="font-mono text-xs leading-relaxed">${bold("NAME                      READY   STATUS    RESTARTS   AGE\n")}core-api-7d9f8b-x4k2p     2/2     ${coralBold("Running")}${dim("   0          14d\n")}edge-proxy-5c8b9d-m9n1q   2/2     ${coralBold("Running")}${dim("   0          14d\n")}pay-worker-6f4d2c-r7t8v   1/1     ${coralBold("Running")}${dim("   0          9d\n")}otel-agent-8b2f1a-z3w5k   1/1     ${coralBold("Running")}${dim("   0          31d")}</pre></div>`;
     case "docker ps":
-      return `<div class="overflow-x-auto text-[#EFE6D8]"><pre class="font-mono text-xs leading-relaxed">${bold("CONTAINER ID   IMAGE                  STATUS              PORTS\n")}${dim("a1b2c3d4e5f6   ")}demo/api-gateway:1.4   ${coralBold("running (healthy)")}   0.0.0.0:8080-&gt;8080/tcp\n${dim("f6e5d4c3b2a1   ")}demo/postgres-ha:16    ${coralBold("running (healthy)")}   5432/tcp\n${dim("9a8b7c6d5e4f   ")}demo/redis-cache:7.2   ${coralBold("running (healthy)")}   6379/tcp</pre></div>`;
+      return `<div class="overflow-x-auto text-[var(--terminal-fg)]"><pre class="font-mono text-xs leading-relaxed">${bold("CONTAINER ID   IMAGE                  STATUS              PORTS\n")}${dim("a1b2c3d4e5f6   ")}demo/api-gateway:1.4   ${coralBold("running (healthy)")}   0.0.0.0:8080-&gt;8080/tcp\n${dim("f6e5d4c3b2a1   ")}demo/postgres-ha:16    ${coralBold("running (healthy)")}   5432/tcp\n${dim("9a8b7c6d5e4f   ")}demo/redis-cache:7.2   ${coralBold("running (healthy)")}   6379/tcp</pre></div>`;
     case "docker compose":
     case "docker compose up":
-      return `<div class="space-y-1 text-[#EFE6D8]">
-        <div class="font-bold text-[#EFE6D8]">[+] Running 3/3 <span class="font-normal text-[#5A6072]">(demo-stack.compose.yml)</span></div>
+      return `<div class="space-y-1 text-[var(--terminal-fg)]">
+        <div class="font-bold text-[var(--terminal-fg)]">[+] Running 3/3 <span class="font-normal text-[var(--terminal-dim)]">(demo-stack.compose.yml)</span></div>
         ${row(`Creating demo-api... ${coralBold("done")} ${dim("(0.6s)")}`)}
         ${row(`Creating demo-db... ${coralBold("done")} ${dim("(0.4s)")}`)}
         ${row(`Creating demo-cache... ${coralBold("done")} ${dim("(0.3s)")}`)}
       </div>`;
     case "terraform plan":
-      return `<div class="space-y-1 text-[#EFE6D8]">
+      return `<div class="space-y-1 text-[var(--terminal-fg)]">
         ${row(`${coralBold("+")} module.eks.aws_eks_node_group.spot_workers`)}
         ${row(`${coralBold("+")} module.observability.helm_release.otel_collector`)}
         ${row(`${coralBold("~")} module.rds.aws_db_instance.ledger_primary`)}
-        <div class="pt-1 text-[#EFE6D8]">${bold("Plan:")} 2 to add, 1 to change, 0 to destroy. ${coralBold("Zero drift detected.")}</div>
+        <div class="pt-1 text-[var(--terminal-fg)]">${bold("Plan:")} 2 to add, 1 to change, 0 to destroy. ${coralBold("Zero drift detected.")}</div>
       </div>`;
     case "sudo hire shanto":
-      return `<div class="space-y-1.5 text-[#EFE6D8]">
-        <div class="text-[#5A6072]">[sudo] password for recruiter: ********</div>
-        <div class="font-bold text-[#E8503A]">ACCESS GRANTED — Shanto provisioned for Platform / DevOps leadership.</div>
-        <div>→ <a href="mailto:hello@shanto.dev" class="font-bold text-[#E8503A] underline hover:text-[#EFE6D8]">hello@shanto.dev</a> ${dim("or")} <a href="#scale" class="font-bold text-[#E8503A] underline hover:text-[#EFE6D8]">jump to contact ↓</a></div>
+      return `<div class="space-y-1.5 text-[var(--terminal-fg)]">
+        <div class="text-[var(--terminal-dim)]">[sudo] password for recruiter: ********</div>
+        <div class="font-bold text-signal">ACCESS GRANTED — Shanto provisioned for Platform / DevOps leadership.</div>
+        <div>→ <a href="mailto:hello@shanto.dev" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">hello@shanto.dev</a> ${dim("or")} <a href="#scale" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">jump to contact ↓</a></div>
       </div>`;
     default:
-      return `<div class="text-[#5A6072]">command not found — try help</div>`;
+      return `<div class="text-[var(--terminal-dim)]">command not found — try help</div>`;
   }
 }
 
@@ -128,7 +128,7 @@ export function initHeroTerminal(
     }
     const entry = document.createElement("div");
     entry.className = "mb-3.5 space-y-1.5";
-    entry.innerHTML = `<div class="flex items-center gap-2"><span class="font-bold text-[#E8503A]">$</span><span class="font-semibold text-[#E8503A] cmd"></span></div><div class="pl-4">${out}</div>`;
+    entry.innerHTML = `<div class="flex items-center gap-2"><span class="font-bold text-signal">$</span><span class="font-semibold text-signal cmd"></span></div><div class="pl-4">${out}</div>`;
     entry.querySelector(".cmd")!.textContent = trimmed;
     historyEl.appendChild(entry);
     historyCount++;

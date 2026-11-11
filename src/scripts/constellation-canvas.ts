@@ -9,8 +9,9 @@ interface Particle {
   baseAlpha: number;
 }
 
-// Design-system RGB triplets: warm sand (#EFE6D8) and coral-red (#E8503A)
+// Design-system RGB triplets: warm sand (#EFE6D8), ink navy (#10151F), and coral-red (#E8503A)
 const SAND = [239, 230, 216] as const;
+const INK = [16, 21, 31] as const;
 const CORAL = [232, 80, 58] as const;
 
 const CONFIG = {
@@ -126,6 +127,11 @@ function initCanvas(canvas: HTMLCanvasElement): () => void {
       });
     }
 
+    const isLight =
+      typeof document !== "undefined" &&
+      document.documentElement.getAttribute("data-theme") === "light";
+    const baseColor = isLight ? INK : SAND;
+
     ctx.lineWidth = 1;
     for (let i = 0; i < particles.length; i++) {
       const a = particles[i]!;
@@ -138,9 +144,9 @@ function initCanvas(canvas: HTMLCanvasElement): () => void {
         const boost = Math.max(factors[i] ?? 0, factors[j] ?? 0);
         if (boost > 0.02) {
           const alpha = Math.min(0.52, base + boost * 0.36 * ratio);
-          ctx.strokeStyle = `rgba(${mix(SAND[0], CORAL[0], boost)}, ${mix(SAND[1], CORAL[1], boost)}, ${mix(SAND[2], CORAL[2], boost)}, ${alpha.toFixed(3)})`;
+          ctx.strokeStyle = `rgba(${mix(baseColor[0], CORAL[0], boost)}, ${mix(baseColor[1], CORAL[1], boost)}, ${mix(baseColor[2], CORAL[2], boost)}, ${alpha.toFixed(3)})`;
         } else {
-          ctx.strokeStyle = `rgba(${SAND[0]}, ${SAND[1]}, ${SAND[2]}, ${base.toFixed(3)})`;
+          ctx.strokeStyle = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${base.toFixed(3)})`;
         }
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
@@ -166,9 +172,9 @@ function initCanvas(canvas: HTMLCanvasElement): () => void {
       const radius = p.baseRadius * (1 + cf * 0.45);
       if (cf > 0.02) {
         const alpha = Math.min(0.6, p.baseAlpha + cf * 0.38);
-        ctx!.fillStyle = `rgba(${mix(SAND[0], CORAL[0], cf)}, ${mix(SAND[1], CORAL[1], cf)}, ${mix(SAND[2], CORAL[2], cf)}, ${alpha.toFixed(3)})`;
+        ctx!.fillStyle = `rgba(${mix(baseColor[0], CORAL[0], cf)}, ${mix(baseColor[1], CORAL[1], cf)}, ${mix(baseColor[2], CORAL[2], cf)}, ${alpha.toFixed(3)})`;
       } else {
-        ctx!.fillStyle = `rgba(${SAND[0]}, ${SAND[1]}, ${SAND[2]}, ${p.baseAlpha.toFixed(3)})`;
+        ctx!.fillStyle = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${p.baseAlpha.toFixed(3)})`;
       }
       ctx!.beginPath();
       ctx!.arc(p.x, p.y, radius, 0, Math.PI * 2);

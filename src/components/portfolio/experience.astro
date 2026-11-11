@@ -62,12 +62,12 @@ const EXPERIENCE_ROLES = [
         04 / Experience
       </p>
       <h2
-        class="mt-4 max-w-3xl font-display text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight text-[#efe6d8]"
+        class="mt-4 max-w-3xl font-display text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight text-[var(--text)]"
       >
         Years spent keeping <span class="text-signal">systems</span> honest.
       </h2>
     </div>
-    <span class="font-mono text-xs uppercase tracking-wider text-[#efe6d8]/60 pb-1">
+    <span class="font-mono text-xs uppercase tracking-wider text-[var(--text)]/60 pb-1">
       [{EXPERIENCE_ROLES.length}] roles · since [year]
     </span>
   </div>
@@ -109,7 +109,7 @@ const EXPERIENCE_ROLES = [
               <span
                 data-reveal="scale"
                 style={`--reveal-delay: ${i * 0.12}s`}
-                class="block h-3.5 w-3.5 rounded-full border-2 border-signal bg-[#10151F]"
+                class="block h-3.5 w-3.5 rounded-full border-2 border-signal bg-[var(--bg)]"
               />
             )}
           </div>
@@ -141,7 +141,7 @@ const EXPERIENCE_ROLES = [
                 <!-- Title, HEAD badge, and Company / Location line -->
                 <div class="min-w-0 flex-1">
                   <div class="flex flex-wrap items-center gap-2.5">
-                    <h3 class="font-display text-lg font-bold tracking-tight text-[#efe6d8] md:text-xl">
+                    <h3 class="font-display text-lg font-bold tracking-tight text-[var(--text)] md:text-xl">
                       {item.role}
                     </h3>
                     {item.current && (
@@ -150,7 +150,7 @@ const EXPERIENCE_ROLES = [
                       </span>
                     )}
                   </div>
-                  <p class="mt-1 font-mono text-xs uppercase tracking-wider text-[#efe6d8]/60">
+                  <p class="mt-1 font-mono text-xs uppercase tracking-wider text-[var(--text)]/60">
                     {item.company} · {item.location} · {item.context}
                   </p>
                 </div>
@@ -161,7 +161,7 @@ const EXPERIENCE_ROLES = [
                 <span
                   class:list={[
                     "font-mono text-xs uppercase tracking-wider",
-                    item.current ? "font-bold text-signal" : "text-[#efe6d8]/60",
+                    item.current ? "font-bold text-signal" : "text-[var(--text)]/60",
                   ]}
                 >
                   {item.period}
@@ -194,8 +194,8 @@ const EXPERIENCE_ROLES = [
             <!-- Expandable Details -->
             <div id={`exp-content-${i}`} class="exp-content">
               <div class="overflow-hidden">
-                <div class="pt-5 mt-4 border-t border-[#efe6d8]/15">
-                  <ul class="grid gap-x-8 gap-y-2.5 text-sm leading-relaxed text-[#efe6d8]/85 md:grid-cols-2">
+                <div class="pt-5 mt-4 border-t border-[var(--text)]/15">
+                  <ul class="grid gap-x-8 gap-y-2.5 text-sm leading-relaxed text-[var(--text)]/85 md:grid-cols-2">
                     {item.bullets.map((bullet) => (
                       <li class="flex items-start gap-2.5">
                         <span
@@ -211,7 +211,7 @@ const EXPERIENCE_ROLES = [
 
                   <ul class="mt-5 flex flex-wrap gap-2 pt-2">
                     {item.tags.map((t) => (
-                      <li class="rounded-full border border-[#efe6d8]/20 bg-[#efe6d8]/[0.03] px-3 py-1 font-mono text-[10px] uppercase text-[#efe6d8]/75 transition-colors hover:border-signal hover:text-signal">
+                      <li class="rounded-full border border-[var(--text)]/20 bg-[var(--text)]/[0.03] px-3 py-1 font-mono text-[10px] uppercase text-[var(--text)]/75 transition-colors hover:border-signal hover:text-signal">
                         {t}
                       </li>
                     ))}

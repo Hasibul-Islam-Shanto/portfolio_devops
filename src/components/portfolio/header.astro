@@ -31,7 +31,7 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
   <div class="site-container">
     <div class="flex items-center justify-between gap-4">
     <div
-      class="float-header header-pill section-surface mode-dark pointer-events-auto flex items-center gap-4 rounded-full border px-2.5"
+      class="float-header header-pill section-surface pointer-events-auto flex items-center gap-4 rounded-full border px-2.5"
     >
       <a
         href="/"
@@ -41,7 +41,7 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
         <span
           data-header-logo="true"
           aria-hidden="true"
-          class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-signal bg-[#10151F]/90 text-signal shadow-[0_0_16px_-4px_rgba(232,80,58,0.45)] transition-all duration-300 group-hover:bg-signal/15 group-hover:shadow-[0_0_22px_-2px_rgba(232,80,58,0.75)]"
+          class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-signal bg-[var(--header-bg)] text-signal shadow-[0_0_16px_-4px_rgba(232,80,58,0.45)] transition-all duration-300 group-hover:bg-signal/15 group-hover:shadow-[0_0_22px_-2px_rgba(232,80,58,0.75)]"
         >
           <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5 overflow-visible" aria-hidden="true">
             <path
@@ -64,7 +64,7 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
           </svg>
         </span>
         <span
-          class="font-display text-lg font-bold tracking-tight text-[#EFE6D8] transition-colors duration-200 group-hover:text-signal"
+          class="font-display text-lg font-bold tracking-tight text-[var(--text)] transition-colors duration-200 group-hover:text-signal"
         >
           shanto
         </span>
@@ -92,9 +92,10 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
     </div>
 
     <div
-      class="float-header header-pill section-surface mode-dark pointer-events-auto flex items-center gap-2 rounded-full border pl-3 pr-2"
+      class="float-header header-pill section-surface pointer-events-auto flex items-center gap-1.5 sm:gap-2 rounded-full border px-2 sm:pl-3 sm:pr-2"
     >
-      <ul class="flex items-center gap-1" aria-label="Social profiles">
+      {/* Social profiles (desktop >= lg) */}
+      <ul class="hidden items-center gap-1 lg:flex" aria-label="Social profiles">
         {
           SOCIAL.map((s) => (
             <li>
@@ -103,7 +104,7 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
                 target="_blank"
                 rel="noreferrer"
                 aria-label={s.label}
-                class="flex h-9 w-9 items-center justify-center rounded-full text-[#EFE6D8]/75 transition-colors hover:bg-[#EFE6D8]/[0.07] hover:text-signal"
+                class="flex h-9 w-9 items-center justify-center rounded-full text-[var(--text)]/75 transition-colors hover:bg-[var(--text)]/[0.07] hover:text-signal"
               >
                 <Icon name={s.icon} class="h-4 w-4" />
               </a>
@@ -112,39 +113,192 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
         }
       </ul>
 
+      {/* Theme toggle switch */}
+      <button
+        type="button"
+        data-theme-toggle
+        aria-label="Toggle light and dark theme"
+        title="Toggle light and dark theme"
+        class="flex h-9 w-9 items-center justify-center rounded-full text-[var(--text)]/75 transition-colors hover:bg-[var(--text)]/[0.07] hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+      >
+        <svg
+          data-theme-icon="sun"
+          class="theme-icon-sun pointer-events-none h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+        <svg
+          data-theme-icon="moon"
+          class="theme-icon-moon pointer-events-none h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+
+      {/* Desktop Hire me CTA */}
       <a
         href="/#scale"
         data-cursor-cta="true"
         data-cursor-label="HIRE"
-        class="shrink-0 rounded-full bg-signal px-5 py-2 font-mono text-xs font-bold text-signal-foreground transition-transform hover:-translate-y-0.5"
+        class="hidden lg:inline-flex shrink-0 rounded-full bg-signal px-5 py-2 font-mono text-xs font-bold text-signal-foreground transition-transform hover:-translate-y-0.5"
       >
         Hire me
       </a>
+
+      {/* Mobile Hamburger toggle button */}
+      <button
+        type="button"
+        data-mobile-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-nav-menu"
+        aria-label="Open navigation menu"
+        class="flex h-9 w-9 items-center justify-center rounded-full text-[var(--text)]/75 transition-colors hover:bg-[var(--text)]/[0.07] hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal lg:hidden"
+      >
+        {/* Hamburger lines */}
+        <svg
+          data-menu-icon="open"
+          class="h-4 w-4 pointer-events-none transition-transform duration-200"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="4" y1="7" x2="20" y2="7"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="17" x2="20" y2="17"></line>
+        </svg>
+        {/* Close icon X */}
+        <svg
+          data-menu-icon="close"
+          class="hidden h-4 w-4 pointer-events-none transition-transform duration-200"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     </div>
   </div>
 
-  <nav
-    aria-label="Main mobile"
-    class="float-header header-pill section-surface mode-dark pointer-events-auto mt-2 overflow-hidden rounded-full border px-2 lg:hidden"
+  {/* Mobile Dropdown Drawer: Floating frosted card below the top pills */}
+  <div
+    id="mobile-nav-menu"
+    data-mobile-menu
+    aria-hidden="true"
+    class="float-header section-surface pointer-events-auto mt-2.5 hidden flex-col overflow-hidden rounded-2xl border p-4 shadow-2xl backdrop-blur-xl lg:hidden"
   >
-    <ul class="flex items-center gap-1 overflow-x-auto">
-      {
-        NAV.map((n) => (
-          <li class="shrink-0">
-            <a
-              href={n.href}
-              class="nav-link"
-              data-nav-path={n.path}
-              data-nav-hash={n.hash}
-              aria-current={isActive(n) ? "page" : undefined}
-            >
-              {n.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </nav>
+    {/* Terminal prompt header */}
+    <div class="flex items-center justify-between pb-2 border-b hairline">
+      <span class="font-mono text-[10px] uppercase tracking-wider text-[var(--text)]/50">
+        // NAVIGATION
+      </span>
+      <span class="flex items-center gap-1.5 font-mono text-[10px] text-signal font-semibold">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-signal animate-pulse" aria-hidden="true"></span>
+        SYS.READY
+      </span>
+    </div>
+
+    {/* Terminal-indexed nav links */}
+    <nav aria-label="Mobile Navigation" class="mt-2">
+      <ul class="flex flex-col gap-1">
+        {
+          NAV.map((n, idx) => {
+            const num = String(idx + 1).padStart(2, "0");
+            return (
+              <li>
+                <a
+                  href={n.href}
+                  class="mobile-nav-link group flex items-center justify-between rounded-xl px-3 py-2.5 font-display text-sm font-semibold transition-colors"
+                  data-mobile-nav-link
+                  data-nav-path={n.path}
+                  data-nav-hash={n.hash}
+                  aria-current={isActive(n) ? "page" : undefined}
+                >
+                  <span class="flex items-center gap-2.5">
+                    <span class="mobile-nav-index font-mono text-xs text-signal/70 group-hover:text-signal">
+                      {num} /
+                    </span>
+                    <span>{n.label}</span>
+                  </span>
+                  <span class="font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 text-signal">
+                    &rarr;
+                  </span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    {/* Divider */}
+    <div class="my-3 border-t hairline"></div>
+
+    {/* Social links + Full-width "Hire me" CTA */}
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center justify-between px-1">
+        <span class="font-mono text-[11px] text-[var(--text)]/60">Connect</span>
+        <ul class="flex items-center gap-2" aria-label="Social profiles">
+          {
+            SOCIAL.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={s.label}
+                  class="flex h-8 w-8 items-center justify-center rounded-full text-[var(--text)]/75 border hairline bg-[var(--text)]/[0.03] transition-colors hover:bg-[var(--text)]/[0.08] hover:text-signal"
+                >
+                  <Icon name={s.icon} class="h-4 w-4" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <a
+        href="/#scale"
+        data-mobile-nav-link
+        data-cursor-cta="true"
+        data-cursor-label="HIRE"
+        class="flex w-full items-center justify-center rounded-xl bg-signal py-2.5 font-mono text-xs font-bold text-signal-foreground shadow-md transition-all hover:bg-signal/90 hover:shadow-lg active:scale-[0.98]"
+      >
+        Hire me &rarr;
+      </a>
+    </div>
+  </div>
   </div>
 </header>
 

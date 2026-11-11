@@ -20,7 +20,7 @@ const categoryCounts = CATEGORIES.reduce(
       </h2>
     </div>
     <div
-      class="flex items-center gap-2 font-mono text-xs tracking-wider text-[#efe6d8]/75 self-start md:self-end pb-1"
+      class="flex items-center gap-2 font-mono text-xs tracking-wider text-[var(--text)]/75 self-start md:self-end pb-1"
       aria-live="polite"
     >
       <span class="inline-block h-2 w-2 rounded-full bg-signal" aria-hidden="true"></span>
@@ -82,7 +82,7 @@ const categoryCounts = CATEGORIES.reduce(
                 class="tool-catalog-card is-active-tool flex aspect-square flex-col justify-between rounded-2xl p-4 sm:p-5 transition-all focus-visible:outline-none"
               >
                 {/* Brand Logo / Icon */}
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl border hairline bg-surface/40 transition-colors duration-200">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-xs border border-black/5 p-2 transition-transform duration-200">
                   <svg
                     viewBox={tool.viewBox ?? "0 0 24 24"}
                     class="h-6 w-6 transition-transform duration-200"
@@ -93,10 +93,10 @@ const categoryCounts = CATEGORIES.reduce(
 
                 {/* Tool name and tag */}
                 <div class="mt-auto pt-3">
-                  <h3 class="font-display text-sm font-bold tracking-tight text-[#efe6d8] leading-snug">
+                  <h3 class="font-display text-sm font-bold tracking-tight text-[var(--text)] leading-snug">
                     {tool.name}
                   </h3>
-                  <p class="mt-1 font-mono text-[10px] lowercase tracking-wider text-[#efe6d8]/60">
+                  <p class="mt-1 font-mono text-[10px] lowercase tracking-wider text-[var(--text)]/60">
                     {tool.tag}
                   </p>
                 </div>

@@ -48,7 +48,7 @@ export function initHowIWork(
     const p5 = getPort(c5);
 
     // Path 0: Card 1 (Row 1 Left) -> Card 2 (Row 1 Right)
-    const dx1 = Math.max(20, (p2.left - 8) - p1.right);
+    const dx1 = Math.max(20, p2.left - 8 - p1.right);
     const d1 = `M ${p1.right} ${p1.centerY} C ${p1.right + dx1 * 0.5} ${p1.centerY}, ${p1.right + dx1 * 0.5} ${p2.centerY}, ${p2.left - 8} ${p2.centerY}`;
 
     // Path 1: Card 2 (Row 1 Right) -> Card 3 (Row 2 Left)
@@ -60,7 +60,7 @@ export function initHowIWork(
     const d2 = `M ${x1_2} ${y1_2} C ${x1_2 - dx2 * 0.4} ${y1_2 + 45}, ${x2_2 + dx2 * 0.4} ${y2_2 - 35}, ${x2_2} ${y2_2}`;
 
     // Path 2: Card 3 (Row 2 Left) -> Card 4 (Row 2 Right)
-    const dx3 = Math.max(20, (p4.left - 8) - p3.right);
+    const dx3 = Math.max(20, p4.left - 8 - p3.right);
     const d3 = `M ${p3.right} ${p3.centerY + 16} C ${p3.right + dx3 * 0.5} ${p3.centerY + 16}, ${p3.right + dx3 * 0.5} ${p4.centerY}, ${p4.left - 8} ${p4.centerY}`;
 
     // Path 3: Card 4 (Row 2 Right) -> Card 5 (Row 3 Center)
