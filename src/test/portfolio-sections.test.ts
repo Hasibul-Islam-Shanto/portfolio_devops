@@ -66,11 +66,8 @@ describe("HeroTerminal", () => {
       expect(Array.from(pills).map((p) => p.textContent?.trim())).toEqual([
         "help",
         "whoami",
-        "deploy",
         "kubectl get pods",
         "docker ps",
-        "docker compose",
-        "terraform plan",
         "sudo hire shanto",
       ]);
 
@@ -132,6 +129,50 @@ describe("HeroTerminal", () => {
       /ACCESS GRANTED — Shanto provisioned for Platform \/ DevOps leadership/i,
     );
     expect(document.querySelector('a[href="mailto:hello@shanto.dev"]')).not.toBeNull();
+  });
+
+  it("auto-runs help on load with simulated typing, rendering two-column commands list", async () => {
+    mount("hero-terminal");
+    vi.useFakeTimers();
+    try {
+      track(initHeroTerminal());
+      vi.advanceTimersByTime(200 + 5 * 35 + 50);
+      const history = document.querySelector("[data-terminal-history]")!;
+      expect(history.textContent).toContain("AVAILABLE COMMANDS:");
+      expect(history.textContent).toContain("kubectl get pods");
+      expect(history.textContent).toContain("inspect live cluster workloads");
+      expect(history.querySelector(".terminal-help-grid")).not.toBeNull();
+      // Fresh empty prompt line ($ _) is ready below output
+      expect(document.querySelector<HTMLElement>("[data-terminal-placeholder]")!.hidden).toBe(true);
+      const cursor = document.querySelector<HTMLElement>("[data-terminal-cursor]")!;
+      expect(cursor.dataset["cursorBlinking"]).toBe("true");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("auto-runs help instantly under prefers-reduced-motion without typing animation", async () => {
+    mockMatchMedia("prefers-reduced-motion");
+    mount("hero-terminal");
+    track(initHeroTerminal());
+    const history = document.querySelector("[data-terminal-history]")!;
+    expect(history.textContent).toContain("AVAILABLE COMMANDS:");
+    expect(document.querySelector<HTMLElement>("[data-terminal-placeholder]")!.hidden).toBe(true);
+  });
+
+  it("auto-runs help only once per element and does not re-trigger", async () => {
+    mount("hero-terminal");
+    vi.useFakeTimers();
+    try {
+      track(initHeroTerminal());
+      vi.advanceTimersByTime(200 + 5 * 35 + 50);
+      expect(document.querySelectorAll(".terminal-help-grid").length).toBe(1);
+      initHeroTerminal();
+      vi.advanceTimersByTime(500);
+      expect(document.querySelectorAll(".terminal-help-grid").length).toBe(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

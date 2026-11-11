@@ -2,11 +2,8 @@
 const PILLS = [
   "help",
   "whoami",
-  "deploy",
   "kubectl get pods",
   "docker ps",
-  "docker compose",
-  "terraform plan",
   "sudo hire shanto",
 ];
 ---
@@ -65,7 +62,7 @@ const PILLS = [
 
   <div
     data-terminal-pills="true"
-    class="mt-4 flex flex-wrap gap-2"
+    class="mt-4 flex w-full flex-wrap items-center justify-between gap-1.5 sm:gap-2 sm:flex-nowrap"
     role="group"
     aria-label="Preset terminal commands"
   >
@@ -74,7 +71,7 @@ const PILLS = [
         <button
           type="button"
           data-terminal-pill={cmd}
-          class="rounded-full border border-[var(--terminal-chip-border)] bg-[var(--terminal-chip-bg)] px-3.5 py-1.5 font-mono text-xs text-[var(--terminal-chip-fg)] transition-colors hover:border-signal hover:text-signal focus-visible:border-signal focus-visible:text-signal focus-visible:outline-none"
+          class="flex flex-1 items-center justify-center whitespace-nowrap rounded-full border border-[var(--terminal-chip-border)] bg-[var(--terminal-chip-bg)] px-2 py-1.5 font-mono text-[11px] text-[var(--terminal-chip-fg)] transition-colors hover:border-signal hover:text-signal focus-visible:border-signal focus-visible:text-signal focus-visible:outline-none sm:px-2.5 sm:text-xs xl:px-3"
         >
           {cmd}
         </button>

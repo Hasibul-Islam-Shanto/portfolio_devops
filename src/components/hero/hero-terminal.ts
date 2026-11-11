@@ -3,12 +3,21 @@ import { createCleanup, prefersReducedMotion } from "@/scripts/util";
 export const TERMINAL_PILLS = [
   "help",
   "whoami",
-  "deploy",
   "kubectl get pods",
   "docker ps",
-  "docker compose",
-  "terraform plan",
   "sudo hire shanto",
+] as const;
+
+export const COMMAND_LIST = [
+  { cmd: "help", desc: "list available portfolio commands" },
+  { cmd: "whoami", desc: "print current operator identity" },
+  { cmd: "kubectl get pods", desc: "inspect live cluster workloads" },
+  { cmd: "docker ps", desc: "list running demo containers" },
+  { cmd: "deploy", desc: "run production rollout pipeline" },
+  { cmd: "docker compose", desc: "start local demo stack" },
+  { cmd: "terraform plan", desc: "preview infrastructure state diff" },
+  { cmd: "sudo hire shanto", desc: "provision a platform engineer" },
+  { cmd: "clear", desc: "clear terminal screen history" },
 ] as const;
 
 const TYPING_CHAR_MS = 35;
@@ -27,16 +36,13 @@ export function renderCommandOutput(rawCommand: string): string {
     case "clear":
       return "CLEAR";
     case "help":
-      return `<div class="space-y-1 text-[var(--terminal-fg)]">
+      return `<div class="space-y-1.5 text-[var(--terminal-fg)]">
         <div class="font-bold text-[var(--terminal-fg)]">AVAILABLE COMMANDS:</div>
-        ${row(`${coral("help")} ${dim("— list available portfolio commands")}`)}
-        ${row(`${coral("whoami")} ${dim("— print current operator identity")}`)}
-        ${row(`${coral("deploy")} ${dim("— run production rollout pipeline")}`)}
-        ${row(`${coral("kubectl get pods")} ${dim("— inspect live cluster workloads")}`)}
-        ${row(`${coral("docker ps")} ${dim("— list running demo containers")}`)}
-        ${row(`${coral("docker compose")} ${dim("— start local demo stack")}`)}
-        ${row(`${coral("terraform plan")} ${dim("— preview infrastructure state diff")}`)}
-        ${row(`${coral("sudo hire shanto")} ${dim("— provision a platform engineer")}`)}
+        <div class="terminal-help-grid grid grid-cols-1 gap-x-4 gap-y-1 items-baseline font-mono text-xs sm:grid-cols-[auto_1fr] sm:gap-x-6">
+          ${COMMAND_LIST.map(
+            (c) => `<div class="font-semibold text-signal">${c.cmd}</div><div class="text-[var(--terminal-dim)]">— ${c.desc}</div>`,
+          ).join("")}
+        </div>
       </div>`;
     case "whoami":
       return `<div class="text-[var(--terminal-fg)]">shanto</div>`;
@@ -102,6 +108,7 @@ export function initHeroTerminal(
 
   let isTyping = false;
   let timer = 0;
+  let autoRunTimer = 0;
   let value = "";
   let historyCount = 0;
 
@@ -136,6 +143,10 @@ export function initHeroTerminal(
   };
 
   const onPill = (command: string) => {
+    if (autoRunTimer) {
+      window.clearTimeout(autoRunTimer);
+      autoRunTimer = 0;
+    }
     window.clearInterval(timer);
     value = "";
     if (reduce) {
@@ -160,6 +171,20 @@ export function initHeroTerminal(
         execute(command);
       }
     }, TYPING_CHAR_MS);
+  };
+
+  const startAutoRun = () => {
+    if (terminal.dataset["autorunCompleted"] === "true") return;
+    terminal.dataset["autorunCompleted"] = "true";
+
+    if (reduce) {
+      execute("help");
+      return;
+    }
+
+    autoRunTimer = window.setTimeout(() => {
+      onPill("help");
+    }, 200);
   };
 
   pills.forEach((pill) => {
@@ -191,6 +216,7 @@ export function initHeroTerminal(
   form.addEventListener("submit", onSubmit);
   body.addEventListener("click", onBodyClick);
   cleanup.add(() => {
+    if (autoRunTimer) window.clearTimeout(autoRunTimer);
     input.removeEventListener("input", onInput);
     input.removeEventListener("change", onInput);
     form.removeEventListener("submit", onSubmit);
@@ -199,5 +225,6 @@ export function initHeroTerminal(
   });
 
   render();
+  startAutoRun();
   return () => cleanup.run();
 }
