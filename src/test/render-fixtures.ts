@@ -14,6 +14,7 @@ import Toolchain from "../components/portfolio/toolchain.astro";
 import Certifications from "../components/portfolio/certifications.astro";
 import Experience from "../components/portfolio/experience.astro";
 import Testimonials from "../components/portfolio/testimonials.astro";
+import Contact from "../components/portfolio/contact.astro";
 import IndexPage from "../pages/index.astro";
 import BlogPage from "../pages/blog/index.astro";
 import CaseStudiesPage from "../pages/case-studies/index.astro";
@@ -38,6 +39,7 @@ const COMPONENTS = {
   certifications: Certifications,
   experience: Experience,
   testimonials: Testimonials,
+  contact: Contact,
   index: IndexPage,
   blog: BlogPage,
   "case-studies": CaseStudiesPage,

@@ -6,6 +6,7 @@ import { initWork } from "@/scripts/work";
 import { initToolchain } from "@/scripts/toolchain";
 import { initHeader } from "@/scripts/header";
 import { initExperience } from "@/scripts/experience";
+import { initContact } from "@/scripts/contact";
 import { initPipelineRail } from "@/scripts/pipeline-rail";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
 import { mockMatchMedia, mount, track } from "./helpers";
@@ -592,6 +593,45 @@ describe("Static sections", () => {
     expect(text(body).match(/\[Name Surname\] — \[Role, Company\]/g)?.length).toBe(3);
     expect(body.querySelectorAll("blockquote.mode-dark").length).toBe(2);
     expect(body.querySelectorAll("blockquote.mode-light").length).toBe(1);
+  });
+
+  it("renders the terminal-style contact footer with commands, email row, CTAs, and bottom bar", async () => {
+    const body = mount("contact");
+    expect(text(body)).toContain("07 · CONTACT");
+    expect(text(body)).toContain("shanto@portfolio:~");
+    expect(text(body)).toContain("whoami");
+    expect(text(body)).toContain("> Platform engineer · open to remote roles");
+    expect(text(body)).toContain("$ cat contact.txt");
+    expect(text(body)).toContain("Let's ship something");
+    expect(text(body)).toContain("that doesn't page anyone.");
+    expect(text(body)).toContain("hello@shanto.dev");
+    expect(text(body)).toContain("Start a conversation →");
+    expect(text(body)).toContain("Download résumé ↓");
+    expect(body.querySelector('a[aria-label="GitHub"]')).not.toBeNull();
+    expect(body.querySelector('a[aria-label="LinkedIn"]')).not.toBeNull();
+    expect(body.querySelector('a[aria-label="X (Twitter)"]')).not.toBeNull();
+    expect(text(body)).toContain("© 2026 Shanto · Dhaka, Bangladesh");
+    expect(text(body)).toContain("BST");
+    expect(text(body)).toContain("Bangladesh");
+  });
+
+  it("handles email copy button interaction in the contact footer", async () => {
+    vi.useFakeTimers();
+    try {
+      const body = mount("contact");
+      track(initContact(body));
+
+      const copyBtn = body.querySelector<HTMLButtonElement>("[data-copy-email]")!;
+      expect(copyBtn.textContent?.trim()).toBe("copy");
+
+      copyBtn.click();
+      expect(copyBtn.textContent?.trim()).toBe("copied");
+
+      vi.advanceTimersByTime(1600);
+      expect(copyBtn.textContent?.trim()).toBe("copy");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

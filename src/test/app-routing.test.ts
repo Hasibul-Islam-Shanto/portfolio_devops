@@ -34,7 +34,7 @@ describe("Astro routes", () => {
       "dark",
       "dark",
       "dark",
-      "signal",
+      "dark",
     ]);
     expect(doc.querySelectorAll("h1").length).toBe(1);
   });
