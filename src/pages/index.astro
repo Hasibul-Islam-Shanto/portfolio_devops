@@ -1,0 +1,41 @@
+---
+import BaseLayout from "../layouts/base-layout.astro";
+import Header from "../components/portfolio/header.astro";
+import PipelineRail from "../components/portfolio/pipeline-rail.astro";
+import Hero from "../components/portfolio/hero.astro";
+import TechMarquee from "../components/portfolio/tech-marquee.astro";
+import Work from "../components/portfolio/work.astro";
+import HowIWork from "../components/portfolio/how-i-work.astro";
+import Toolchain from "../components/portfolio/toolchain.astro";
+import Certifications from "../components/portfolio/certifications.astro";
+import Experience from "../components/portfolio/experience.astro";
+import Principles from "../components/portfolio/principles.astro";
+import Contact from "../components/portfolio/contact.astro";
+
+const sectionClass = (mode: string = "dark") =>
+  `section-surface rail-safe mode-${mode} relative scroll-mt-24 md:scroll-mt-16`;
+---
+
+<BaseLayout
+  title="Shanto — DevOps & Platform Engineer"
+  description="Pipelines, Kubernetes platforms and observability that let teams ship safely. Portfolio of a DevOps / Platform Engineer."
+  ogDescription="Build → Test → Deploy → Monitor → Scale. Six production systems, told as a pipeline."
+  twitterCard="summary_large_image"
+>
+  <Header currentPath="/" />
+  <PipelineRail />
+  <main class="overflow-x-clip">
+    <section id="build" class={sectionClass("dark")}><Hero /></section>
+    <TechMarquee />
+    <section id="test" class={sectionClass("dark")}><Work /></section>
+    <section class={sectionClass("dark")}><HowIWork /></section>
+    <section id="deploy" class={sectionClass("dark")}><Toolchain /></section>
+    <!-- PLACEHOLDER: Replace certification names, years, and icons with real credentials before publishing -->
+    <section class={sectionClass("dark")}><Certifications /></section>
+    <!-- PLACEHOLDER: Replace all company names, roles, dates, locations, bullet points, and tech tags below with real work history before publishing -->
+    <section class={sectionClass("dark")}><Experience /></section>
+    <section id="monitor" class={sectionClass("dark")}><Principles /></section>
+    <section id="scale" class={sectionClass("dark")}><Contact /></section>
+  </main>
+</BaseLayout>
+

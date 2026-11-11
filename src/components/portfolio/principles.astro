@@ -1,0 +1,70 @@
+---
+const PRINCIPLES = [
+  [
+    "Design for reliability",
+    "Assume every dependency fails. Budget errors, rehearse recovery, and make the safe path the default one.",
+  ],
+  [
+    "Automate the repeatable",
+    "If I've done it twice by hand, the third time is a pipeline. Toil is a bug with a ticket number.",
+  ],
+  [
+    "Keep changes reviewable",
+    "Small diffs, readable plans, versioned everything. Production should never surprise the person who changed it.",
+  ],
+] as const;
+---
+
+<div class="site-container grid gap-16 py-28 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+  <div>
+    <p class="font-mono text-xs uppercase tracking-[0.25em] dim">03 / Principles</p>
+    <h2 class="mt-4 text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+      Calm systems are <span class="text-signal">monitored</span> systems.
+    </h2>
+    <ol class="mt-10 space-y-6">
+      {
+        PRINCIPLES.map(([t, d], i) => (
+          <li
+            data-reveal
+            style={`--reveal-delay: ${i * 0.12}s`}
+            class="grid grid-cols-[3rem_1fr] border-t hairline pt-5"
+          >
+            <span class="font-mono text-sm text-signal">0{i + 1}</span>
+            <div>
+              <h3 class="text-2xl font-bold tracking-tight">{t}</h3>
+              <p class="mt-1 dim">{d}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <div class="relative mx-auto aspect-square w-full max-w-sm" aria-hidden="true">
+    <div class="spin-slow absolute inset-0 rounded-full border border-dashed hairline">
+      {
+        [0, 120, 240].map((d) => (
+          <span
+            class="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-signal"
+            style={`transform: rotate(${d}deg) translateY(-50%) translateY(-9rem)`}
+          />
+        ))
+      }
+    </div>
+    <div class="spin-rev absolute inset-[22%] rounded-full border hairline">
+      {
+        [60, 240].map((d) => (
+          <span
+            class="absolute left-1/2 top-1/2 h-2 w-2 rounded-full bg-current"
+            style={`transform: rotate(${d}deg) translateY(-5.5rem)`}
+          />
+        ))
+      }
+    </div>
+    <div
+      class="absolute inset-[40%] flex items-center justify-center rounded-full bg-signal font-mono text-[10px] font-bold uppercase text-signal-foreground"
+    >
+      core
+    </div>
+  </div>
+</div>
+

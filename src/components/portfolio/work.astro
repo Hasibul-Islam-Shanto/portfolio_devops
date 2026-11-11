@@ -1,0 +1,204 @@
+---
+import ConstellationCanvas from "./constellation-canvas.astro";
+
+const PROJECTS = [
+  {
+    stage: "Build",
+    cat: "CI/CD",
+    title: "Monorepo pipeline rebuild",
+    frame: "Cut a 41-minute pipeline to 7 for 120 engineers.",
+    p: "Serial jobs, flaky tests and no caching blocked every merge.",
+    a: "Affected-graph builds, remote cache, test sharding across spot runners.",
+    o: "−83% build time, 3× deploy frequency, $14k/mo saved.",
+    tags: ["GitHub Actions", "Bazel", "Buildkite"],
+    flow: ["Commit", "Build", "Test", "Deploy"],
+    cmd: "gh workflow run release.yml",
+    res: "✓ 7m02s · 1,284 tests passed",
+  },
+  {
+    stage: "Build",
+    cat: "IaC",
+    title: "Terraform landing zone",
+    frame: "Every cloud account, born compliant.",
+    p: "Click-ops accounts drifted; audits took weeks.",
+    a: "Module registry, policy-as-code, plan reviews in PRs.",
+    o: "42 accounts codified, zero drift, SOC2 in one quarter.",
+    tags: ["Terraform", "OPA", "Atlantis"],
+    flow: ["Plan", "Review", "Apply", "Verify"],
+    cmd: "terraform plan -out=release.plan",
+    res: "✓ plan ready · 0 destroys",
+  },
+  {
+    stage: "Deploy",
+    cat: "Kubernetes",
+    title: "Internal developer platform",
+    frame: "Golden paths from repo to production in a day.",
+    p: "Each team hand-rolled manifests and ingress.",
+    a: "EKS multi-tenant clusters, Helm templates, Backstage scaffolds.",
+    o: "New service onboarding: 3 weeks → 4 hours.",
+    tags: ["EKS", "Helm", "Backstage"],
+    flow: ["Manifest", "Helm", "Rollout", "Healthy"],
+    cmd: "kubectl rollout status deploy/api",
+    res: "✓ successfully rolled out · 6/6",
+  },
+  {
+    stage: "Monitor",
+    cat: "Observability",
+    title: "SLO-first monitoring",
+    frame: "Fewer alerts, faster answers.",
+    p: "900 noisy alerts; MTTR over an hour.",
+    a: "OpenTelemetry tracing, burn-rate alerts, shared dashboards.",
+    o: "−70% pages, MTTR down to 11 minutes.",
+    tags: ["Prometheus", "Grafana", "OTel"],
+    flow: ["Metric", "Alert", "Triage", "Resolve"],
+    cmd: "promtool check rules slo.yml",
+    res: "✓ SUCCESS · 24 rules found",
+  },
+  {
+    stage: "Deploy",
+    cat: "GitOps",
+    title: "Declarative releases",
+    frame: "Git is the only way into production.",
+    p: "Manual kubectl applies and unknown cluster state.",
+    a: "Argo CD app-of-apps, progressive canaries, auto-rollback.",
+    o: "400+ deploys/week, 0 manual cluster writes.",
+    tags: ["Argo CD", "Argo Rollouts", "Kustomize"],
+    flow: ["Push", "Sync", "Reconcile", "Live"],
+    cmd: "argocd app sync payments",
+    res: "✓ Synced · Healthy · canary 100%",
+  },
+  {
+    stage: "Test",
+    cat: "Chaos",
+    title: "Game-day program",
+    frame: "Break it on Tuesday so it holds on Black Friday.",
+    p: "Failover was untested and assumed.",
+    a: "Scheduled chaos experiments, AZ evacuation drills, runbooks.",
+    o: "Survived a full AZ outage with zero customer impact.",
+    tags: ["Chaos Mesh", "Litmus", "k6"],
+    flow: ["Hypothesis", "Inject", "Observe", "Recover"],
+    cmd: "chaos run az-failure.yaml",
+    res: "✓ steady state held · 0 errors",
+  },
+];
+---
+
+<div class="site-container py-28">
+  <p class="font-mono text-xs uppercase tracking-[0.25em] dim">01 / The work</p>
+  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    Six systems, each <span class="text-signal">tested</span> in production.
+  </h2>
+  <div class="mt-14 grid gap-6 md:grid-cols-2">
+    {
+      PROJECTS.map((p, i) => (
+        <div data-reveal data-reveal-managed style={`--reveal-delay: ${(i % 2) * 0.15}s`}>
+          <article
+            data-work-card
+            data-cmd={`$ ${p.cmd}`}
+            data-res={p.res}
+            tabindex="0"
+            data-cursor-interactive="true"
+            class="work-card section-surface group flex h-full flex-col rounded-3xl border hairline p-7 focus-visible:outline-none"
+          >
+            <ConstellationCanvas variant="card" active={false} class="z-0 rounded-[inherit]" />
+            <div class="relative z-10 flex flex-1 flex-col">
+              <div class="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest">
+                <span class="flex items-center text-signal">
+                  <span class="work-cat-tick" aria-hidden="true" />
+                  <span>
+                    {p.stage} / {p.cat}
+                  </span>
+                </span>
+                <span class="dim">Project / {String(i + 1).padStart(2, "0")}</span>
+              </div>
+              <h3 class="mt-5 text-2xl font-bold tracking-tight">{p.title}</h3>
+              <p class="mt-1 dim">{p.frame}</p>
+              <dl class="mt-6 grid gap-5 text-sm sm:grid-cols-2">
+                <div>
+                  <dt class="font-mono text-[10px] uppercase tracking-widest dim">Problem</dt>
+                  <dd class="mt-1.5 leading-snug">{p.p}</dd>
+                </div>
+                <div>
+                  <dt class="font-mono text-[10px] uppercase tracking-widest dim">Approach</dt>
+                  <dd class="mt-1.5 leading-snug">{p.a}</dd>
+                </div>
+              </dl>
+              <p class="mt-6 font-medium text-signal">✓ Outcome: {p.o}</p>
+              <ul class="mt-5 flex flex-wrap gap-2">
+                {p.tags.map((t, j) => (
+                  <li
+                    data-reveal="scale"
+                    data-reveal-managed
+                    style={`--reveal-delay: ${0.4 + j * 0.1}s`}
+                    class="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase transition-colors duration-250 group-hover:border-signal"
+                  >
+                    {t}
+                  </li>
+                ))}
+              </ul>
+
+              <div
+                data-mini-flow
+                class="mt-6 border-t hairline pt-4 font-mono"
+                aria-label="Project pipeline stages"
+              >
+                <div class="relative flex items-start justify-between">
+                  <span class="absolute left-3.5 right-3.5 top-3.5 h-px bg-current opacity-20" aria-hidden="true" />
+                  <span
+                    data-flow-line
+                    class="absolute left-3.5 right-3.5 top-3.5 h-px origin-left bg-signal"
+                    style="transform: scaleX(0); transition: transform 220ms linear"
+                    aria-hidden="true"
+                  />
+                  <span
+                    data-flow-dot
+                    hidden
+                    class="flow-dot absolute top-3.5 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                    style="left: 0.875rem; transition: left 220ms linear"
+                    aria-hidden="true"
+                  />
+                  {p.flow.map((label, idx) => (
+                    <div class="relative z-10 flex flex-col items-center gap-1.5">
+                      <div
+                        data-flow-node
+                        class="flow-node hairline dim flex h-7 w-7 items-center justify-center rounded-lg border bg-surface text-[10px] font-bold"
+                      >
+                        0{idx + 1}
+                      </div>
+                      <span data-flow-label class="flow-label dim text-[9px] uppercase tracking-wider">
+                        {label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div class="mt-4 border-t hairline pt-4 font-mono text-[11px] leading-5">
+                <div data-work-cmd class="truncate dim">{`$ ${p.cmd}`}</div>
+                <div class="work-result-line truncate text-signal">
+                  <span data-work-res>{p.res}</span>
+                  <span data-work-caret class="cursor" hidden>
+                    ▋
+                  </span>
+                </div>
+              </div>
+              <div class="mt-3 flex justify-end">
+                <a
+                  href="/case-studies"
+                  class="work-case-link font-mono text-[11px] font-bold uppercase tracking-wider text-signal"
+                >
+                  View case study →
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { initWork } from "../../scripts/work";
+  initWork();
+</script>

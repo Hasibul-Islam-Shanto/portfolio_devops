@@ -1,0 +1,498 @@
+---
+const PROCESS_STEPS = [
+  {
+    num: "1",
+    title: "1. Understand",
+    cmd: "$ runbook understand --incident",
+    desc: "Map failure domains, SLO targets, and real developer bottlenecks before touching YAML.",
+    res: "failure domains mapped · 3 bottlenecks identified",
+  },
+  {
+    num: "2",
+    title: "2. Plan",
+    cmd: "$ plan review --blast-radius",
+    desc: "Draft small, reversible architecture plans with explicit blast-radius and rollback bounds.",
+    res: "architecture approved · rollback verified",
+  },
+  {
+    num: "3",
+    title: "3. Delegate / Build",
+    cmd: "$ scaffold golden-path --module=core",
+    desc: "Codify golden paths, reusable Terraform modules, and automated CI/CD workflows.",
+    res: "3 modules codified · pipeline green",
+  },
+  {
+    num: "4",
+    title: "4. Review",
+    cmd: "$ chaos test --dry-run --policy=strict",
+    desc: "Enforce policy-as-code checks, dry-run diffs, and failure-injection drills in staging.",
+    res: "policy checks passed · 0 violations",
+  },
+  {
+    num: "5",
+    title: "5. Measure",
+    cmd: "$ slo verify --p99 --window=30d",
+    desc: "Verify deploy lead time, error-budget burn, and p99 latency against production SLOs.",
+    res: "p99 < 85ms · 99.95% SLO held",
+  },
+] as const;
+
+const [step1, step2, step3, step4, step5] = PROCESS_STEPS;
+---
+
+<div class="site-container py-28 text-[var(--text)]">
+  <p class="font-mono text-xs uppercase tracking-[0.25em] text-signal">Process / Execution model</p>
+  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    How I <span class="text-signal">work</span> from incident to system.
+  </h2>
+
+  {/* CSS Grid 3 columns x 2 content rows (snake pattern) with explicit connector columns/rows */}
+  <div data-flow-stage class="flow-stage relative mt-16 w-full lg:mt-20">
+    <ol
+      class="flow-grid flex flex-col gap-6 min-[860px]:grid min-[860px]:grid-cols-[1fr_34px_1fr_34px_1fr] min-[860px]:grid-rows-[auto_34px_auto] min-[860px]:gap-0 min-[860px]:items-center w-full"
+    >
+      {/* 1. Step 1: Understand (Row 1, Col 1) */}
+      <li
+        data-flow-card
+        data-step-index={0}
+        data-step-cmd={step1.cmd}
+        class="flow-card relative z-10 w-full overflow-hidden rounded-2xl border border-[var(--terminal-border)] bg-[var(--terminal-bg)] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out min-[860px]:[grid-column:1] min-[860px]:[grid-row:1]"
+      >
+        <div class="flex items-center border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+          <div class="flex items-center gap-1.5" aria-hidden="true">
+            <span class="h-2 w-2 rounded-full bg-[#FF5F56]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#FFBD2E]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#27C93F]/85" />
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <div class="font-mono text-xs font-semibold text-[#E8503A] text-signal truncate flex items-center min-h-[1.25rem]"><span data-flow-cmd-text>{step1.cmd}</span><span data-flow-cursor class="ml-0.5 inline-block text-[#E8503A] text-signal font-bold" aria-hidden="true" style="display: none;">▍</span></div>
+          <div data-flow-body class="flow-body">
+            <h3 class="font-display text-base font-bold tracking-tight text-[var(--terminal-fg)] mt-2.5 sm:text-lg">
+              {step1.title}
+            </h3>
+            <p class="font-mono text-[11px] leading-relaxed text-[var(--terminal-dim)] mt-1.5 sm:text-xs">
+              {step1.desc}
+            </p>
+          </div>
+          <div
+            data-flow-result
+            class="flow-result mt-3.5 flex items-center gap-2 border-t border-[var(--terminal-header-border)] pt-3 font-mono text-[11px] font-medium text-[var(--terminal-success)] sm:text-xs"
+          >
+            <span class="font-bold">✓</span>
+            <span class="truncate">{step1.res}</span>
+          </div>
+        </div>
+      </li>
+
+      {/* Connector 0: Step 1 -> Step 2 (Horizontal Right, Row 1, Col 2) */}
+      <li
+        data-flow-connector="0"
+        aria-hidden="true"
+        class="flow-connector hidden min-[860px]:flex h-full w-full items-center justify-center min-[860px]:[grid-column:2] min-[860px]:[grid-row:1]"
+      >
+        <svg viewBox="0 0 34 24" class="h-6 w-[34px] overflow-visible" aria-hidden="true">
+          <path
+            data-connector-line
+            d="M 0 12 L 24 12"
+            stroke="#E8503A"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <polygon data-connector-arrow points="23,7 33,12 23,17" fill="#E8503A" />
+        </svg>
+      </li>
+
+      {/* 2. Step 2: Plan (Row 1, Col 3) */}
+      <li
+        data-flow-card
+        data-step-index={1}
+        data-step-cmd={step2.cmd}
+        class="flow-card relative z-10 w-full overflow-hidden rounded-2xl border border-[var(--terminal-border)] bg-[var(--terminal-bg)] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out min-[860px]:[grid-column:3] min-[860px]:[grid-row:1]"
+      >
+        <div class="flex items-center border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+          <div class="flex items-center gap-1.5" aria-hidden="true">
+            <span class="h-2 w-2 rounded-full bg-[#FF5F56]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#FFBD2E]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#27C93F]/85" />
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <div class="font-mono text-xs font-semibold text-[#E8503A] text-signal truncate flex items-center min-h-[1.25rem]"><span data-flow-cmd-text>{step2.cmd}</span><span data-flow-cursor class="ml-0.5 inline-block text-[#E8503A] text-signal font-bold" aria-hidden="true" style="display: none;">▍</span></div>
+          <div data-flow-body class="flow-body">
+            <h3 class="font-display text-base font-bold tracking-tight text-[var(--terminal-fg)] mt-2.5 sm:text-lg">
+              {step2.title}
+            </h3>
+            <p class="font-mono text-[11px] leading-relaxed text-[var(--terminal-dim)] mt-1.5 sm:text-xs">
+              {step2.desc}
+            </p>
+          </div>
+          <div
+            data-flow-result
+            class="flow-result mt-3.5 flex items-center gap-2 border-t border-[var(--terminal-header-border)] pt-3 font-mono text-[11px] font-medium text-[var(--terminal-success)] sm:text-xs"
+          >
+            <span class="font-bold">✓</span>
+            <span class="truncate">{step2.res}</span>
+          </div>
+        </div>
+      </li>
+
+      {/* Connector 1: Step 2 -> Step 3 (Horizontal Right, Row 1, Col 4) */}
+      <li
+        data-flow-connector="1"
+        aria-hidden="true"
+        class="flow-connector hidden min-[860px]:flex h-full w-full items-center justify-center min-[860px]:[grid-column:4] min-[860px]:[grid-row:1]"
+      >
+        <svg viewBox="0 0 34 24" class="h-6 w-[34px] overflow-visible" aria-hidden="true">
+          <path
+            data-connector-line
+            d="M 0 12 L 24 12"
+            stroke="#E8503A"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <polygon data-connector-arrow points="23,7 33,12 23,17" fill="#E8503A" />
+        </svg>
+      </li>
+
+      {/* 3. Step 3: Delegate / Build (Row 1, Col 5) */}
+      <li
+        data-flow-card
+        data-step-index={2}
+        data-step-cmd={step3.cmd}
+        class="flow-card relative z-10 w-full overflow-hidden rounded-2xl border border-[var(--terminal-border)] bg-[var(--terminal-bg)] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out min-[860px]:[grid-column:5] min-[860px]:[grid-row:1]"
+      >
+        <div class="flex items-center border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+          <div class="flex items-center gap-1.5" aria-hidden="true">
+            <span class="h-2 w-2 rounded-full bg-[#FF5F56]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#FFBD2E]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#27C93F]/85" />
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <div class="font-mono text-xs font-semibold text-[#E8503A] text-signal truncate flex items-center min-h-[1.25rem]"><span data-flow-cmd-text>{step3.cmd}</span><span data-flow-cursor class="ml-0.5 inline-block text-[#E8503A] text-signal font-bold" aria-hidden="true" style="display: none;">▍</span></div>
+          <div data-flow-body class="flow-body">
+            <h3 class="font-display text-base font-bold tracking-tight text-[var(--terminal-fg)] mt-2.5 sm:text-lg">
+              {step3.title}
+            </h3>
+            <p class="font-mono text-[11px] leading-relaxed text-[var(--terminal-dim)] mt-1.5 sm:text-xs">
+              {step3.desc}
+            </p>
+          </div>
+          <div
+            data-flow-result
+            class="flow-result mt-3.5 flex items-center gap-2 border-t border-[var(--terminal-header-border)] pt-3 font-mono text-[11px] font-medium text-[var(--terminal-success)] sm:text-xs"
+          >
+            <span class="font-bold">✓</span>
+            <span class="truncate">{step3.res}</span>
+          </div>
+        </div>
+      </li>
+
+      {/* Connector 2: Step 3 -> Step 4 (Vertical Down, Row 2, Col 5) */}
+      <li
+        data-flow-connector="2"
+        aria-hidden="true"
+        class="flow-connector hidden min-[860px]:flex h-full w-full items-center justify-center min-[860px]:[grid-column:5] min-[860px]:[grid-row:2]"
+      >
+        <svg viewBox="0 0 24 34" class="h-[34px] w-6 overflow-visible" aria-hidden="true">
+          <path
+            data-connector-line
+            d="M 12 0 L 12 24"
+            stroke="#E8503A"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <polygon data-connector-arrow points="7,23 12,33 17,23" fill="#E8503A" />
+        </svg>
+      </li>
+
+      {/* 4. Step 4: Review (Row 3, Col 5) */}
+      <li
+        data-flow-card
+        data-step-index={3}
+        data-step-cmd={step4.cmd}
+        class="flow-card relative z-10 w-full overflow-hidden rounded-2xl border border-[var(--terminal-border)] bg-[var(--terminal-bg)] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out min-[860px]:[grid-column:5] min-[860px]:[grid-row:3]"
+      >
+        <div class="flex items-center border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+          <div class="flex items-center gap-1.5" aria-hidden="true">
+            <span class="h-2 w-2 rounded-full bg-[#FF5F56]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#FFBD2E]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#27C93F]/85" />
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <div class="font-mono text-xs font-semibold text-[#E8503A] text-signal truncate flex items-center min-h-[1.25rem]"><span data-flow-cmd-text>{step4.cmd}</span><span data-flow-cursor class="ml-0.5 inline-block text-[#E8503A] text-signal font-bold" aria-hidden="true" style="display: none;">▍</span></div>
+          <div data-flow-body class="flow-body">
+            <h3 class="font-display text-base font-bold tracking-tight text-[var(--terminal-fg)] mt-2.5 sm:text-lg">
+              {step4.title}
+            </h3>
+            <p class="font-mono text-[11px] leading-relaxed text-[var(--terminal-dim)] mt-1.5 sm:text-xs">
+              {step4.desc}
+            </p>
+          </div>
+          <div
+            data-flow-result
+            class="flow-result mt-3.5 flex items-center gap-2 border-t border-[var(--terminal-header-border)] pt-3 font-mono text-[11px] font-medium text-[var(--terminal-success)] sm:text-xs"
+          >
+            <span class="font-bold">✓</span>
+            <span class="truncate">{step4.res}</span>
+          </div>
+        </div>
+      </li>
+
+      {/* Connector 3: Step 4 -> Step 5 (Horizontal Left, Row 3, Col 4) */}
+      <li
+        data-flow-connector="3"
+        aria-hidden="true"
+        class="flow-connector hidden min-[860px]:flex h-full w-full items-center justify-center min-[860px]:[grid-column:4] min-[860px]:[grid-row:3]"
+      >
+        <svg viewBox="0 0 34 24" class="h-6 w-[34px] overflow-visible" aria-hidden="true">
+          <path
+            data-connector-line
+            d="M 34 12 L 10 12"
+            stroke="#E8503A"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <polygon data-connector-arrow points="11,7 1,12 11,17" fill="#E8503A" />
+        </svg>
+      </li>
+
+      {/* 5. Step 5: Measure (Row 3, Col 3) */}
+      <li
+        data-flow-card
+        data-step-index={4}
+        data-step-cmd={step5.cmd}
+        class="flow-card relative z-10 w-full overflow-hidden rounded-2xl border border-[var(--terminal-border)] bg-[var(--terminal-bg)] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out min-[860px]:[grid-column:3] min-[860px]:[grid-row:3]"
+      >
+        <div class="flex items-center border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+          <div class="flex items-center gap-1.5" aria-hidden="true">
+            <span class="h-2 w-2 rounded-full bg-[#FF5F56]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#FFBD2E]/85" />
+            <span class="h-2 w-2 rounded-full bg-[#27C93F]/85" />
+          </div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <div class="font-mono text-xs font-semibold text-[#E8503A] text-signal truncate flex items-center min-h-[1.25rem]"><span data-flow-cmd-text>{step5.cmd}</span><span data-flow-cursor class="ml-0.5 inline-block text-[#E8503A] text-signal font-bold" aria-hidden="true" style="display: none;">▍</span></div>
+          <div data-flow-body class="flow-body">
+            <h3 class="font-display text-base font-bold tracking-tight text-[var(--terminal-fg)] mt-2.5 sm:text-lg">
+              {step5.title}
+            </h3>
+            <p class="font-mono text-[11px] leading-relaxed text-[var(--terminal-dim)] mt-1.5 sm:text-xs">
+              {step5.desc}
+            </p>
+          </div>
+          <div
+            data-flow-result
+            class="flow-result mt-3.5 flex items-center gap-2 border-t border-[var(--terminal-header-border)] pt-3 font-mono text-[11px] font-medium text-[var(--terminal-success)] sm:text-xs"
+          >
+            <span class="font-bold">✓</span>
+            <span class="truncate">{step5.res}</span>
+          </div>
+        </div>
+      </li>
+
+      {/* Connector 4: Step 5 -> Resolution (Horizontal Left, Row 3, Col 2) */}
+      <li
+        data-flow-connector="4"
+        aria-hidden="true"
+        class="flow-connector hidden min-[860px]:flex h-full w-full items-center justify-center min-[860px]:[grid-column:2] min-[860px]:[grid-row:3]"
+      >
+        <svg viewBox="0 0 34 24" class="h-6 w-[34px] overflow-visible" aria-hidden="true">
+          <path
+            data-connector-line
+            d="M 34 12 L 10 12"
+            stroke="#E8503A"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <polygon data-connector-arrow points="11,7 1,12 11,17" fill="#E8503A" />
+        </svg>
+      </li>
+
+      {/* 6. Sixth Element: Resolution Card (Row 3, Col 1) */}
+      <li
+        data-flow-card
+        data-flow-resolution
+        data-step-index={5}
+        class="flow-card flow-resolution-card relative z-10 w-full overflow-hidden rounded-2xl border border-signal/40 bg-signal/[0.06] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out min-[860px]:[grid-column:1] min-[860px]:[grid-row:3]"
+      >
+        <div class="flex items-center justify-between border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+              <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-signal opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-signal"></span>
+            </span>
+            <span class="font-mono text-[11px] font-bold tracking-wider text-signal uppercase">
+              INCIDENT RESOLVED
+            </span>
+          </div>
+          <span class="font-mono text-[9px] tracking-widest text-[var(--terminal-dim)] uppercase">
+            SYSTEM STABLE
+          </span>
+        </div>
+
+        <div data-flow-body class="flow-body p-4 sm:p-5">
+          <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+            <div class="rounded-xl border border-[var(--terminal-header-border)] bg-[var(--terminal-bg)]/60 p-2 sm:p-2.5">
+              <div class="font-mono text-sm font-bold text-signal sm:text-base">3</div>
+              <div class="mt-0.5 font-mono text-[10px] leading-tight text-[var(--terminal-dim)]">bottlenecks resolved</div>
+            </div>
+            <div class="rounded-xl border border-[var(--terminal-header-border)] bg-[var(--terminal-bg)]/60 p-2 sm:p-2.5">
+              <div class="font-mono text-sm font-bold text-signal sm:text-base">0</div>
+              <div class="mt-0.5 font-mono text-[10px] leading-tight text-[var(--terminal-dim)]">policy violations</div>
+            </div>
+            <div class="rounded-xl border border-[var(--terminal-header-border)] bg-[var(--terminal-bg)]/60 p-2 sm:p-2.5">
+              <div class="font-mono text-sm font-bold text-signal sm:text-base">&lt; 85ms</div>
+              <div class="mt-0.5 font-mono text-[10px] leading-tight text-[var(--terminal-dim)]">p99 latency</div>
+            </div>
+            <div class="rounded-xl border border-[var(--terminal-header-border)] bg-[var(--terminal-bg)]/60 p-2 sm:p-2.5">
+              <div class="font-mono text-sm font-bold text-signal sm:text-base">99.95%</div>
+              <div class="mt-0.5 font-mono text-[10px] leading-tight text-[var(--terminal-dim)]">SLO held</div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<style>
+  /* Base card animation states: start invisible and empty until reached in sequence */
+  .flow-card {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    border-color: var(--terminal-border);
+    background-color: var(--terminal-bg);
+    transition:
+      opacity 0.35s ease-out,
+      transform 0.35s ease-out,
+      border-color 0.3s ease-out,
+      box-shadow 0.3s ease-out,
+      background-color 0.3s ease-out,
+      color 0.3s ease-out;
+  }
+
+  .flow-card[data-revealed="true"] {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .flow-card[data-state="active"] {
+    border-color: var(--signal) !important;
+    box-shadow: 0 0 25px -2px color-mix(in oklab, var(--signal) 45%, transparent);
+  }
+
+  .flow-card[data-state="settled"] {
+    border-color: var(--terminal-border);
+    box-shadow: var(--terminal-shadow);
+  }
+
+  .flow-resolution-card {
+    border-color: color-mix(in oklab, var(--signal) 40%, transparent);
+    background-color: color-mix(in oklab, var(--signal) 6%, var(--terminal-bg));
+  }
+
+  .flow-resolution-card[data-state="active"] {
+    border-color: var(--signal) !important;
+    box-shadow: 0 0 30px -2px color-mix(in oklab, var(--signal) 50%, transparent);
+  }
+
+  .flow-resolution-card[data-state="settled"] {
+    border-color: color-mix(in oklab, var(--signal) 40%, transparent);
+    box-shadow: var(--terminal-shadow);
+  }
+
+  /* Body (title + description / stats) animation */
+  .flow-body {
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.3s ease-out;
+  }
+
+  .flow-body[data-visible="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Result line animation */
+  .flow-result {
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.3s ease-out;
+  }
+
+  .flow-result[data-visible="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Connector styles */
+  .flow-connector {
+    opacity: 0.25;
+    transition: opacity 250ms ease-out;
+  }
+
+  .flow-connector[data-drawn="true"] {
+    opacity: 1;
+  }
+
+  .flow-connector [data-connector-line] {
+    stroke-dasharray: 28;
+    stroke-dashoffset: 28;
+    transition: stroke-dashoffset 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .flow-connector[data-drawn="true"] [data-connector-line] {
+    stroke-dashoffset: 0;
+  }
+
+  .flow-connector [data-connector-arrow] {
+    opacity: 0;
+    transition: opacity 150ms ease-out 200ms;
+  }
+
+  .flow-connector[data-drawn="true"] [data-connector-arrow] {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flow-card,
+    .flow-body,
+    .flow-result,
+    .flow-connector,
+    .flow-connector [data-connector-line],
+    .flow-connector [data-connector-arrow] {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      pointer-events: auto !important;
+    }
+    .flow-connector [data-connector-line] {
+      stroke-dashoffset: 0 !important;
+    }
+    .flow-connector [data-connector-arrow] {
+      opacity: 1 !important;
+    }
+    .pulse-ring {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { initHowIWork } from "../../scripts/how-i-work";
+  initHowIWork();
+</script>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  variant?: "hero" | "card";
+  /** Hero is always active; cards are activated on hover/focus by work.ts. */
+  active?: boolean;
+  class?: string;
+}
+
+const { variant = "hero", active = true, class: className = "" } = Astro.props;
+---
+
+<canvas
+  data-constellation-canvas={variant}
+  data-constellation-active={active ? "true" : "false"}
+  aria-hidden="true"
+  class:list={["constellation-canvas pointer-events-none absolute inset-0 h-full w-full", className]}
+></canvas>
+
+<script>
+  import { initConstellationCanvases } from "../../scripts/constellation-canvas";
+  initConstellationCanvases();
+</script>
+
