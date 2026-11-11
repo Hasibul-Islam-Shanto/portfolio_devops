@@ -46,7 +46,7 @@ The development server starts at `http://localhost:4321` by default.
 ├── src/
 │   ├── components/
 │   │   └── portfolio/          # Kebab-case Astro components (.astro) & inline SVG icon map
-│   │       ├── about.astro
+│   │       ├── principles.astro
 │   │       ├── certifications.astro
 │   │       ├── coming-soon.astro
 │   │       ├── constellation-canvas.astro

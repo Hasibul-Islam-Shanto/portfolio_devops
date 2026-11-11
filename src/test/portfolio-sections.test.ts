@@ -511,22 +511,23 @@ describe("Toolchain", () => {
 });
 
 describe("Static sections", () => {
-  it("renders the 5-step How I Work section with terminal cards and connecting arrows", async () => {
+  it("renders the 5-step How I Work section with terminal cards, connecting arrows, and resolution card", async () => {
     const body = mount("how-i-work");
     for (const t of ["Understand", "Plan", "Delegate / Build", "Review", "Measure"]) {
       expect(text(body)).toContain(t);
     }
     const cards = body.querySelectorAll<HTMLElement>("ol > li[data-flow-card]");
-    expect(cards.length).toBe(5);
+    expect(cards.length).toBe(6);
 
-    // Verify terminal structure in each card
-    cards.forEach((card) => {
+    // Verify terminal structure in each of the 5 step cards
+    const stepCards = Array.from(cards).slice(0, 5);
+    stepCards.forEach((card) => {
       // 3 dots window chrome
       const dots = card.querySelectorAll("span.rounded-full");
       expect(dots.length).toBe(3);
 
       // Coral mono command line
-      const cmd = card.querySelector(".text-\\[\\#E8503A\\]");
+      const cmd = card.querySelector(".text-signal");
       expect(cmd).not.toBeNull();
       expect(text(cmd).trim()).toMatch(/^\$ /);
 
@@ -540,62 +541,120 @@ describe("Static sections", () => {
       expect(text(res)).toContain("✓");
     });
 
-    // Verify SVG connecting arrows and arrowhead marker
-    const svg = body.querySelector("svg[data-flow-svg]");
-    expect(svg).not.toBeNull();
-    expect(body.querySelector("#flow-arrowhead")).not.toBeNull();
-    const paths = body.querySelectorAll("path[data-flow-path]");
-    expect(paths.length).toBe(4);
+    // Verify Resolution card
+    const resolutionCard = body.querySelector<HTMLElement>("[data-flow-resolution]");
+    expect(resolutionCard).not.toBeNull();
+    expect(text(resolutionCard)).toContain("INCIDENT RESOLVED");
+    expect(text(resolutionCard)).toContain("SYSTEM STABLE");
+    expect(text(resolutionCard)).toContain("3");
+    expect(text(resolutionCard)).toContain("bottlenecks resolved");
+    expect(text(resolutionCard)).toContain("0");
+    expect(text(resolutionCard)).toContain("policy violations");
+    expect(text(resolutionCard)).toContain("< 85ms");
+    expect(text(resolutionCard)).toContain("p99 latency");
+    expect(text(resolutionCard)).toContain("99.95%");
+    expect(text(resolutionCard)).toContain("SLO held");
+
+    // Verify 5 connectors
+    const connectors = body.querySelectorAll("[data-flow-connector]");
+    expect(connectors.length).toBe(5);
   });
 
-  it("animates cards and connecting arrows in a continuous relay sequence when triggered", async () => {
+  it("animates cards and connectors in a sequential build relay, starting completely unrevealed", async () => {
     vi.useFakeTimers();
     try {
       const body = mount("how-i-work");
       track(initHowIWork(body, { immediate: true }));
 
       const cards = body.querySelectorAll<HTMLElement>("[data-flow-card]");
+      const bodies = body.querySelectorAll<HTMLElement>("[data-flow-body]");
       const results = body.querySelectorAll<HTMLElement>("[data-flow-result]");
-      const paths = body.querySelectorAll<SVGPathElement>("[data-flow-path]");
+      const connectors = body.querySelectorAll<HTMLElement>("[data-flow-connector]");
+      const resCard = body.querySelector<HTMLElement>("[data-flow-resolution]");
 
-      // Card 0 activates and starts typing after initial reset
-      await vi.advanceTimersByTimeAsync(210);
+      // Initially on setup before first card activates: all cards and bodies are unrevealed/invisible
+      cards.forEach((c) => {
+        expect(c.getAttribute("data-revealed")).toBeNull();
+        expect(c.getAttribute("data-state")).toBeNull();
+      });
+      bodies.forEach((b) => {
+        expect(b.getAttribute("data-visible")).toBeNull();
+      });
+      results.forEach((r) => {
+        expect(r.getAttribute("data-visible")).toBeNull();
+      });
+      connectors.forEach((conn) => {
+        expect(conn.getAttribute("data-drawn")).toBeNull();
+      });
+
+      // Advance past initial reset pause (250ms)
+      await vi.advanceTimersByTimeAsync(260);
+      // Card 0 fades/slides in as active, but subsequent cards are completely unrevealed
+      expect(cards[0]?.getAttribute("data-revealed")).toBe("true");
       expect(cards[0]?.getAttribute("data-state")).toBe("active");
-      expect(cards[1]?.getAttribute("data-state")).toBeNull();
+      expect(cards[1]?.getAttribute("data-revealed")).toBeNull();
+      expect(cards[2]?.getAttribute("data-revealed")).toBeNull();
+      // At container appearance, inner title/desc and result are not yet visible
+      expect(bodies[0]?.getAttribute("data-visible")).toBeNull();
+      expect(results[0]?.getAttribute("data-visible")).toBeNull();
 
-      // Card 0 command finishes typing (~33 chars * 22ms = 726ms)
-      await vi.advanceTimersByTimeAsync(33 * 22 + 10);
+      // Card 0 container appearance pause (250ms) + command typing (~33 chars * 22ms = 726ms)
+      await vi.advanceTimersByTimeAsync(250 + 33 * 22 + 10);
       const cmdText0 = cards[0]?.querySelector("[data-flow-cmd-text]");
       expect(text(cmdText0 ?? null)).toBe("$ runbook understand --incident");
 
-      // Result 0 appears after typing finishes
-      await vi.advanceTimersByTimeAsync(110);
+      // Cursor hides (80ms) -> title and description fade in
+      await vi.advanceTimersByTimeAsync(90);
+      expect(bodies[0]?.getAttribute("data-visible")).toBe("true");
+      expect(results[0]?.getAttribute("data-visible")).toBeNull();
+
+      // Body fade pause (300ms) -> green result line fades in last
+      await vi.advanceTimersByTimeAsync(310);
       expect(results[0]?.getAttribute("data-visible")).toBe("true");
 
-      // Card 0 settles and path 0 is drawn
-      await vi.advanceTimersByTimeAsync(260);
+      // Result pause (250ms) + settle pause (100ms) -> Card 0 settles and connector 0 draws
+      await vi.advanceTimersByTimeAsync(360);
       expect(cards[0]?.getAttribute("data-state")).toBe("settled");
-      expect(paths[0]?.getAttribute("data-drawn")).toBe("true");
+      expect(connectors[0]?.getAttribute("data-drawn")).toBe("true");
+      // Card 1 is STILL not revealed while connector is drawing
+      expect(cards[1]?.getAttribute("data-revealed")).toBeNull();
 
-      // After arrow finish delay, Card 1 activates and begins typing
-      await vi.advanceTimersByTimeAsync(430);
+      // After connector finish delay (380ms), Card 1 begins step 1
+      await vi.advanceTimersByTimeAsync(390);
+      expect(cards[1]?.getAttribute("data-revealed")).toBe("true");
       expect(cards[1]?.getAttribute("data-state")).toBe("active");
+      expect(cards[2]?.getAttribute("data-revealed")).toBeNull();
 
-      // Advance through remaining cards (Steps 2, 3, 4, 5)
-      await vi.advanceTimersByTimeAsync(5800);
-      cards.forEach((c) => {
-        expect(c.getAttribute("data-state")).toBe("settled");
-      });
-      results.forEach((r) => {
-        expect(r.getAttribute("data-visible")).toBe("true");
-      });
-      paths.forEach((p) => {
-        expect(p.getAttribute("data-drawn")).toBe("true");
-      });
+      // Advance through remaining steps (Cards 1, 2, 3, 4)
+      // Each step takes approx: 250 + 720 + 80 + 300 + 250 + 100 + 380 = ~2080ms
+      // For remaining 4 step cards: ~4 * 2100 = ~8400ms
+      await vi.advanceTimersByTimeAsync(8500);
+      for (let i = 0; i < 5; i++) {
+        expect(cards[i]?.getAttribute("data-revealed")).toBe("true");
+        expect(cards[i]?.getAttribute("data-state")).toBe("settled");
+        expect(bodies[i]?.getAttribute("data-visible")).toBe("true");
+        expect(results[i]?.getAttribute("data-visible")).toBe("true");
+        expect(connectors[i]?.getAttribute("data-drawn")).toBe("true");
+      }
 
-      // After hold delay (2500ms) + reset (200ms), loop restarts and Card 0 begins typing again
-      await vi.advanceTimersByTimeAsync(2800);
+      // Sixth Element (Resolution Card) container reveals with active glow
+      expect(resCard?.getAttribute("data-revealed")).toBe("true");
+      expect(resCard?.getAttribute("data-state")).toBe("active");
+
+      // Resolution stats body fades in after container reveal pause (250ms)
+      await vi.advanceTimersByTimeAsync(260);
+      const resBody = resCard?.querySelector("[data-flow-body]");
+      expect(resBody?.getAttribute("data-visible")).toBe("true");
+
+      // Active glow holds for ~1800ms
+      await vi.advanceTimersByTimeAsync(1850);
+      expect(resCard?.getAttribute("data-state")).toBe("settled");
+
+      // After pause (1400ms) + reset (250ms), loop restarts and Card 0 begins again
+      await vi.advanceTimersByTimeAsync(1700);
+      expect(cards[0]?.getAttribute("data-revealed")).toBe("true");
       expect(cards[0]?.getAttribute("data-state")).toBe("active");
+      expect(cards[1]?.getAttribute("data-revealed")).toBeNull();
     } finally {
       vi.useRealTimers();
     }
@@ -607,18 +666,28 @@ describe("Static sections", () => {
     track(initHowIWork(body));
 
     const cards = body.querySelectorAll<HTMLElement>("[data-flow-card]");
+    expect(cards.length).toBe(6);
     cards.forEach((c) => {
+      expect(c.getAttribute("data-revealed")).toBe("true");
       expect(c.getAttribute("data-state")).toBe("settled");
     });
 
+    const bodies = body.querySelectorAll<HTMLElement>("[data-flow-body]");
+    expect(bodies.length).toBe(6);
+    bodies.forEach((b) => {
+      expect(b.getAttribute("data-visible")).toBe("true");
+    });
+
     const results = body.querySelectorAll<HTMLElement>("[data-flow-result]");
+    expect(results.length).toBe(5);
     results.forEach((r) => {
       expect(r.getAttribute("data-visible")).toBe("true");
     });
 
-    const paths = body.querySelectorAll<SVGPathElement>("[data-flow-path]");
-    paths.forEach((p) => {
-      expect(p.getAttribute("data-drawn")).toBe("true");
+    const connectors = body.querySelectorAll<HTMLElement>("[data-flow-connector]");
+    expect(connectors.length).toBe(5);
+    connectors.forEach((conn) => {
+      expect(conn.getAttribute("data-drawn")).toBe("true");
     });
   });
 

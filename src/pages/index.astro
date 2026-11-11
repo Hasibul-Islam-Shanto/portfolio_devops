@@ -9,7 +9,7 @@ import HowIWork from "../components/portfolio/how-i-work.astro";
 import Toolchain from "../components/portfolio/toolchain.astro";
 import Certifications from "../components/portfolio/certifications.astro";
 import Experience from "../components/portfolio/experience.astro";
-import About from "../components/portfolio/about.astro";
+import Principles from "../components/portfolio/principles.astro";
 import Contact from "../components/portfolio/contact.astro";
 
 const sectionClass = (mode: string = "dark") =>
@@ -34,7 +34,7 @@ const sectionClass = (mode: string = "dark") =>
     <section class={sectionClass("dark")}><Certifications /></section>
     <!-- PLACEHOLDER: Replace all company names, roles, dates, locations, bullet points, and tech tags below with real work history before publishing -->
     <section class={sectionClass("dark")}><Experience /></section>
-    <section id="monitor" class={sectionClass("dark")}><About /></section>
+    <section id="monitor" class={sectionClass("dark")}><Principles /></section>
     <section id="scale" class={sectionClass("dark")}><Contact /></section>
   </main>
 </BaseLayout>
