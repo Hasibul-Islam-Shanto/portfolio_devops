@@ -1,21 +1,18 @@
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import type { TestProject } from "vitest/node";
 
-import Header from "../components/portfolio/header.astro";
-import PipelineRail from "../components/portfolio/pipeline-rail.astro";
-import CustomCursor from "../components/portfolio/custom-cursor.astro";
-import Hero from "../components/portfolio/hero.astro";
-import TechMarquee from "../components/portfolio/tech-marquee.astro";
-import HeroTerminal from "../components/portfolio/hero-terminal.astro";
-import DeployFlow from "../components/portfolio/deploy-flow.astro";
-import DeployPipeline from "../components/portfolio/deploy-pipeline.astro";
-import Work from "../components/portfolio/work.astro";
-import HowIWork from "../components/portfolio/how-i-work.astro";
-import Toolchain from "../components/portfolio/toolchain.astro";
-import Certifications from "../components/portfolio/certifications.astro";
-import Experience from "../components/portfolio/experience.astro";
-import Testimonials from "../components/portfolio/testimonials.astro";
-import Contact from "../components/portfolio/contact.astro";
+import Header from "../components/navbar/header.astro";
+import PipelineRail from "../components/pipeline-rail/pipeline-rail.astro";
+import CustomCursor from "../components/shared/custom-cursor.astro";
+import Hero from "../components/hero/hero.astro";
+import TechMarquee from "../components/logos/tech-marquee.astro";
+import HeroTerminal from "../components/hero/hero-terminal.astro";
+import Work from "../components/projects/work.astro";
+import HowIWork from "../components/how-it-works/how-i-work.astro";
+import Toolchain from "../components/toolstack/toolchain.astro";
+import Certifications from "../components/certifications/certifications.astro";
+import Experience from "../components/experience/experience.astro";
+import Contact from "../components/contact/contact.astro";
 import IndexPage from "../pages/index.astro";
 import BlogPage from "../pages/blog/index.astro";
 import CaseStudiesPage from "../pages/case-studies/index.astro";
@@ -33,14 +30,11 @@ const COMPONENTS = {
   hero: Hero,
   "tech-marquee": TechMarquee,
   "hero-terminal": HeroTerminal,
-  "deploy-flow": DeployFlow,
-  "deploy-pipeline": DeployPipeline,
   work: Work,
   "how-i-work": HowIWork,
   toolchain: Toolchain,
   certifications: Certifications,
   experience: Experience,
-  testimonials: Testimonials,
   contact: Contact,
   index: IndexPage,
   blog: BlogPage,

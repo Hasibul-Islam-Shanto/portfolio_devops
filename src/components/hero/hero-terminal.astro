@@ -1,0 +1,90 @@
+---
+const PILLS = [
+  "help",
+  "whoami",
+  "deploy",
+  "kubectl get pods",
+  "docker ps",
+  "docker compose",
+  "terraform plan",
+  "sudo hire shanto",
+];
+---
+
+<div data-terminal-root class="w-full max-w-full min-w-0 font-mono">
+  <div
+    data-terminal-window="true"
+    class="flex h-[320px] w-full flex-col overflow-hidden rounded-3xl border border-[var(--terminal-border)] bg-[var(--terminal-bg)] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] sm:h-[360px] lg:h-[390px] xl:h-[420px]"
+  >
+    <div
+      data-terminal-header="true"
+      class="relative flex items-center gap-3 border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-5 py-3.5 font-mono text-xs text-[var(--terminal-dim)]"
+    >
+      <div data-terminal-dots="true" class="flex items-center gap-2" aria-hidden="true">
+        <span data-terminal-dot="close" class="h-3 w-3 rounded-full bg-[#FF5F56]"></span>
+        <span data-terminal-dot="minimize" class="h-3 w-3 rounded-full bg-[#FFBD2E]"></span>
+        <span data-terminal-dot="expand" class="h-3 w-3 rounded-full bg-[#27C93F]"></span>
+      </div>
+      <span class="ml-1 tracking-wide text-[var(--terminal-dim)]">shanto@platform:~</span>
+    </div>
+
+    <div
+      data-terminal-body="true"
+      class="flex-1 cursor-text overflow-y-auto p-5 font-mono text-xs leading-relaxed text-[var(--terminal-fg)] sm:p-6 sm:text-[13px]"
+    >
+      <div data-terminal-history></div>
+      <form class="relative flex items-center gap-2">
+        <span class="shrink-0 font-bold text-signal">$</span>
+        <div class="relative flex min-w-0 flex-1 flex-wrap items-center">
+          <span
+            data-terminal-typed="true"
+            hidden
+            class="whitespace-pre font-semibold text-signal"></span>
+          <span
+            data-terminal-cursor="true"
+            data-cursor-blinking="true"
+            aria-hidden="true"
+            class="terminal-cursor-blink inline-block h-[15px] w-[9px] shrink-0 rounded-[2px] bg-signal align-middle"
+          ></span>
+          <span data-terminal-placeholder="true" class="ml-2 select-none text-[var(--terminal-dim)]">
+            type a command, try help
+          </span>
+          <input
+            type="text"
+            aria-label="Terminal command input"
+            class="absolute inset-0 h-full w-full bg-transparent font-mono text-xs text-transparent caret-transparent focus:outline-none sm:text-[13px]"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    data-terminal-pills="true"
+    class="mt-4 flex flex-wrap gap-2"
+    role="group"
+    aria-label="Preset terminal commands"
+  >
+    {
+      PILLS.map((cmd) => (
+        <button
+          type="button"
+          data-terminal-pill={cmd}
+          class="rounded-full border border-[var(--terminal-chip-border)] bg-[var(--terminal-chip-bg)] px-3.5 py-1.5 font-mono text-xs text-[var(--terminal-chip-fg)] transition-colors hover:border-signal hover:text-signal focus-visible:border-signal focus-visible:text-signal focus-visible:outline-none"
+        >
+          {cmd}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { initHeroTerminal } from "./hero-terminal";
+  initHeroTerminal();
+</script>
+

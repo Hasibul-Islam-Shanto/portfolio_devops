@@ -1,14 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { initHeroTerminal } from "@/scripts/hero-terminal";
-import { initDeployFlow } from "@/scripts/deploy-flow";
-import { initDeployPipeline } from "@/scripts/deploy-pipeline";
-import { initWork } from "@/scripts/work";
-import { initToolchain } from "@/scripts/toolchain";
-import { initHeader } from "@/scripts/header";
-import { initExperience } from "@/scripts/experience";
-import { initContact } from "@/scripts/contact";
-import { initHowIWork } from "@/scripts/how-i-work";
-import { initPipelineRail } from "@/scripts/pipeline-rail";
+import { initHeroTerminal } from "@/components/hero/hero-terminal";
+import { initWork } from "@/components/projects/work";
+import { initToolchain } from "@/components/toolstack/toolchain";
+import { initHeader } from "@/components/navbar/header";
+import { initExperience } from "@/components/experience/experience";
+import { initContact } from "@/components/contact/contact";
+import { initHowIWork } from "@/components/how-it-works/how-i-work";
+import { initPipelineRail } from "@/components/pipeline-rail/pipeline-rail";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
 import { mockMatchMedia, mount, track } from "./helpers";
 
@@ -136,141 +134,6 @@ describe("HeroTerminal", () => {
   });
 });
 
-describe("DeployFlow", () => {
-  it("renders the 7-stage strip without an outer card and progresses to HEALTHY", async () => {
-    vi.useFakeTimers();
-    mount("deploy-flow");
-    track(initDeployFlow());
-    try {
-      expect(document.querySelector(".deploy-widget")).toBeNull();
-      expect(document.body.textContent).toContain("DEPLOYMENT · CORE-API:V2463");
-      const status = document.querySelector("[data-deploy-status]")!;
-      expect(text(status)).toBe("IN PROGRESS");
-
-      const stages = document.querySelectorAll("[data-stage]");
-      expect(stages.length).toBe(7);
-      expect(stages[0]?.getAttribute("data-state")).toBe("active");
-      expect(stages[1]?.getAttribute("data-state")).toBe("pending");
-      for (const label of ["GIT", "DOCKER", "REGISTRY", "K8S", "PODS", "PROM", "GRAFANA"]) {
-        expect(document.querySelector(`[data-stage-label="${label}"]`)).not.toBeNull();
-      }
-
-      const connectors = document.querySelectorAll<HTMLElement>("[data-connector-index]");
-      expect(connectors.length).toBe(6);
-      connectors.forEach((c, i) => {
-        expect(c.style.gridColumn).toBe(String(i * 2 + 2));
-        expect(c.getAttribute("data-connector-active")).toBe("false");
-      });
-
-      vi.advanceTimersByTime(1600 * 4);
-      expect(stages[3]?.getAttribute("data-state")).toBe("done");
-      expect(stages[4]?.getAttribute("data-state")).toBe("active");
-      expect(connectors[3]?.getAttribute("data-connector-active")).toBe("true");
-      expect(connectors[4]?.getAttribute("data-connector-active")).toBe("false");
-
-      vi.advanceTimersByTime(1600 * 2);
-      expect(stages[6]?.getAttribute("data-state")).toBe("active");
-      expect(text(status)).toBe("HEALTHY");
-      connectors.forEach((c) => expect(c.getAttribute("data-connector-active")).toBe("true"));
-
-      vi.advanceTimersByTime(1600); // completed pass
-      stages.forEach((s) => expect(s.getAttribute("data-state")).toBe("done"));
-      vi.advanceTimersByTime(1600); // loops back
-      expect(stages[0]?.getAttribute("data-state")).toBe("active");
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it("shows the static all-done HEALTHY state under reduced motion", async () => {
-    mockMatchMedia("prefers-reduced-motion");
-    mount("deploy-flow");
-    track(initDeployFlow());
-    expect(text(document.querySelector("[data-deploy-status]"))).toBe("HEALTHY");
-    document
-      .querySelectorAll("[data-stage]")
-      .forEach((s) => expect(s.getAttribute("data-state")).toBe("done"));
-    document
-      .querySelectorAll("[data-connector-index]")
-      .forEach((c) => expect(c.getAttribute("data-connector-active")).toBe("true"));
-  });
-});
-
-describe("DeployPipeline", () => {
-  it("renders the 11-node diagram with orthogonal connectors and advances to HEALTHY", async () => {
-    vi.useFakeTimers();
-    mount("deploy-pipeline");
-    track(initDeployPipeline());
-    try {
-      for (const zone of [
-        "SOURCE",
-        "CI PIPELINE",
-        "ARTIFACTS · INFRA",
-        "ORCHESTRATION",
-        "RUNTIME",
-      ]) {
-        expect(document.querySelector(`[data-zone-label="${zone}"]`)).not.toBeNull();
-      }
-      const num = (sel: string, attr: string) =>
-        Number(document.querySelector(sel)?.getAttribute(attr));
-      const deployLabelY = num('[data-node-label="DEPLOY"]', "y");
-      const k8sY = num('[data-pipeline-node="K8S"] rect', "y");
-      const orchY = num('[data-zone-label="ORCHESTRATION"]', "y");
-      expect(orchY - deployLabelY).toBeGreaterThanOrEqual(40);
-      expect(k8sY - orchY).toBeGreaterThanOrEqual(40);
-      expect(
-        num('[data-pipeline-node="MONITOR"] rect', "y") - num('[data-zone-label="RUNTIME"]', "y"),
-      ).toBeGreaterThanOrEqual(40);
-      expect(num('[data-zone-label="RUNTIME"]', "x")).toBeGreaterThan(440);
-
-      const nodes = document.querySelectorAll("[data-pipeline-node]");
-      expect(nodes.length).toBe(11);
-      expect(nodes[0]?.getAttribute("data-node-state")).toBe("done");
-      expect(nodes[1]?.getAttribute("data-node-state")).toBe("pending");
-
-      const connectors = document.querySelectorAll("[data-pipeline-connector]");
-      expect(connectors.length).toBe(10);
-      connectors.forEach((line) => {
-        const [x1, y1, x2, y2] = ["x1", "y1", "x2", "y2"].map((a) => line.getAttribute(a));
-        expect(x1 === x2 || y1 === y2).toBe(true);
-        expect(line.getAttribute("data-connector-done")).toBe("false");
-      });
-
-      const feedback = document.querySelector("[data-feedback-loop]")!;
-      const dot = document.querySelector("[data-monitor-dot]")!;
-      expect(feedback.getAttribute("data-feedback-active")).toBe("false");
-      expect(dot.getAttribute("data-dot-active")).toBe("false");
-      expect(text(document.querySelector("[data-pipeline-status]"))).toBe("RUNNING");
-
-      vi.advanceTimersByTime(900 * 10);
-      nodes.forEach((n) => expect(n.getAttribute("data-node-state")).toBe("done"));
-      connectors.forEach((c) => expect(c.getAttribute("data-connector-done")).toBe("true"));
-      expect(feedback.getAttribute("data-feedback-active")).toBe("true");
-      expect(dot.getAttribute("data-dot-active")).toBe("true");
-      expect(text(document.querySelector("[data-pipeline-status]"))).toBe("HEALTHY");
-      expect(text(document.querySelector("[data-release-num]"))).toBe("2463");
-
-      vi.advanceTimersByTime(900 * 2); // pass 11 -> restart, release bumps
-      expect(text(document.querySelector("[data-release-num]"))).toBe("2464");
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it("shows the static all-done state under reduced motion without the pulse animation", async () => {
-    mockMatchMedia("prefers-reduced-motion");
-    mount("deploy-pipeline");
-    track(initDeployPipeline());
-    expect(text(document.querySelector("[data-pipeline-status]"))).toBe("HEALTHY");
-    expect(
-      document.querySelector("[data-feedback-loop]")?.getAttribute("data-feedback-active"),
-    ).toBe("true");
-    const dot = document.querySelector("[data-monitor-dot]")!;
-    expect(dot.getAttribute("data-dot-active")).toBe("true");
-    expect(dot.getAttribute("class")).not.toContain("monitor-pulse");
-  });
-});
-
 describe("Work", () => {
   it("renders six cards with mini flows, inactive canvases and the case-study link", async () => {
     const body = mount("work");
@@ -392,7 +255,7 @@ describe("Toolchain", () => {
     const body = mount("toolchain");
     track(initToolchain());
 
-    expect(text(body)).toContain("02 / The toolchain");
+    expect(text(body)).toContain("03 / The toolchain");
     expect(text(body)).toContain("Every layer, deployed with intent.");
     expect(text(body.querySelector("[data-tool-counter]"))).toContain("30 tools");
 
@@ -701,7 +564,7 @@ describe("Static sections", () => {
 
   it("renders the Experience commit-log timeline with standard section heading, placeholders, HEAD badge, and CTA", async () => {
     const body = mount("experience");
-    expect(text(body)).toContain("04 / Experience");
+    expect(text(body)).toContain("02 / Experience");
     expect(text(body)).toContain("Years spent keeping");
     expect(text(body)).toContain("systems");
     expect(text(body)).toContain("honest.");
@@ -757,14 +620,6 @@ describe("Static sections", () => {
     track(initExperience(body));
     const bar = body.querySelector<HTMLElement>("[data-timeline-progress]")!;
     expect(bar.style.transform).toBe("scaleY(1)");
-  });
-
-  it("renders the 3 placeholder Testimonials quote cards", async () => {
-    const body = mount("testimonials");
-    expect(text(body)).toContain("What people say");
-    expect(text(body).match(/\[Name Surname\] — \[Role, Company\]/g)?.length).toBe(3);
-    expect(body.querySelectorAll("blockquote.mode-dark").length).toBe(2);
-    expect(body.querySelectorAll("blockquote.mode-light").length).toBe(1);
   });
 
   it("renders the terminal-style contact footer with commands, email row, CTAs, and bottom bar", async () => {

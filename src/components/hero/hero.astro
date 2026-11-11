@@ -1,0 +1,81 @@
+---
+import ConstellationCanvas from "../shared/constellation-canvas.astro";
+import HeroTerminal from "./hero-terminal.astro";
+
+const lines = [
+  { words: ["Making", "complex"], signal: false },
+  { words: ["systems", "run", "like"], signal: true },
+  { words: ["they", "should."], signal: false },
+] as const;
+
+let wordIndex = 0;
+---
+
+<div
+  class="relative flex min-h-screen w-full items-center overflow-hidden bg-[var(--bg)] pt-28 pb-12 lg:min-h-[100dvh] lg:pt-20 lg:pb-10"
+>
+  <ConstellationCanvas variant="hero" active class="z-0" />
+  <div
+    class="site-container relative z-10 grid gap-10 py-4 lg:grid-cols-[1.04fr_1.15fr] lg:items-center lg:gap-14"
+  >
+    <div>
+      <p class="font-mono text-xs uppercase tracking-[0.25em] dim">
+        00 / Platform engineer · Dhaka → Remote
+      </p>
+      <h1 class="mt-5 text-[clamp(40px,5vw,60px)] font-bold leading-[1.08] tracking-tight">
+        {
+          lines.map((line, li) => (
+            <Fragment>
+              <span class:list={["block", { "text-signal": line.signal }]}>
+                {line.words.map((w, wi) => {
+                  const i = wordIndex++;
+                  return (
+                    <Fragment>
+                      {wi > 0 && <span class="hero-gap">{" "}</span>}
+                      <span class="hero-word mr-[0.22em] inline-block last:mr-0" style={`--i: ${i}`}>
+                        {w}
+                      </span>
+                    </Fragment>
+                  );
+                })}
+              </span>
+              {li < lines.length - 1 && " "}
+            </Fragment>
+          ))
+        }
+      </h1>
+      <p class="mt-5 max-w-lg text-base leading-relaxed dim sm:text-[17px]">
+        I build the pipelines, platforms and guardrails that let product teams ship ten times a day
+        without paging anyone at 3am.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3.5">
+        <a
+          href="#test"
+          data-cursor-cta="true"
+          data-cursor-label="WORK ↓"
+          class="rounded-full bg-signal px-6 py-3 font-mono text-xs font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5 sm:text-sm"
+        >
+          View the work →
+        </a>
+        <a
+          href="#scale"
+          data-cursor-cta="true"
+          data-cursor-label="TALK"
+          class="rounded-full border-2 border-current px-6 py-3 font-mono text-xs font-bold uppercase transition-colors hover:border-signal hover:text-signal sm:text-sm"
+        >
+          Get in touch
+        </a>
+      </div>
+    </div>
+    <div class="hero-panel min-w-0">
+      <HeroTerminal />
+    </div>
+  </div>
+  <a
+    href="#test"
+    data-cursor-label="↓"
+    class="scroll-cue absolute bottom-4 left-1/2 z-10 -translate-x-1/2 font-mono text-[10px] uppercase tracking-widest dim"
+  >
+    scroll ↓
+  </a>
+</div>
