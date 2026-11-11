@@ -1,0 +1,75 @@
+[
+  {
+    "slug": "orderfirst",
+    "name": "OrderFirst — Distributed Microservices & Zero-Downtime CI/CD Platform",
+    "category": "Distributed Microservices · Cloud-Native CI/CD",
+    "summary": "A distributed restaurant ordering and table reservation platform engineered with an event-driven microservices architecture, schema isolation, and automated zero-downtime deployment.",
+    "problem": "Monolithic deployment coupled all services into slow all-or-nothing rebuilds, shared database schema bottlenecks, and downtime risks during releases.",
+    "solution": "Decoupled into 6 independent microservices orchestrated by a Jenkins monorepo pipeline featuring selective git-diff change detection, parallel quality gates, and zero-downtime rolling updates.",
+    "devopsHighlights": [
+      "Monorepo change detection: evaluates git diff to run parallel typecheck, unit tests, and Docker builds only for modified services",
+      "Zero-downtime rolling deployment using Docker Compose without restarting database, message broker, or untouched containers",
+      "Multi-platform container packaging (linux/amd64 & linux/arm64) and hardened dual-network isolation (zero exposed DB ports in prod)"
+    ],
+    "applicationFeatures": [
+      "High-concurrency table reservations protected by PostgreSQL btree_gist anti-overlap exclusion constraints",
+      "Fault-tolerant order processing with circuit-breaker resiliency and catalog inventory sync",
+      "Asynchronous transactional event processing and OTP dispatch via RabbitMQ messaging daemon"
+    ],
+    "stack": [
+      { "id": "react", "label": "React" },
+      { "id": "typescript", "label": "TypeScript" },
+      { "id": "tailwindcss", "label": "Tailwind CSS" },
+      { "id": "vite", "label": "Vite" },
+      { "id": "nodedotjs", "label": "Node.js" },
+      { "id": "express", "label": "Express.js" },
+      { "id": "postgresql", "label": "PostgreSQL" },
+      { "id": "prisma", "label": "Prisma ORM" },
+      { "id": "rabbitmq", "label": "RabbitMQ" },
+      { "id": "docker", "label": "Docker / Compose" },
+      { "id": "jenkins", "label": "Jenkins" },
+      { "id": "nginx", "label": "Nginx" },
+      { "id": "linux", "label": "Linux" }
+    ],
+    "outcome": "Eliminated monorepo release bottlenecks, reduced CI pipeline execution overhead, and enabled reliable, zero-downtime rolling production deployments.",
+    "githubUrl": "https://github.com/Hasibul-Islam-Shanto/orderfirst"
+  },
+  {
+    "slug": "devtalk",
+    "name": "DevTalk — Developer Community & CI/CD Platform",
+    "category": "Full-stack platform · DevOps delivery",
+    "summary": "A LinkedIn-inspired community where developers solve coding problems, publish blogs, and connect through jobs.",
+    "problem": "Manual testing, scanning, image builds, and server commands made every release slow and inconsistent.",
+    "solution": "A GitHub-triggered Jenkins pipeline tests, analyzes, scans, builds, and deploys the Docker Compose stack.",
+    "devopsHighlights": [
+      "Push-to-deploy workflow using GitHub webhooks and Jenkins",
+      "Reusable stages for tests, SonarQube analysis, and Trivy scanning",
+      "Managed secrets and repeatable multi-container deployments"
+    ],
+    "applicationFeatures": [
+      "Accounts, posts, comments, and developer blogs",
+      "Job publishing and candidate applications",
+      "Real-time notifications for likes, comments, and applications"
+    ],
+    "stack": [
+      { "id": "nextdotjs", "label": "Next.js" },
+      { "id": "react", "label": "React" },
+      { "id": "tailwindcss", "label": "Tailwind CSS" },
+      { "id": "zustand", "label": "Zustand" },
+      { "id": "nodedotjs", "label": "Node.js" },
+      { "id": "express", "label": "Express.js" },
+      { "id": "mongodb", "label": "MongoDB" },
+      { "id": "redis", "label": "Redis" },
+      { "id": "jenkins", "label": "Jenkins" },
+      { "id": "github", "label": "GitHub" },
+      { "id": "docker", "label": "Docker / Compose" },
+      { "id": "sonarqube", "label": "SonarQube" },
+      { "id": "trivy", "label": "Trivy" },
+      { "id": "linux", "label": "Linux" }
+    ],
+    "outcome": "Turned manual releases into one repeatable, quality-gated path from commit to deployment.",
+    "githubUrl": "https://github.com/Hasibul-Islam-Shanto/devtalk",
+    "blogHref": "/blogs/how-to-setup-jenkins",
+    "blogLabel": "Read the implementation guide"
+  }
+]

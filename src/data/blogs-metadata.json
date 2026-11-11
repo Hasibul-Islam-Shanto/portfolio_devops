@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "how-to-setup-jenkins",
+    "title": "Build a Jenkins CI/CD Pipeline with Docker, SonarQube, and Trivy",
+    "description": "A beginner-friendly, end-to-end guide to installing Jenkins and building a secure CI/CD pipeline for a Docker Compose application.",
+    "pubDate": "2026-09-25",
+    "readTime": "18 min read",
+    "tags": ["jenkins", "ci-cd", "docker", "sonarqube", "trivy", "devops"],
+    "file": "content/blogs/how-to-setup-jenkins.md",
+    "featuredImage": "/images/blog/devTalk-jenkins-cicd.png"
+  },
+  {
+    "slug": "kind-full-stack-deployment",
+    "title": "Deploying a Full-Stack Application on Kubernetes with kind",
+    "description": "A practical walkthrough for deploying a React frontend, Node.js backend, and PostgreSQL database on a local Kubernetes cluster created with kind.",
+    "pubDate": "2026-08-14",
+    "readTime": "12 min read",
+    "tags": ["kubernetes", "kind", "docker", "postgresql", "devops"],
+    "file": "content/blogs/kind-full-stack-deployment.md",
+    "featuredImage": null
+  }
+]

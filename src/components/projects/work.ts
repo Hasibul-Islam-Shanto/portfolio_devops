@@ -1,10 +1,8 @@
-import { createCleanup, prefersReducedMotion, typeInto } from "@/scripts/util";
+import { createCleanup, prefersReducedMotion } from "@/scripts/util";
 
 const MINI_STEP_MS = 220;
-const CMD_SPEED = 22;
-const RES_SPEED = 18;
 
-/** Reveals project cards in view, types their CLI command/result, and runs hover/focus effects. */
+/** Reveals project cards in view and runs hover/focus effects on their mini pipeline flows and canvas. */
 export function initWork(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -16,27 +14,17 @@ export function initWork(
   const reduce = prefersReducedMotion();
 
   cards.forEach((card) => {
-    const cmdEl = card.querySelector<HTMLElement>("[data-work-cmd]")!;
-    const resEl = card.querySelector<HTMLElement>("[data-work-res]")!;
-    const caret = card.querySelector<HTMLElement>("[data-work-caret]")!;
-    const cmdText = card.dataset["cmd"] ?? cmdEl.textContent ?? "";
-    const resText = card.dataset["res"] ?? resEl.textContent ?? "";
     const wrapper = card.parentElement as HTMLElement;
     const canvas = card.querySelector<HTMLElement>('[data-constellation-canvas="card"]');
-    const flow = card.querySelector<HTMLElement>("[data-mini-flow]")!;
+    const flow = card.querySelector<HTMLElement>("[data-mini-flow]");
+    if (!flow) return;
+
     const nodes = Array.from(flow.querySelectorAll<HTMLElement>("[data-flow-node]"));
     const labels = Array.from(flow.querySelectorAll<HTMLElement>("[data-flow-label]"));
-    const line = flow.querySelector<HTMLElement>("[data-flow-line]")!;
-    const dot = flow.querySelector<HTMLElement>("[data-flow-dot]")!;
+    const line = flow.querySelector<HTMLElement>("[data-flow-line]");
+    const dot = flow.querySelector<HTMLElement>("[data-flow-dot]");
 
-    // ---- in-view reveal + terminal typing (text is full in the HTML for crawlers / no-JS) ----
-    let stopTyping = () => {};
-    if (!reduce) {
-      cmdEl.textContent = "";
-      resEl.textContent = "";
-      caret.hidden = false;
-    }
-
+    // ---- in-view reveal ----
     const revealTargets = [
       wrapper,
       ...Array.from(card.querySelectorAll<HTMLElement>("[data-reveal]")),
@@ -46,20 +34,12 @@ export function initWork(
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
         revealTargets.forEach((el) => el.classList.add("is-in"));
-        const stopCmd = typeInto(cmdEl, cmdText, CMD_SPEED, reduce, () => {
-          stopTyping = typeInto(resEl, resText, RES_SPEED, reduce, () => {
-            caret.hidden = true;
-          });
-        });
-        stopTyping = stopCmd;
-        if (reduce) caret.hidden = true;
       },
       { rootMargin: "-15% 0px" },
     );
     io.observe(card);
     cleanup.add(() => {
       io.disconnect();
-      stopTyping();
     });
 
     // ---- hover / focus: constellation + mini flow ----
@@ -69,10 +49,12 @@ export function initWork(
     const paint = () => {
       const n = nodes.length;
       const pos = step < 0 ? 0 : Math.max(0, Math.min(step, n - 1)) / Math.max(1, n - 1);
-      line.style.transform = `scaleX(${step < 0 ? 0 : pos})`;
+      if (line) line.style.transform = `scaleX(${step < 0 ? 0 : pos})`;
       const showDot = !reduce && step >= 0 && step < n;
-      dot.hidden = !showDot;
-      dot.style.left = `calc(0.875rem + (100% - 1.75rem) * ${pos})`;
+      if (dot) {
+        dot.hidden = !showDot;
+        dot.style.left = `calc(0.875rem + (100% - 1.75rem) * ${pos})`;
+      }
       nodes.forEach((node, idx) => {
         node.classList.toggle("is-on", idx === step);
         node.classList.toggle("is-done", step > idx);

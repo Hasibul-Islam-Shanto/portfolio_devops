@@ -11,14 +11,23 @@ const { currentPath = "/" } = Astro.props;
 const NAV = [
   { label: "Home", href: "/", path: "/", hash: "" },
   { label: "Projects", href: "/#test", path: "/", hash: "#test" },
-  { label: "Case Studies", href: "/case-studies", path: "/case-studies", hash: "" },
+  { label: "About", href: "/about", path: "/about", hash: "" },
+  { label: "Learnings", href: "/learnings", path: "/learnings", hash: "" },
   { label: "Blog", href: "/blog", path: "/blog", hash: "" },
   { label: "Contact", href: "/#scale", path: "/", hash: "#scale" },
 ] as const;
 
 const SOCIAL = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/", icon: "Linkedin" },
-  { label: "GitHub", href: "https://github.com/", icon: "Github" },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/hasibul-islam-shanto-80487a217/",
+    icon: "Linkedin",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/Hasibul-Islam-Shanto",
+    icon: "Github",
+  },
 ] as const;
 
 const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash === "";

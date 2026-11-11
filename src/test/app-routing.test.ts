@@ -39,17 +39,17 @@ describe("Astro routes", () => {
     expect(doc.querySelectorAll("h1").length).toBe(1);
   });
 
-  it("/ ships crawlable content in the static HTML, including the placeholder comments", async () => {
+  it("/ ships crawlable content in the static HTML, including real systems and experience", async () => {
     const html = fixture("index");
     for (const text of [
       "Making",
-      "Monorepo pipeline rebuild",
-      "Game-day program",
+      "OrderFirst",
+      "DevTalk",
+      "Universal Machine Inc.",
+      "Production platforms",
       "Every layer,",
       "Calm systems are",
-      "mailto:hello@shanto.dev",
-      "PLACEHOLDER: Replace certification names",
-      "PLACEHOLDER: Replace all company names",
+      "mailto:mdhasibulislamshanto007@gmail.com",
     ]) {
       expect(html).toContain(text);
     }
@@ -65,22 +65,18 @@ describe("Astro routes", () => {
     for (const h of hashes) expect(ids.has(h)).toBe(true);
   });
 
-  it("/blog is a coming-soon page with its own metadata and a link back to the projects", async () => {
+  it("/blog renders the real blog articles and links to posts", async () => {
     const doc = renderPage("blog");
-    expect(doc.title).toBe("Blog — Shanto, DevOps & Platform Engineer");
-    expect(meta(doc, 'meta[name="description"]')).toContain("Notes on pipelines");
-    expect(doc.querySelector("h1")?.textContent).toContain("First posts are being written.");
-    expect(doc.querySelector('a[href="/#test"]')).not.toBeNull();
+    expect(doc.title).toContain("Blog");
+    expect(meta(doc, 'meta[name="description"]')).toContain("write-ups");
+    expect(doc.querySelector("h1")?.textContent).toContain("Production notes");
     expect(doc.querySelector('.nav-link[href="/blog"]')?.getAttribute("aria-current")).toBe("page");
   });
 
-  it("/case-studies is a coming-soon page with its own metadata", async () => {
+  it("/case-studies renders the case studies placeholder page", async () => {
     const doc = renderPage("case-studies");
-    expect(doc.title).toBe("Case Studies — Shanto, DevOps & Platform Engineer");
-    expect(doc.querySelector("h1")?.textContent).toContain("Long-form write-ups");
-    expect(doc.querySelector('.nav-link[href="/case-studies"]')?.getAttribute("aria-current")).toBe(
-      "page",
-    );
+    expect(doc.title).toContain("Case Studies");
+    expect(doc.querySelector("h1")?.textContent).toContain("Case studies coming soon.");
   });
 
   it("the 404 page is centered and links back home", async () => {

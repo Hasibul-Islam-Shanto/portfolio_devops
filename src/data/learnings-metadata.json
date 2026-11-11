@@ -1,0 +1,415 @@
+{
+  "topicOrder": [
+    "linux",
+    "networking",
+    "docker",
+    "kubernetes",
+    "terraform",
+    "ansible",
+    "github-actions",
+    "jenkins"
+  ],
+  "topics": [
+    {
+      "slug": "linux",
+      "title": "Linux",
+      "description": "Files, users, permissions, and the shell commands you use on a server.",
+      "icon": "linux",
+      "lessonCount": 6,
+      "lessons": [
+        {
+          "order": 1,
+          "slug": "basic-linux",
+          "title": "Basic Linux",
+          "file": "basic-linux.md"
+        },
+        {
+          "order": 2,
+          "slug": "commands",
+          "title": "Linux Commands",
+          "file": "commands.md"
+        },
+        {
+          "order": 3,
+          "slug": "file-permissions",
+          "title": "File Permissions",
+          "file": "file-permissions.md"
+        },
+        {
+          "order": 4,
+          "slug": "scenario-questions",
+          "title": "Scenario Based Questions",
+          "file": "scenario-questions.md"
+        },
+        {
+          "order": 5,
+          "slug": "bash-basics",
+          "title": "Bash Script Basics",
+          "file": "bash-basics.md"
+        },
+        {
+          "order": 6,
+          "slug": "bash-examples",
+          "title": "Bash Script Examples",
+          "file": "bash-examples.md"
+        }
+      ]
+    },
+    {
+      "slug": "networking",
+      "title": "Networking",
+      "description": "How machines find each other — IP addresses, DNS, ports, and how to debug the path.",
+      "icon": "networking",
+      "lessonCount": 8,
+      "lessons": [
+        {
+          "order": 1,
+          "slug": "internet-and-ip-addressing",
+          "title": "Internet & IP Addressing",
+          "file": "internet-and-ip-addressing.md"
+        },
+        {
+          "order": 2,
+          "slug": "mac-address-and-packets",
+          "title": "MAC Address & Packets",
+          "file": "mac-address-and-packets.md"
+        },
+        {
+          "order": 3,
+          "slug": "ports-and-dns",
+          "title": "Ports & DNS",
+          "file": "ports-and-dns.md"
+        },
+        {
+          "order": 4,
+          "slug": "network-models",
+          "title": "Network Models",
+          "file": "network-models.md"
+        },
+        {
+          "order": 5,
+          "slug": "transport-protocols",
+          "title": "Transport Protocols",
+          "file": "transport-protocols.md"
+        },
+        {
+          "order": 6,
+          "slug": "http-tls-and-ssh",
+          "title": "HTTP, TLS & SSH",
+          "file": "http-tls-and-ssh.md"
+        },
+        {
+          "order": 7,
+          "slug": "load-balancing-and-proxies",
+          "title": "Load Balancing & Reverse Proxy",
+          "file": "load-balancing-and-proxies.md"
+        },
+        {
+          "order": 8,
+          "slug": "troubleshooting-tools",
+          "title": "Troubleshooting Tools",
+          "file": "troubleshooting-tools.md"
+        }
+      ]
+    },
+    {
+      "slug": "docker",
+      "title": "Docker",
+      "description": "Package an app so the same container runs on a laptop and in production.",
+      "icon": "docker",
+      "lessonCount": 9,
+      "lessons": [
+        {
+          "order": 1,
+          "slug": "basics",
+          "title": "Docker Basics",
+          "file": "basics.md"
+        },
+        {
+          "order": 2,
+          "slug": "dockerfile",
+          "title": "Dockerfile Basics",
+          "file": "dockerfile.md"
+        },
+        {
+          "order": 3,
+          "slug": "basic-commands",
+          "title": "Essential Docker Commands",
+          "file": "basic-commands.md"
+        },
+        {
+          "order": 4,
+          "slug": "environment-variables",
+          "title": "Environment Variables in Docker",
+          "file": "environment-variables.md"
+        },
+        {
+          "order": 5,
+          "slug": "image-and-containers",
+          "title": "Images and Containers",
+          "file": "image-and-containers.md"
+        },
+        {
+          "order": 6,
+          "slug": "networking",
+          "title": "Docker Networking",
+          "file": "networking.md"
+        },
+        {
+          "order": 7,
+          "slug": "storage",
+          "title": "Docker Storage and Volumes",
+          "file": "storage.md"
+        },
+        {
+          "order": 8,
+          "slug": "docker-compose",
+          "title": "Docker Compose",
+          "file": "docker-compose.md"
+        },
+        {
+          "order": 9,
+          "slug": "debugging-troubleshooting",
+          "title": "Docker Debugging and Troubleshooting",
+          "file": "debugging-troubleshooting.md"
+        }
+      ]
+    },
+    {
+      "slug": "kubernetes",
+      "title": "Kubernetes",
+      "description": "Run containers across a cluster and keep them healthy as traffic grows.",
+      "icon": "kubernetes",
+      "lessonCount": 11,
+      "lessons": [
+        {
+          "order": 1,
+          "slug": "foundations-and-architecture",
+          "title": "Foundations and Architecture",
+          "file": "foundations-and-architecture.md"
+        },
+        {
+          "order": 2,
+          "slug": "kubectl-and-resource-inspection",
+          "title": "Working with kubectl",
+          "file": "kubectl-and-resource-inspection.md"
+        },
+        {
+          "order": 3,
+          "slug": "pods-replicasets-and-deployments",
+          "title": "Pods, ReplicaSets, and Deployments",
+          "file": "pods-replicasets-and-deployments.md"
+        },
+        {
+          "order": 4,
+          "slug": "services-and-ingress",
+          "title": "Services and Ingress",
+          "file": "services-and-ingress.md"
+        },
+        {
+          "order": 5,
+          "slug": "namespaces-configmaps-and-secrets",
+          "title": "Namespaces, ConfigMaps, and Secrets",
+          "file": "namespaces-configmaps-and-secrets.md"
+        },
+        {
+          "order": 6,
+          "slug": "resources-and-scheduling",
+          "title": "Resources and Scheduling",
+          "file": "resources-and-scheduling.md"
+        },
+        {
+          "order": 7,
+          "slug": "health-checks-and-probes",
+          "title": "Health Checks and Probes",
+          "file": "health-checks-and-probes.md"
+        },
+        {
+          "order": 8,
+          "slug": "storage",
+          "title": "Storage",
+          "file": "storage.md"
+        },
+        {
+          "order": 9,
+          "slug": "specialized-workloads",
+          "title": "Specialized Workloads",
+          "file": "specialized-workloads.md"
+        },
+        {
+          "order": 10,
+          "slug": "autoscaling",
+          "title": "Autoscaling",
+          "file": "autoscaling.md"
+        },
+        {
+          "order": 11,
+          "slug": "troubleshooting",
+          "title": "Troubleshooting",
+          "file": "troubleshooting.md"
+        }
+      ]
+    },
+    {
+      "slug": "terraform",
+      "title": "Terraform",
+      "description": "Describe infrastructure in code, then review a plan before anything changes.",
+      "icon": "terraform",
+      "lessonCount": 7,
+      "lessons": [
+        {
+          "order": 1,
+          "slug": "language-basics",
+          "title": "Terraform Language Basics",
+          "file": "language-basics.md"
+        },
+        {
+          "order": 2,
+          "slug": "block-types",
+          "title": "Terraform Block Types",
+          "file": "block-types.md"
+        },
+        {
+          "order": 3,
+          "slug": "variables-and-types",
+          "title": "Variables, Types, and Outputs",
+          "file": "variables-and-types.md"
+        },
+        {
+          "order": 4,
+          "slug": "expressions-and-functions",
+          "title": "Expressions and Built-in Functions",
+          "file": "expressions-and-functions.md"
+        },
+        {
+          "order": 5,
+          "slug": "count-and-for-each",
+          "title": "Meta-Arguments: count and for_each",
+          "file": "count-and-for-each.md"
+        },
+        {
+          "order": 6,
+          "slug": "state",
+          "title": "Terraform State",
+          "file": "state.md"
+        },
+        {
+          "order": 7,
+          "slug": "workflow",
+          "title": "Terraform Workflow",
+          "file": "workflow.md"
+        }
+      ]
+    },
+    {
+      "slug": "ansible",
+      "title": "Ansible",
+      "description": "Configure many servers from one playbook, the same way every time.",
+      "icon": "ansible",
+      "lessonCount": 7,
+      "lessons": [
+        {
+          "order": 1,
+          "slug": "fundamentals-and-architecture",
+          "title": "Ansible Fundamentals and Architecture",
+          "file": "fundamentals-and-architecture.md"
+        },
+        {
+          "order": 2,
+          "slug": "inventory-and-connectivity",
+          "title": "Inventory and SSH Connectivity",
+          "file": "inventory-and-connectivity.md"
+        },
+        {
+          "order": 3,
+          "slug": "playbooks-and-modules",
+          "title": "Playbooks and Core Modules",
+          "file": "playbooks-and-modules.md"
+        },
+        {
+          "order": 4,
+          "slug": "variables-loops-facts-and-templates",
+          "title": "Variables, Loops, Facts, and Templates",
+          "file": "variables-loops-facts-and-templates.md"
+        },
+        {
+          "order": 5,
+          "slug": "idempotence-and-results",
+          "title": "Idempotence, Registered Results, and Handlers",
+          "file": "idempotence-and-results.md"
+        },
+        {
+          "order": 6,
+          "slug": "roles-and-reuse",
+          "title": "Reusable Automation with Roles",
+          "file": "roles-and-reuse.md"
+        },
+        {
+          "order": 7,
+          "slug": "workflow-and-next-steps",
+          "title": "Safe Workflow and Next Steps",
+          "file": "workflow-and-next-steps.md"
+        }
+      ]
+    },
+    {
+      "slug": "github-actions",
+      "title": "GitHub Actions",
+      "description": "Run tests and deploys automatically whenever code is pushed.",
+      "icon": "github-actions",
+      "lessonCount": 7,
+      "lessons": [
+        {
+          "order": 1,
+          "slug": "core-concepts-and-workflow-anatomy",
+          "title": "Core Concepts and Workflow Anatomy",
+          "file": "core-concepts-and-workflow-anatomy.md"
+        },
+        {
+          "order": 2,
+          "slug": "events-steps-and-actions",
+          "title": "Events, Steps, and Actions",
+          "file": "events-steps-and-actions.md"
+        },
+        {
+          "order": 3,
+          "slug": "contexts-variables-and-secrets",
+          "title": "Contexts, Variables, and Secrets",
+          "file": "contexts-variables-and-secrets.md"
+        },
+        {
+          "order": 4,
+          "slug": "job-control-needs-if-and-matrix",
+          "title": "Job Control: needs, if, and Matrix",
+          "file": "job-control-needs-if-and-matrix.md"
+        },
+        {
+          "order": 5,
+          "slug": "artifacts-and-caching",
+          "title": "Artifacts and Caching",
+          "file": "artifacts-and-caching.md"
+        },
+        {
+          "order": 6,
+          "slug": "reusable-workflows-and-composite-actions",
+          "title": "Reusable Workflows and Composite Actions",
+          "file": "reusable-workflows-and-composite-actions.md"
+        },
+        {
+          "order": 7,
+          "slug": "runners-and-glossary",
+          "title": "Runners and Quick Glossary",
+          "file": "runners-and-glossary.md"
+        }
+      ]
+    },
+    {
+      "slug": "jenkins",
+      "title": "Jenkins",
+      "description": "Build pipelines that test, package, and ship an application.",
+      "icon": "jenkins",
+      "lessonCount": 0,
+      "lessons": []
+    }
+  ]
+}

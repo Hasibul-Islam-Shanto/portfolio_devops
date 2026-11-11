@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "event": "Smart Village Idea Competition",
+    "year": "2023",
+    "recognition": "1st Runner-Up",
+    "project": "Ethereum-based Agri-Food Supply Chain System",
+    "description": "Presented a public Ethereum blockchain solution designed to enhance transparency, traceability, and sustainability in agricultural supply chains.",
+    "imageUrl": "/images/idea_competition.webp",
+    "externalLink": null
+  },
+  {
+    "id": 2,
+    "event": "Bangladesh Blockchain Olympiad",
+    "year": "2023",
+    "recognition": "Top 10 Finalist (Team Block-bit)",
+    "project": "Digital Sharecropper",
+    "description": "Developed a Hyperledger Fabric-based private blockchain solution connecting landowners, investors, and farmers to improve transparency and collaboration in agriculture.",
+    "imageUrl": "/images/blockchain_competition.webp",
+    "externalLink": null
+  },
+  {
+    "id": 3,
+    "event": "International Conference on Computer and Information Technology (ICCIT)",
+    "year": "2023",
+    "recognition": "Research Paper Presentation",
+    "project": "Digital Sharecropper: Connecting Landowners, Farmers, and Investors Through Blockchain",
+    "description": "Presented research addressing underutilized arable land and agricultural investment challenges through blockchain-driven transparency and decentralized collaboration.",
+    "imageUrl": null,
+    "externalLink": "https://ieeexplore.ieee.org/abstract/document/10441096"
+  }
+]

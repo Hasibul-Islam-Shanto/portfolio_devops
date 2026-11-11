@@ -22,7 +22,6 @@ export const COMMAND_LIST = [
 
 const TYPING_CHAR_MS = 35;
 
-const coral = (t: string) => `<span class="text-signal">${t}</span>`;
 const coralBold = (t: string) => `<span class="font-bold text-signal">${t}</span>`;
 const dim = (t: string) => `<span class="text-[var(--terminal-dim)]">${t}</span>`;
 const bold = (t: string) => `<span class="font-bold text-[var(--terminal-fg)]">${t}</span>`;
@@ -40,7 +39,8 @@ export function renderCommandOutput(rawCommand: string): string {
         <div class="font-bold text-[var(--terminal-fg)]">AVAILABLE COMMANDS:</div>
         <div class="terminal-help-grid grid grid-cols-1 gap-x-4 gap-y-1 items-baseline font-mono text-xs sm:grid-cols-[auto_1fr] sm:gap-x-6">
           ${COMMAND_LIST.map(
-            (c) => `<div class="font-semibold text-signal">${c.cmd}</div><div class="text-[var(--terminal-dim)]">— ${c.desc}</div>`,
+            (c) =>
+              `<div class="font-semibold text-signal">${c.cmd}</div><div class="text-[var(--terminal-dim)]">— ${c.desc}</div>`,
           ).join("")}
         </div>
       </div>`;
@@ -76,7 +76,7 @@ export function renderCommandOutput(rawCommand: string): string {
       return `<div class="space-y-1.5 text-[var(--terminal-fg)]">
         <div class="text-[var(--terminal-dim)]">[sudo] password for recruiter: ********</div>
         <div class="font-bold text-signal">ACCESS GRANTED — Shanto provisioned for Platform / DevOps leadership.</div>
-        <div>→ <a href="mailto:hello@shanto.dev" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">hello@shanto.dev</a> ${dim("or")} <a href="#scale" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">jump to contact ↓</a></div>
+        <div>→ <a href="mailto:mdhasibulislamshanto007@gmail.com" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">mdhasibulislamshanto007@gmail.com</a> ${dim("or")} <a href="#scale" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">jump to contact ↓</a></div>
       </div>`;
     default:
       return `<div class="text-[var(--terminal-dim)]">command not found — try help</div>`;

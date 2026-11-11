@@ -80,8 +80,7 @@ export function smoothScrollTo(
   let rafId = 0;
   const startTime = performance.now();
 
-  const easeInOutCubic = (t: number) =>
-    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
   const restore = () => {
     document.documentElement.style.scrollBehavior = prevScrollBehavior;
@@ -149,7 +148,7 @@ export function initSectionNav(
   const setActiveEyebrow = (id: SectionId) => {
     activeSectionId = id;
     eyebrows.forEach((a) => {
-      const match = a.dataset.sectionEyebrow === id;
+      const match = a.dataset["sectionEyebrow"] === id;
       a.classList.toggle("is-active", match);
       if (match) {
         a.setAttribute("aria-current", "location");
@@ -160,7 +159,7 @@ export function initSectionNav(
   };
 
   const pulseEyebrow = (id: SectionId) => {
-    const el = eyebrows.find((a) => a.dataset.sectionEyebrow === id);
+    const el = eyebrows.find((a) => a.dataset["sectionEyebrow"] === id);
     if (!el) return;
     el.classList.remove("is-highlighted");
     // Trigger reflow to restart animation if clicked repeatedly
@@ -247,7 +246,8 @@ export function initSectionNav(
     const canonicalId = TARGET_ALIASES[rawId];
     if (!canonicalId) return;
 
-    const targetSection = sectionMap.get(canonicalId) || root.querySelector<HTMLElement>(`#${rawId}`);
+    const targetSection =
+      sectionMap.get(canonicalId) || root.querySelector<HTMLElement>(`#${rawId}`);
     if (!targetSection) return;
 
     e.preventDefault();
@@ -274,12 +274,11 @@ export function initSectionNav(
     });
   };
 
-  root.addEventListener("click", onAnchorClick);
+  root.addEventListener("click", onAnchorClick as EventListener);
   cleanup.add(() => {
-    root.removeEventListener("click", onAnchorClick);
+    root.removeEventListener("click", onAnchorClick as EventListener);
     if (activeScrollCancel) activeScrollCancel();
   });
 
   return () => cleanup.run();
 }
-

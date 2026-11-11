@@ -1,0 +1,44 @@
+{
+  "intro": {
+    "kicker": "About",
+    "headline": "From product interfaces to production systems",
+    "lede": "I started in product UI, then followed the work into APIs, databases, and the pipelines that keep them shipping. Today I build CI/CD, containers, and cloud infrastructure so production stays boring."
+  },
+  "photo": {
+    "src": "/images/shanto_dp.webp",
+    "alt": "Portrait of Hasibul Islam Shanto"
+  },
+  "story": [
+    "I studied Computer Science & Engineering at Shahjalal University of Science and Technology from 2019 to 2024, graduating with a 3.52 CGPA. While finishing that degree I was already shipping: first as a Junior Web Developer at InnovexIT, building responsive appointment and workforce platforms in React, Next.js, and TypeScript.",
+    "From January 2024 to June 2026 I was a Front-End Engineer at Universal Machine Inc., working on a carbon credit platform for enterprise sustainability teams and on a Minipay wallet used by 200K+ people. That work spanned Next.js and TypeScript on the client, Node.js and PostgreSQL on the server, and GitHub Actions pipelines that test, lint, and deploy on every merge.",
+    "In 2023 I took blockchain systems into competitions and research — 1st runner-up at the Smart Village Idea Competition, a top-10 finish at the Bangladesh Blockchain Olympiad, and a paper at ICCIT on connecting landowners, farmers, and investors. The through-line is the same as my DevOps work: make systems that are transparent, automated, and hard to silently break."
+  ],
+  "quickFacts": [
+    {
+      "label": "Former",
+      "value": "Front-End Engineer",
+      "detail": "Universal Machine Inc."
+    },
+    {
+      "label": "Education",
+      "value": "B.Sc. CSE",
+      "detail": "SUST · 3.52 CGPA"
+    },
+    {
+      "label": "Recognition",
+      "value": "1st Runner-Up",
+      "detail": "Smart Village Idea Competition"
+    },
+    {
+      "label": "Status",
+      "value": "Open to work",
+      "detail": "Available for DevOps roles & freelance"
+    }
+  ],
+  "education": {
+    "degree": "B.Sc. in Computer Science & Engineering",
+    "university": "Shahjalal University of Science and Technology",
+    "period": "Jan 2019 – Feb 2024",
+    "cgpa": "3.52 / 4.00"
+  }
+}
