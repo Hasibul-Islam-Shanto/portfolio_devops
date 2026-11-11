@@ -29,7 +29,7 @@ describe("Astro routes", () => {
     expect(sections.map((s) => s.className.match(/mode-(\w+)/)?.[1])).toEqual([
       "dark",
       "dark",
-      "light",
+      "dark",
       "dark",
       "dark",
       "dark",

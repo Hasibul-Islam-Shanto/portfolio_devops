@@ -1,78 +1,234 @@
 ---
 const PROCESS_STEPS = [
   {
-    num: "01",
-    title: "Understand",
+    num: "1",
+    title: "1. Understand",
+    cmd: "$ runbook understand --incident",
     desc: "Map failure domains, SLO targets, and real developer bottlenecks before touching YAML.",
+    res: "failure domains mapped · 3 bottlenecks identified",
   },
   {
-    num: "02",
-    title: "Plan",
+    num: "2",
+    title: "2. Plan",
+    cmd: "$ plan review --blast-radius",
     desc: "Draft small, reversible architecture plans with explicit blast-radius and rollback bounds.",
+    res: "architecture approved · rollback verified",
   },
   {
-    num: "03",
-    title: "Delegate / Build",
+    num: "3",
+    title: "3. Delegate / Build",
+    cmd: "$ scaffold golden-path --module=core",
     desc: "Codify golden paths, reusable Terraform modules, and automated CI/CD workflows.",
+    res: "3 modules codified · pipeline green",
   },
   {
-    num: "04",
-    title: "Review",
+    num: "4",
+    title: "4. Review",
+    cmd: "$ chaos test --dry-run --policy=strict",
     desc: "Enforce policy-as-code checks, dry-run diffs, and failure-injection drills in staging.",
+    res: "policy checks passed · 0 violations",
   },
   {
-    num: "05",
-    title: "Measure",
+    num: "5",
+    title: "5. Measure",
+    cmd: "$ slo verify --p99 --window=30d",
     desc: "Verify deploy lead time, error-budget burn, and p99 latency against production SLOs.",
+    res: "p99 < 85ms · 99.95% SLO held",
   },
 ];
 ---
 
-<div class="site-container py-28">
+<div class="site-container py-28 text-[#EFE6D8]">
   <p class="font-mono text-xs uppercase tracking-[0.25em] text-signal">Process / Execution model</p>
   <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
     How I <span class="text-signal">work</span> from incident to system.
   </h2>
 
-  <ol class="mt-14 grid gap-8 md:grid-cols-5 md:gap-5">
-    {
-      PROCESS_STEPS.map((step, i) => {
-        const isLast = i === PROCESS_STEPS.length - 1;
-        return (
-          <li data-reveal style={`--reveal-delay: ${i * 0.1}s`} class="relative flex flex-col">
-            <div class="flex items-center">
-              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border hairline bg-surface font-mono text-sm font-bold text-signal">
-                {step.num}
-              </div>
-              {!isLast && (
-                <div class="hidden flex-1 items-center pl-2 pr-1 md:flex" aria-hidden="true">
-                  <span class="h-px flex-1 bg-current opacity-25" />
-                  <svg viewBox="0 0 8 8" class="h-2 w-2 shrink-0 fill-current opacity-45">
-                    <path d="M0 0 L8 4 L0 8 Z" />
-                  </svg>
-                </div>
-              )}
-            </div>
-            <h3 class="mt-5 text-lg font-bold tracking-tight">{step.title}</h3>
-            <p class="mt-2 text-sm leading-relaxed dim">{step.desc}</p>
-            {!isLast && (
-              <div
-                class="mt-5 flex items-center gap-1.5 font-mono text-[10px] dim md:hidden"
-                aria-hidden="true"
-              >
-                <span class="h-4 w-px bg-current opacity-30" />
-                <span>↓</span>
-              </div>
-            )}
-          </li>
-        );
-      })
-    }
-  </ol>
+  {/* Non-linear zigzag flow stage on desktop with generous breathing room */}
+  <div data-flow-stage class="flow-stage relative mt-20 w-full lg:mt-24">
+    {/* SVG connecting arrows (1→2→3→4→5) on desktop viewports */}
+    <svg
+      data-flow-svg
+      class="flow-arrows pointer-events-none absolute inset-0 z-0 hidden h-full w-full lg:block"
+      aria-hidden="true"
+    >
+      <defs>
+        <marker
+          id="flow-arrowhead"
+          viewBox="0 0 10 10"
+          refX="6"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto"
+        >
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#E8503A" />
+        </marker>
+      </defs>
+      <path
+        data-flow-path="0"
+        marker-end="url(#flow-arrowhead)"
+        fill="none"
+        stroke="#E8503A"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+      <path
+        data-flow-path="1"
+        marker-end="url(#flow-arrowhead)"
+        fill="none"
+        stroke="#E8503A"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+      <path
+        data-flow-path="2"
+        marker-end="url(#flow-arrowhead)"
+        fill="none"
+        stroke="#E8503A"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+      <path
+        data-flow-path="3"
+        marker-end="url(#flow-arrowhead)"
+        fill="none"
+        stroke="#E8503A"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
 
-  <blockquote class="mt-14 border-t hairline pt-8 text-lg italic leading-relaxed md:text-xl">
-    “Every pipeline I ship has one clear owner until it runs quietly in production —{" "}
-    <span class="font-bold not-italic text-signal">if it pages at 3am, it pages me first.</span>”
-  </blockquote>
+    {/* 5 independent mini-terminal window cards in a robust CSS grid */}
+    <ol class="flow-list relative z-10 flex flex-col gap-6 sm:gap-8 max-w-xl mx-auto lg:max-w-none lg:grid lg:grid-cols-2 lg:gap-x-20 xl:gap-x-28 lg:gap-y-24 xl:gap-y-28 w-full">
+      {
+        PROCESS_STEPS.map((step, i) => (
+          <li
+            data-flow-card
+            data-step-index={i}
+            data-step-cmd={step.cmd}
+            class:list={[
+              "flow-card relative z-10 w-full overflow-hidden rounded-2xl border border-[#3A4152]/70 bg-[#10151F] text-[#EFE6D8] shadow-lg transition-all duration-300 ease-out",
+              i === 0 && "lg:col-start-1 lg:justify-self-start lg:max-w-[360px] xl:max-w-[390px]",
+              i === 1 && "lg:col-start-2 lg:justify-self-end lg:max-w-[360px] xl:max-w-[390px] lg:mt-8",
+              i === 2 && "lg:col-start-1 lg:justify-self-start lg:max-w-[360px] xl:max-w-[390px]",
+              i === 3 && "lg:col-start-2 lg:justify-self-end lg:max-w-[360px] xl:max-w-[390px] lg:mt-8",
+              i === 4 && "lg:col-span-2 lg:justify-self-center lg:max-w-[360px] xl:max-w-[390px] lg:mt-6",
+            ]}
+          >
+            {/* Window chrome header */}
+            <div class="flex items-center border-b border-[#3A4152]/50 bg-[#10151F] px-4 py-2.5">
+              <div class="flex items-center gap-1.5" aria-hidden="true">
+                <span class="h-2 w-2 rounded-full bg-[#FF5F56]/85" />
+                <span class="h-2 w-2 rounded-full bg-[#FFBD2E]/85" />
+                <span class="h-2 w-2 rounded-full bg-[#27C93F]/85" />
+              </div>
+            </div>
+
+            {/* Terminal card body */}
+            <div class="p-4 sm:p-5">
+              <div class="font-mono text-xs font-semibold text-[#E8503A] truncate flex items-center min-h-[1.25rem]"><span data-flow-cmd-text>{step.cmd}</span><span data-flow-cursor class="ml-0.5 inline-block text-[#E8503A] font-bold" aria-hidden="true" style="display: none;">▍</span></div>
+              <h3 class="font-display text-base font-bold tracking-tight text-[#EFE6D8] mt-2.5 sm:text-lg">
+                {step.title}
+              </h3>
+              <p class="font-mono text-[11px] leading-relaxed text-[#EFE6D8]/70 mt-1.5 sm:text-xs">
+                {step.desc}
+              </p>
+              <div
+                data-flow-result
+                class="flow-result mt-3.5 flex items-center gap-2 border-t border-[#3A4152]/40 pt-3 font-mono text-[11px] font-medium text-[#27C93F] sm:text-xs"
+              >
+                <span class="font-bold">✓</span>
+                <span class="truncate">{step.res}</span>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
 </div>
 
+<style>
+  /* Base card animation states */
+  .flow-card {
+    border-color: rgba(58, 65, 82, 0.7);
+    transition:
+      border-color 0.3s ease-out,
+      box-shadow 0.3s ease-out;
+  }
+
+  .flow-card[data-state="active"] {
+    border-color: #e8503a !important;
+    box-shadow: 0 0 25px -2px rgba(232, 80, 58, 0.45);
+  }
+
+  .flow-card[data-state="settled"] {
+    border-color: rgba(58, 65, 82, 0.7);
+    box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Result line animation */
+  .flow-result {
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.3s ease-out;
+  }
+
+  .flow-result[data-visible="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Connecting arrow path */
+  [data-flow-path] {
+    opacity: 0;
+  }
+
+  [data-flow-path][data-drawn="true"] {
+    opacity: 1;
+    stroke-dashoffset: 0 !important;
+  }
+
+  /* Blinking terminal cursor */
+  @keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  [data-flow-cursor] {
+    animation: blink-cursor 0.75s infinite;
+  }
+
+  /* Static fallback before JS / in SSR */
+  html:not(.js) .flow-result,
+  html:not(.js) [data-flow-path] {
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  /* Accessibility: prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .flow-card,
+    .flow-result,
+    [data-flow-path] {
+      opacity: 1 !important;
+      transform: none !important;
+      stroke-dashoffset: 0 !important;
+      transition: none !important;
+      box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.5) !important;
+      border-color: rgba(58, 65, 82, 0.7) !important;
+    }
+    [data-flow-cursor] {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { initHowIWork } from "../../scripts/how-i-work";
+  initHowIWork();
+</script>

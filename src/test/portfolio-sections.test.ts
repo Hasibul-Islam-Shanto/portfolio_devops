@@ -7,6 +7,7 @@ import { initToolchain } from "@/scripts/toolchain";
 import { initHeader } from "@/scripts/header";
 import { initExperience } from "@/scripts/experience";
 import { initContact } from "@/scripts/contact";
+import { initHowIWork } from "@/scripts/how-i-work";
 import { initPipelineRail } from "@/scripts/pipeline-rail";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
 import { mockMatchMedia, mount, track } from "./helpers";
@@ -510,13 +511,115 @@ describe("Toolchain", () => {
 });
 
 describe("Static sections", () => {
-  it("renders the 5-step How I Work section and pull-quote", async () => {
+  it("renders the 5-step How I Work section with terminal cards and connecting arrows", async () => {
     const body = mount("how-i-work");
     for (const t of ["Understand", "Plan", "Delegate / Build", "Review", "Measure"]) {
       expect(text(body)).toContain(t);
     }
-    expect(body.querySelectorAll("ol > li").length).toBe(5);
-    expect(text(body)).toMatch(/if it pages at 3am, it pages me first/i);
+    const cards = body.querySelectorAll<HTMLElement>("ol > li[data-flow-card]");
+    expect(cards.length).toBe(5);
+
+    // Verify terminal structure in each card
+    cards.forEach((card) => {
+      // 3 dots window chrome
+      const dots = card.querySelectorAll("span.rounded-full");
+      expect(dots.length).toBe(3);
+
+      // Coral mono command line
+      const cmd = card.querySelector(".text-\\[\\#E8503A\\]");
+      expect(cmd).not.toBeNull();
+      expect(text(cmd).trim()).toMatch(/^\$ /);
+
+      // Step title & description
+      expect(card.querySelector("h3")).not.toBeNull();
+      expect(card.querySelector("p")).not.toBeNull();
+
+      // Green result confirmation
+      const res = card.querySelector("[data-flow-result]");
+      expect(res).not.toBeNull();
+      expect(text(res)).toContain("✓");
+    });
+
+    // Verify SVG connecting arrows and arrowhead marker
+    const svg = body.querySelector("svg[data-flow-svg]");
+    expect(svg).not.toBeNull();
+    expect(body.querySelector("#flow-arrowhead")).not.toBeNull();
+    const paths = body.querySelectorAll("path[data-flow-path]");
+    expect(paths.length).toBe(4);
+  });
+
+  it("animates cards and connecting arrows in a continuous relay sequence when triggered", async () => {
+    vi.useFakeTimers();
+    try {
+      const body = mount("how-i-work");
+      track(initHowIWork(body, { immediate: true }));
+
+      const cards = body.querySelectorAll<HTMLElement>("[data-flow-card]");
+      const results = body.querySelectorAll<HTMLElement>("[data-flow-result]");
+      const paths = body.querySelectorAll<SVGPathElement>("[data-flow-path]");
+
+      // Card 0 activates and starts typing after initial reset
+      await vi.advanceTimersByTimeAsync(210);
+      expect(cards[0]?.getAttribute("data-state")).toBe("active");
+      expect(cards[1]?.getAttribute("data-state")).toBeNull();
+
+      // Card 0 command finishes typing (~33 chars * 22ms = 726ms)
+      await vi.advanceTimersByTimeAsync(33 * 22 + 10);
+      const cmdText0 = cards[0]?.querySelector("[data-flow-cmd-text]");
+      expect(text(cmdText0 ?? null)).toBe("$ runbook understand --incident");
+
+      // Result 0 appears after typing finishes
+      await vi.advanceTimersByTimeAsync(110);
+      expect(results[0]?.getAttribute("data-visible")).toBe("true");
+
+      // Card 0 settles and path 0 is drawn
+      await vi.advanceTimersByTimeAsync(260);
+      expect(cards[0]?.getAttribute("data-state")).toBe("settled");
+      expect(paths[0]?.getAttribute("data-drawn")).toBe("true");
+
+      // After arrow finish delay, Card 1 activates and begins typing
+      await vi.advanceTimersByTimeAsync(430);
+      expect(cards[1]?.getAttribute("data-state")).toBe("active");
+
+      // Advance through remaining cards (Steps 2, 3, 4, 5)
+      await vi.advanceTimersByTimeAsync(5800);
+      cards.forEach((c) => {
+        expect(c.getAttribute("data-state")).toBe("settled");
+      });
+      results.forEach((r) => {
+        expect(r.getAttribute("data-visible")).toBe("true");
+      });
+      paths.forEach((p) => {
+        expect(p.getAttribute("data-drawn")).toBe("true");
+      });
+
+      // After hold delay (2500ms) + reset (200ms), loop restarts and Card 0 begins typing again
+      await vi.advanceTimersByTimeAsync(2800);
+      expect(cards[0]?.getAttribute("data-state")).toBe("active");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("settles all cards and draws all arrows immediately under prefers-reduced-motion", async () => {
+    mockMatchMedia("prefers-reduced-motion");
+    const body = mount("how-i-work");
+    track(initHowIWork(body));
+
+    const cards = body.querySelectorAll<HTMLElement>("[data-flow-card]");
+    cards.forEach((c) => {
+      expect(c.getAttribute("data-state")).toBe("settled");
+    });
+
+    const results = body.querySelectorAll<HTMLElement>("[data-flow-result]");
+    results.forEach((r) => {
+      expect(r.getAttribute("data-visible")).toBe("true");
+    });
+
+    const paths = body.querySelectorAll<SVGPathElement>("[data-flow-path]");
+    paths.forEach((p) => {
+      expect(p.getAttribute("data-drawn")).toBe("true");
+    });
   });
 
   it("renders the 4 placeholder Certifications cards", async () => {
