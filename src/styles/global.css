@@ -155,6 +155,7 @@
 /* ===== Portfolio design system ===== */
 /* Fixed palette: warm sand (#EFE6D8), ink navy (#10151F), coral-red (#E8503A). */
 :root {
+  --site-container-max: 1200px;
   --cream: #efe6d8;
   --ink: #10151f;
   --night: #10151f;
@@ -216,15 +217,32 @@
   background: var(--night);
   color: var(--paper);
 }
-/* Keep section content clear of the fixed pipeline rail (dot-only at md, labelled at lg). */
+
+/*
+ * Shared site container: defines the single unified horizontal layout boundary
+ * used by the floating navbar and all section content across all breakpoints.
+ * Matches navbar's responsive insets: 16px (mobile), 24px (tablet), 32px (desktop).
+ */
+.site-container {
+  width: 100%;
+  max-width: var(--site-container-max, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 @media (min-width: 768px) {
-  .rail-safe > * {
-    padding-right: max(1.25rem, calc(4rem - (100vw - 80rem) / 2));
+  .site-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
+
 @media (min-width: 1024px) {
-  .rail-safe > * {
-    padding-right: max(1.25rem, calc(8rem - (100vw - 80rem) / 2));
+  .site-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 .glow-hover {

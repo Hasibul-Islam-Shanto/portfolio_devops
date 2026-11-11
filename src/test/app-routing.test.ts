@@ -88,4 +88,14 @@ describe("Astro routes", () => {
     expect(doc.querySelector("h1")?.textContent).toBe("404");
     expect(doc.querySelector('a[href="/"]')?.textContent?.trim()).toBe("Go home");
   });
+
+  it("header and all index sections share the unified .site-container layout boundary", async () => {
+    const doc = renderPage("index");
+    expect(doc.querySelector("header .site-container")).not.toBeNull();
+    const sections = Array.from(doc.querySelectorAll("main > section"));
+    expect(sections.length).toBe(8);
+    for (const section of sections) {
+      expect(section.querySelector(".site-container")).not.toBeNull();
+    }
+  });
 });

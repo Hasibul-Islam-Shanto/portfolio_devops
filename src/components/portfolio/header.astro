@@ -26,9 +26,10 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
 
 <header
   data-site-header
-  class="pointer-events-none fixed inset-x-4 top-4 z-50 mx-auto max-w-6xl md:inset-x-6 lg:inset-x-8"
+  class="pointer-events-none fixed inset-x-0 top-4 z-50 w-full"
 >
-  <div class="flex items-center justify-between gap-4">
+  <div class="site-container">
+    <div class="flex items-center justify-between gap-4">
     <div
       class="float-header header-pill section-surface mode-dark pointer-events-auto flex items-center gap-4 rounded-full border px-2.5"
     >
@@ -144,6 +145,7 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
       }
     </ul>
   </nav>
+  </div>
 </header>
 
 <script>
