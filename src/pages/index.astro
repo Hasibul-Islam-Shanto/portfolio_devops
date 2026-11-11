@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/base-layout.astro";
 import Header from "../components/portfolio/header.astro";
 import PipelineRail from "../components/portfolio/pipeline-rail.astro";
 import Hero from "../components/portfolio/hero.astro";
+import TechMarquee from "../components/portfolio/tech-marquee.astro";
 import Work from "../components/portfolio/work.astro";
 import HowIWork from "../components/portfolio/how-i-work.astro";
 import Toolchain from "../components/portfolio/toolchain.astro";
@@ -25,6 +26,7 @@ const sectionClass = (mode: string) =>
   <PipelineRail />
   <main class="overflow-x-clip">
     <section id="build" class={sectionClass("dark")}><Hero /></section>
+    <TechMarquee />
     <section id="test" class={sectionClass("dark")}><Work /></section>
     <section class={sectionClass("light")}><HowIWork /></section>
     <section id="deploy" class={sectionClass("dark")}><Toolchain /></section>

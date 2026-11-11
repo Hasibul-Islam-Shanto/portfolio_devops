@@ -5,6 +5,7 @@ import Header from "../components/portfolio/header.astro";
 import PipelineRail from "../components/portfolio/pipeline-rail.astro";
 import CustomCursor from "../components/portfolio/custom-cursor.astro";
 import Hero from "../components/portfolio/hero.astro";
+import TechMarquee from "../components/portfolio/tech-marquee.astro";
 import HeroTerminal from "../components/portfolio/hero-terminal.astro";
 import DeployFlow from "../components/portfolio/deploy-flow.astro";
 import DeployPipeline from "../components/portfolio/deploy-pipeline.astro";
@@ -30,6 +31,7 @@ const COMPONENTS = {
   "pipeline-rail": PipelineRail,
   "custom-cursor": CustomCursor,
   hero: Hero,
+  "tech-marquee": TechMarquee,
   "hero-terminal": HeroTerminal,
   "deploy-flow": DeployFlow,
   "deploy-pipeline": DeployPipeline,

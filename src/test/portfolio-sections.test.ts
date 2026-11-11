@@ -738,3 +738,41 @@ describe("PipelineRail", () => {
     );
   });
 });
+
+describe("TechMarquee", () => {
+  it("renders an infinite marquee band with accessibility attributes and duplicated items", async () => {
+    const body = mount("tech-marquee");
+    const region = body.querySelector('[role="region"][aria-label="Technologies I work with"]');
+    expect(region).not.toBeNull();
+
+    const groups = body.querySelectorAll(".tech-marquee-group");
+    expect(groups.length).toBe(2);
+    expect(groups[0]?.getAttribute("aria-hidden")).toBeNull();
+    expect(groups[1]?.getAttribute("aria-hidden")).toBe("true");
+
+    const pills = groups[0]?.querySelectorAll(".tech-pill");
+    expect(pills?.length).toBe(16);
+
+    const labels = Array.from(pills || []).map((p) => p.querySelector("span")?.textContent?.trim());
+    expect(labels).toContain("AWS");
+    expect(labels).toContain("Google Cloud");
+    expect(labels).toContain("Kubernetes");
+    expect(labels).toContain("Docker");
+    expect(labels).toContain("Terraform");
+    expect(labels).toContain("GitHub Actions");
+    expect(labels).toContain("Argo CD");
+    expect(labels).toContain("PostgreSQL");
+    expect(labels).toContain("Redis");
+    expect(labels).toContain("NGINX");
+    expect(labels).toContain("Prometheus");
+    expect(labels).toContain("Grafana");
+    expect(labels).toContain("HashiCorp Vault");
+
+    // Each pill contains a circular badge with SVG
+    const firstPill = pills?.[0];
+    const badge = firstPill?.querySelector("div");
+    expect(badge?.className).toContain("rounded-full");
+    expect(badge?.className).toContain("bg-white");
+    expect(badge?.querySelector("svg")).not.toBeNull();
+  });
+});
