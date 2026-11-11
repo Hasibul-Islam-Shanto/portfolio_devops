@@ -7,6 +7,7 @@ import { initExperience } from "@/components/experience/experience";
 import { initContact } from "@/components/contact/contact";
 import { initHowIWork } from "@/components/how-it-works/how-i-work";
 import { initPipelineRail } from "@/components/pipeline-rail/pipeline-rail";
+import { initSectionNav, SECTION_IDS, getTargetScrollY, smoothScrollTo } from "@/scripts/section-nav";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
 import { mockMatchMedia, mount, track } from "./helpers";
 
@@ -742,17 +743,20 @@ describe("Header", () => {
 });
 
 describe("PipelineRail", () => {
-  it("becomes visible after scrolling past 50% of #build and marks the active stage", () => {
+  it("becomes visible after scrolling past 50% of #hero and marks the active section", () => {
     const body = mount("pipeline-rail");
-    const stageOffsets: Record<string, { top: number; height: number }> = {
-      build: { top: 0, height: 800 },
-      test: { top: 800, height: 800 },
-      deploy: { top: 1600, height: 800 },
-      monitor: { top: 2400, height: 800 },
-      scale: { top: 3200, height: 800 },
+    const sectionOffsets: Record<string, { top: number; height: number }> = {
+      hero: { top: 0, height: 800 },
+      projects: { top: 800, height: 800 },
+      experience: { top: 1600, height: 800 },
+      toolchain: { top: 2400, height: 800 },
+      certifications: { top: 3200, height: 800 },
+      process: { top: 4000, height: 800 },
+      principles: { top: 4800, height: 800 },
+      contact: { top: 5600, height: 800 },
     };
 
-    for (const [id, box] of Object.entries(stageOffsets)) {
+    for (const [id, box] of Object.entries(sectionOffsets)) {
       const sec = document.createElement("section");
       sec.id = id;
       Object.defineProperty(sec, "offsetHeight", { value: box.height, configurable: true });
@@ -773,7 +777,7 @@ describe("PipelineRail", () => {
 
     Object.defineProperty(window, "innerHeight", { value: 800, configurable: true });
     Object.defineProperty(document.documentElement, "scrollHeight", {
-      value: 4000,
+      value: 6400,
       configurable: true,
     });
     Object.defineProperty(window, "scrollY", { value: 100, configurable: true });
@@ -783,7 +787,7 @@ describe("PipelineRail", () => {
     expect(rail.dataset["visible"]).toBe("false");
     expect(rail.getAttribute("aria-hidden")).toBe("true");
 
-    // Scroll past 50% of #build (400px) so midpoint (scrollY + 400 = 900) crosses #test (800)
+    // Scroll past 50% of #hero (400px) so midpoint (scrollY + 400 = 900) crosses #projects (800)
     Object.defineProperty(window, "scrollY", { value: 500, configurable: true });
     let rafCb: FrameRequestCallback | null = null;
     const origRaf = window.requestAnimationFrame;
@@ -797,7 +801,7 @@ describe("PipelineRail", () => {
 
     expect(rail.dataset["visible"]).toBe("true");
     expect(rail.getAttribute("aria-hidden")).toBe("false");
-    expect(body.querySelector('[data-rail-link="test"]')?.getAttribute("aria-current")).toBe(
+    expect(body.querySelector('[data-rail-link="projects"]')?.getAttribute("aria-current")).toBe(
       "step",
     );
   });
@@ -840,3 +844,80 @@ describe("TechMarquee", () => {
     expect(badge?.querySelector("svg")).not.toBeNull();
   });
 });
+
+describe("SectionNav", () => {
+  it("renders all eight eyebrows as real anchor links with matching IDs", () => {
+    const body = mount("index");
+    const eyebrows = Array.from(body.querySelectorAll<HTMLAnchorElement>("[data-section-eyebrow]"));
+    expect(eyebrows.length).toBe(8);
+
+    const mapped = eyebrows.map((a) => ({
+      eyebrow: a.dataset.sectionEyebrow,
+      href: a.getAttribute("href"),
+      tagName: a.tagName.toLowerCase(),
+    }));
+
+    expect(mapped).toEqual([
+      { eyebrow: "hero", href: "#hero", tagName: "a" },
+      { eyebrow: "projects", href: "#projects", tagName: "a" },
+      { eyebrow: "experience", href: "#experience", tagName: "a" },
+      { eyebrow: "toolchain", href: "#toolchain", tagName: "a" },
+      { eyebrow: "certifications", href: "#certifications", tagName: "a" },
+      { eyebrow: "process", href: "#process", tagName: "a" },
+      { eyebrow: "principles", href: "#principles", tagName: "a" },
+      { eyebrow: "contact", href: "#contact", tagName: "a" },
+    ]);
+  });
+
+  it("activates the clicked eyebrow, triggers highlight, and sets aria-current", () => {
+    const body = mount("index");
+    track(initSectionNav(body));
+
+    const initialActive = body.querySelector<HTMLAnchorElement>('[data-section-eyebrow="hero"]')!;
+    expect(initialActive.classList.contains("is-active")).toBe(true);
+    expect(initialActive.getAttribute("aria-current")).toBe("location");
+
+    const projectsLink = body.querySelector<HTMLAnchorElement>('[data-section-eyebrow="projects"]')!;
+    projectsLink.click();
+
+    expect(projectsLink.classList.contains("is-active")).toBe(true);
+    expect(projectsLink.getAttribute("aria-current")).toBe("location");
+    expect(projectsLink.classList.contains("is-highlighted")).toBe(true);
+    expect(initialActive.classList.contains("is-active")).toBe(false);
+  });
+
+  it("smoothScrollTo jumps instantly when prefersReducedMotion is true", () => {
+    mockMatchMedia("prefers-reduced-motion");
+    const scrollSpy = vi.fn();
+    window.scrollTo = scrollSpy;
+
+    smoothScrollTo(1200, 700);
+
+    expect(scrollSpy).toHaveBeenCalledWith(0, 1200);
+  });
+
+  it("getTargetScrollY calculates correct offset taking into account scroll-margin-top", () => {
+    const section = document.createElement("section");
+    section.style.scrollMarginTop = "96px";
+    section.getBoundingClientRect = () =>
+      ({
+        top: 500,
+        bottom: 1200,
+        left: 0,
+        right: 800,
+        width: 800,
+        height: 700,
+        x: 0,
+        y: 500,
+        toJSON: () => {},
+      }) as DOMRect;
+    document.body.appendChild(section);
+
+    Object.defineProperty(window, "scrollY", { value: 100, configurable: true });
+
+    const targetY = getTargetScrollY(section);
+    // targetY = scrollY (100) + rect.top (500) - offset (96) = 504
+    expect(targetY).toBe(504);
+  });
+});
+

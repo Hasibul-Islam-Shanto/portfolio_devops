@@ -7,12 +7,17 @@ const initialBST = getBSTTime();
 <div
   class="site-container pt-12 pb-8 text-[var(--text)] md:pt-16 md:pb-8 lg:pt-[76px] lg:pb-12"
 >
-  <!-- Eyebrow row at top: small coral dot (7px, circular) + mono-font label "07 · CONTACT" in muted grey, letter-spacing 0.12em -->
-  <div class="flex items-center gap-2.5">
-    <span class="h-[7px] w-[7px] shrink-0 rounded-full bg-[#FF6B47]" aria-hidden="true"></span>
-    <span class="font-mono text-xs uppercase tracking-[0.12em] text-[var(--text)]/60">
-      07 · CONTACT
-    </span>
+  <!-- Eyebrow row at top: small coral dot (7px, circular) + mono-font label "07 · CONTACT" -->
+  <div>
+    <a
+      href="#contact"
+      data-section-eyebrow="contact"
+      class="section-eyebrow group font-mono text-xs uppercase tracking-[0.12em]"
+      aria-label="07 Contact section"
+    >
+      <span class="h-[7px] w-[7px] shrink-0 rounded-full bg-[#FF6B47] transition-transform duration-300 group-hover:scale-125" aria-hidden="true"></span>
+      <span>07 · CONTACT</span>
+    </a>
   </div>
 
   <!-- Terminal Window Card: styled with distinct border, background & depth like Hero section -->

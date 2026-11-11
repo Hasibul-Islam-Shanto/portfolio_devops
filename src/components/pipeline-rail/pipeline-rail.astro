@@ -1,17 +1,20 @@
 ---
-const STAGES = [
-  { id: "build", label: "Build" },
-  { id: "test", label: "Test" },
-  { id: "deploy", label: "Deploy" },
-  { id: "monitor", label: "Monitor" },
-  { id: "scale", label: "Scale" },
+const SECTIONS = [
+  { id: "hero", label: "Hero" },
+  { id: "projects", label: "Projects" },
+  { id: "experience", label: "Experience" },
+  { id: "toolchain", label: "Toolchain" },
+  { id: "certifications", label: "Certifications" },
+  { id: "process", label: "Process" },
+  { id: "principles", label: "Principles" },
+  { id: "contact", label: "Contact" },
 ];
 ---
 
 <div class="rail-float pointer-events-none fixed bottom-8 right-3 top-28 z-40 hidden md:block lg:right-6">
   <nav
     data-pipeline-rail
-    aria-label="Pipeline progress"
+    aria-label="Section navigation rail"
     class="pipeline-rail h-full"
   >
     <ol class="relative flex h-full flex-col justify-between">
@@ -22,7 +25,7 @@ const STAGES = [
         style="transform: scaleY(0)"
         aria-hidden="true"></span>
       {
-        STAGES.map((s) => (
+        SECTIONS.map((s) => (
           <li class="relative z-10 h-4">
             <a
               href={`#${s.id}`}

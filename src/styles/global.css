@@ -1029,8 +1029,9 @@ html.js [data-reveal].is-in {
   border-color: var(--rail-dot-border);
   transition:
     transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
-    background-color 0.3s,
-    border-color 0.3s;
+    background-color 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 [data-rail-link].is-active .rail-label {
   opacity: 1;
@@ -1044,6 +1045,83 @@ html.js [data-reveal].is-in {
   box-shadow:
     0 0 0 2px var(--rail-active-ring),
     0 0 14px color-mix(in oklab, var(--signal) 70%, transparent);
+}
+
+/* Section stage anchors (keeps #build, #test, #deploy, #monitor, #scale valid) */
+.section-stage-anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Section eyebrow interactive links */
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: color-mix(in oklab, var(--text) 60%, transparent);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin-left: -6px;
+  transition:
+    color 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    text-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.section-eyebrow:hover {
+  color: var(--signal);
+  transform: translateX(2px);
+}
+
+.section-eyebrow:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--signal);
+  color: var(--signal);
+}
+
+.section-eyebrow.is-active {
+  color: var(--signal);
+  opacity: 1;
+}
+
+.section-eyebrow.is-highlighted {
+  color: var(--signal);
+  animation: eyebrow-pulse 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes eyebrow-pulse {
+  0% {
+    transform: scale(1);
+    color: var(--signal);
+  }
+  50% {
+    transform: scale(1.05);
+    color: var(--signal);
+    text-shadow: 0 0 16px color-mix(in oklab, var(--signal) 75%, transparent);
+  }
+  100% {
+    transform: scale(1);
+    color: var(--signal);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-eyebrow,
+  .section-eyebrow:hover,
+  .section-eyebrow.is-highlighted {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 /* Constellation canvas: hidden until activated */

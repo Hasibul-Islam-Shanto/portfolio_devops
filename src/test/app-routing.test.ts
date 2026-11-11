@@ -17,14 +17,14 @@ describe("Astro routes", () => {
 
     const sections = Array.from(doc.querySelectorAll("main > section"));
     expect(sections.map((s) => s.id)).toEqual([
-      "build",
-      "test",
-      "",
-      "deploy",
-      "",
-      "",
-      "monitor",
-      "scale",
+      "hero",
+      "projects",
+      "experience",
+      "toolchain",
+      "certifications",
+      "process",
+      "principles",
+      "contact",
     ]);
     expect(sections.map((s) => s.className.match(/mode-(\w+)/)?.[1])).toEqual([
       "dark",
