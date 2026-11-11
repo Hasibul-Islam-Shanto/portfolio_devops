@@ -45,48 +45,59 @@ The development server starts at `http://localhost:4321` by default.
 │   └── robots.txt
 ├── src/
 │   ├── components/
-│   │   └── portfolio/          # Kebab-case Astro components (.astro) & inline SVG icon map
-│   │       ├── principles.astro
-│   │       ├── certifications.astro
+│   │   ├── hero/               # Hero headline + interactive terminal & controller
+│   │   │   ├── hero.astro
+│   │   │   ├── hero-terminal.astro
+│   │   │   └── hero-terminal.ts
+│   │   ├── logos/              # Tech marquee strip
+│   │   │   └── tech-marquee.astro
+│   │   ├── projects/           # Featured production systems & controller
+│   │   │   ├── work.astro
+│   │   │   └── work.ts
+│   │   ├── experience/         # Roles timeline & controller
+│   │   │   ├── experience.astro
+│   │   │   └── experience.ts
+│   │   ├── toolstack/          # Filterable toolchain catalog, data & controller
+│   │   │   ├── toolchain.astro
+│   │   │   ├── toolchain-data.ts
+│   │   │   └── toolchain.ts
+│   │   ├── certifications/     # Verified skill credentials
+│   │   │   └── certifications.astro
+│   │   ├── how-it-works/       # 5-step process model & controller
+│   │   │   ├── how-i-work.astro
+│   │   │   └── how-i-work.ts
+│   │   ├── principles/         # Core operational tenets
+│   │   │   └── principles.astro
+│   │   ├── contact/            # Terminal-style contact footer & clock/copy controller
+│   │   │   ├── contact.astro
+│   │   │   └── contact.ts
+│   │   ├── navbar/             # Floating navigation pill, theme switch & controller
+│   │   │   ├── header.astro
+│   │   │   └── header.ts
+│   │   ├── pipeline-rail/      # Vertical pipeline stage progress rail & controller
+│   │   │   ├── pipeline-rail.astro
+│   │   │   └── pipeline-rail.ts
+│   │   └── shared/             # Reusable icons, canvas, cursor & coming-soon components
 │   │       ├── coming-soon.astro
 │   │       ├── constellation-canvas.astro
-│   │       ├── contact.astro
 │   │       ├── custom-cursor.astro
-│   │       ├── deploy-flow.astro
-│   │       ├── deploy-pipeline.astro
-│   │       ├── experience.astro
-│   │       ├── header.astro
-│   │       ├── hero.astro
-│   │       ├── hero-terminal.astro
-│   │       ├── how-i-work.astro
 │   │       ├── icon.astro
-│   │       ├── icons.ts
-│   │       ├── pipeline-rail.astro
-│   │       ├── testimonials.astro
-│   │       ├── toolchain.astro
-│   │       └── work.astro
+│   │       └── icons.ts
 │   ├── layouts/
 │   │   └── base-layout.astro   # Global HTML shell, SEO/OG metadata, fonts, custom cursor
 │   ├── pages/
-│   │   ├── index.astro         # / (9-section DevOps pipeline portfolio)
+│   │   ├── index.astro         # / (homepage pipeline portfolio)
 │   │   ├── 404.astro           # Custom 404 page
 │   │   ├── blog/
 │   │   │   └── index.astro     # /blog (Coming Soon placeholder)
 │   │   └── case-studies/
 │   │       └── index.astro     # /case-studies (Coming Soon placeholder)
-│   ├── scripts/                # Modular browser-side TypeScript controllers
+│   ├── scripts/                # Shared browser utilities & global runtime controllers
 │   │   ├── constellation-canvas.ts
 │   │   ├── custom-cursor.ts
-│   │   ├── deploy-flow.ts
-│   │   ├── deploy-pipeline.ts
-│   │   ├── experience.ts
-│   │   ├── header.ts
-│   │   ├── hero-terminal.ts
-│   │   ├── pipeline-rail.ts
 │   │   ├── reveal.ts
-│   │   ├── toolchain.ts
-│   │   ├── util.ts
-│   │   └── work.ts
+│   │   ├── theme.ts
+│   │   └── util.ts
 │   ├── styles/
 │   │   └── global.css          # Tailwind CSS v4 entry + portfolio design tokens & animations
 │   └── test/                   # Vitest + Astro Container API test suite

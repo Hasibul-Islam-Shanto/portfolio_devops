@@ -1,0 +1,53 @@
+---
+import Icon from "../shared/icon.astro";
+
+const CERTIFICATIONS = [
+  { name: "[Certification Name — e.g. AWS Solutions Architect]", year: "[Year]" },
+  { name: "[Certification Name — e.g. Certified Kubernetes Administrator]", year: "[Year]" },
+  { name: "[Certification Name — e.g. HashiCorp Terraform Associate]", year: "[Year]" },
+  { name: "[Certification Name — e.g. Prometheus Certified Associate]", year: "[Year]" },
+];
+---
+
+<div class="site-container py-28">
+  <p>
+    <a
+      href="#certifications"
+      data-section-eyebrow="certifications"
+      class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em]"
+      aria-label="04 Certifications section: Verified skills"
+    >
+      04 / Verified skills
+    </a>
+  </p>
+  <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
+    Certifications
+  </h2>
+  <div class="mt-14 grid grid-cols-2 gap-4 lg:grid-cols-4">
+    {
+      CERTIFICATIONS.map((cert, i) => (
+        <div data-reveal style={`--reveal-delay: ${i * 0.1}s`}>
+          <article
+            tabindex="0"
+            data-cursor-interactive="true"
+            class="group flex h-full flex-col justify-between rounded-3xl border hairline p-6 transition-colors duration-300 hover:border-signal focus-visible:border-signal focus-visible:outline-none"
+          >
+            <div>
+              {/* Generic shield line-icon placeholder: swap for the real certification body's icon later */}
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl border hairline bg-surface text-signal transition-colors duration-300 group-hover:border-signal">
+                <Icon name="ShieldCheck" class="h-6 w-6" strokeWidth={1.5} />
+              </div>
+              <h3 class="mt-6 text-base font-bold leading-snug tracking-tight sm:text-lg">
+                {cert.name}
+              </h3>
+            </div>
+            <p class="mt-6 border-t hairline pt-4 font-mono text-xs uppercase tracking-widest dim">
+              Issued · <span class="text-signal">{cert.year}</span>
+            </p>
+          </article>
+        </div>
+      ))
+    }
+  </div>
+</div>
+

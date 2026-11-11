@@ -1,0 +1,251 @@
+---
+// PLACEHOLDER: content stays bracketed until real work history is provided
+const EXPERIENCE_ROLES = [
+  {
+    hash: "[a3f9c21]",
+    period: "[Month Year] → Present",
+    company: "[Company Name]",
+    location: "[City]",
+    context: "[context]",
+    role: "[Job Title]",
+    current: true,
+    bullets: [
+      "[Shipped/built X — describe the system and its measurable impact]",
+      "[Reduced/improved Y by Z% — describe the specific technical change]",
+      "[Automated/scaled W across N environments — describe reliability outcome]",
+      "[Standardized CI/CD or infrastructure workflow across engineering teams]",
+    ],
+    tags: ["[Tech]", "[Tech]", "[Tech]", "[Tech]"],
+  },
+  {
+    hash: "[7be41d0]",
+    period: "[Year] → [Year]",
+    company: "[Company Name]",
+    location: "[City]",
+    context: "[context]",
+    role: "[Job Title]",
+    current: false,
+    bullets: [
+      "[Shipped/built X — describe the system and its measurable impact]",
+      "[Reduced/improved Y by Z% — describe the specific technical change]",
+      "[Standardized CI/CD or infrastructure workflow across engineering teams]",
+      "[Automated/scaled W across N environments — describe reliability outcome]",
+    ],
+    tags: ["[Tech]", "[Tech]", "[Tech]", "[Tech]"],
+  },
+  {
+    hash: "[4c19e85]",
+    period: "[Year] → [Year]",
+    company: "[Company Name]",
+    location: "[City]",
+    context: "[context]",
+    role: "[Job Title]",
+    current: false,
+    bullets: [
+      "[Shipped/built X — describe the system and its measurable impact]",
+      "[Reduced/improved Y by Z% — describe the specific technical change]",
+      "[Standardized CI/CD or infrastructure workflow across engineering teams]",
+      "[Automated/scaled W across N environments — describe reliability outcome]",
+    ],
+    tags: ["[Tech]", "[Tech]", "[Tech]"],
+  },
+];
+---
+
+<!-- PLACEHOLDER: Replace all company names, roles, dates, locations, bullet points, and tech tags below with real work history before publishing -->
+
+<div class="site-container py-28">
+  <!-- Header row -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p>
+        <a
+          href="#experience"
+          data-section-eyebrow="experience"
+          class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em]"
+          aria-label="02 Experience section"
+        >
+          02 / Experience
+        </a>
+      </p>
+      <h2
+        class="mt-4 max-w-3xl font-display text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight text-[var(--text)]"
+      >
+        Years spent keeping <span class="text-signal">systems</span> honest.
+      </h2>
+    </div>
+    <span class="font-mono text-xs uppercase tracking-wider text-[var(--text)]/60 pb-1">
+      [{EXPERIENCE_ROLES.length}] roles · since [year]
+    </span>
+  </div>
+
+  <!-- Timeline container -->
+  <ol data-timeline class="relative mt-14 space-y-6">
+    <!-- Static muted track line -->
+    <span
+      class="absolute bottom-4 left-3 md:left-4 top-4 w-px bg-current opacity-20"
+      aria-hidden="true"
+    ></span>
+    <!-- Dynamic scroll-synced coral progress line -->
+    <span
+      data-timeline-progress
+      class="absolute bottom-4 left-3 md:left-4 top-4 w-px origin-top bg-signal"
+      style="transform: scaleY(0)"
+      aria-hidden="true"
+    ></span>
+
+    {
+      EXPERIENCE_ROLES.map((item, i) => (
+        <li
+          class="relative pl-8 md:pl-11"
+          data-reveal="slide-left"
+          style={`--reveal-delay: ${i * 0.12}s`}
+        >
+          <!-- Commit node marker on the line -->
+          <div
+            class="absolute left-3 md:left-4 top-6 flex -translate-x-1/2 items-center justify-center"
+            aria-hidden="true"
+          >
+            {item.current ? (
+              <span
+                data-reveal="scale"
+                style={`--reveal-delay: ${i * 0.12}s`}
+                class="block h-3.5 w-3.5 rounded-full bg-signal ring-4 ring-signal/25"
+              />
+            ) : (
+              <span
+                data-reveal="scale"
+                style={`--reveal-delay: ${i * 0.12}s`}
+                class="block h-3.5 w-3.5 rounded-full border-2 border-signal bg-[var(--bg)]"
+              />
+            )}
+          </div>
+
+          <!-- Role entry card -->
+          <article
+            id={`exp-card-${i}`}
+            data-exp-card
+            data-role={item.role}
+            data-company={item.company}
+            tabindex="0"
+            data-cursor-interactive="true"
+            class:list={[
+              "exp-card rounded-2xl md:rounded-3xl p-5 md:p-6 transition-all duration-300 focus-visible:border-signal focus-visible:outline-none",
+              item.current ? "is-expanded" : "",
+            ]}
+          >
+            <!-- Top Row (always visible) -->
+            <div class="flex flex-wrap items-start justify-between gap-4">
+              <div class="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
+                <!-- Commit hash tag -->
+                <span
+                  class="mt-0.5 font-mono text-xs uppercase tracking-wider text-signal select-none shrink-0"
+                  aria-label={`Commit ${item.hash}`}
+                >
+                  {item.hash}
+                </span>
+
+                <!-- Title, HEAD badge, and Company / Location line -->
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2.5">
+                    <h3 class="font-display text-lg font-bold tracking-tight text-[var(--text)] md:text-xl">
+                      {item.role}
+                    </h3>
+                    {item.current && (
+                      <span class="rounded-full bg-signal px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-signal-foreground">
+                        HEAD
+                      </span>
+                    )}
+                  </div>
+                  <p class="mt-1 font-mono text-xs uppercase tracking-wider text-[var(--text)]/60">
+                    {item.company} · {item.location} · {item.context}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Right: Date range & Expand/Collapse toggle -->
+              <div class="flex items-center gap-3 sm:gap-4 shrink-0 ml-auto">
+                <span
+                  class:list={[
+                    "font-mono text-xs uppercase tracking-wider",
+                    item.current ? "font-bold text-signal" : "text-[var(--text)]/60",
+                  ]}
+                >
+                  {item.period}
+                </span>
+                <button
+                  type="button"
+                  data-exp-toggle
+                  aria-expanded={item.current ? "true" : "false"}
+                  aria-controls={`exp-content-${i}`}
+                  aria-label={`${item.current ? "Collapse" : "Expand"} details for ${item.role} at ${item.company}`}
+                  class="exp-toggle flex h-8 w-8 items-center justify-center rounded-full border border-signal/50 text-signal hover:border-signal hover:bg-signal hover:text-signal-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2"
+                >
+                  <svg
+                    class="exp-icon h-3.5 w-3.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Expandable Details -->
+            <div id={`exp-content-${i}`} class="exp-content">
+              <div class="overflow-hidden">
+                <div class="pt-5 mt-4 border-t border-[var(--text)]/15">
+                  <ul class="grid gap-x-8 gap-y-2.5 text-sm leading-relaxed text-[var(--text)]/85 md:grid-cols-2">
+                    {item.bullets.map((bullet) => (
+                      <li class="flex items-start gap-2.5">
+                        <span
+                          class="font-mono text-xs font-bold text-signal select-none mt-0.5 shrink-0"
+                          aria-hidden="true"
+                        >
+                          +
+                        </span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <ul class="mt-5 flex flex-wrap gap-2 pt-2">
+                    {item.tags.map((t) => (
+                      <li class="rounded-full border border-[var(--text)]/20 bg-[var(--text)]/[0.03] px-3 py-1 font-mono text-[10px] uppercase text-[var(--text)]/75 transition-colors hover:border-signal hover:text-signal">
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+      ))
+    }
+  </ol>
+
+  <!-- CTA -->
+  <div class="mt-12 pl-8 md:pl-11">
+    <a
+      href="#"
+      data-cursor-cta="true"
+      data-cursor-label="CV ↗"
+      class="inline-block rounded-full bg-signal px-6 py-3 font-mono text-sm font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2"
+    >
+      View Full Experience →
+    </a>
+  </div>
+</div>
+
+<script>
+  import { initExperience } from "./experience";
+  initExperience();
+</script>

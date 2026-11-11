@@ -1,14 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
-import { initHeroTerminal } from "@/scripts/hero-terminal";
-import { initDeployFlow } from "@/scripts/deploy-flow";
-import { initDeployPipeline } from "@/scripts/deploy-pipeline";
-import { initWork } from "@/scripts/work";
-import { initToolchain } from "@/scripts/toolchain";
-import { initHeader } from "@/scripts/header";
-import { initExperience } from "@/scripts/experience";
-import { initContact } from "@/scripts/contact";
-import { initHowIWork } from "@/scripts/how-i-work";
-import { initPipelineRail } from "@/scripts/pipeline-rail";
+import { initHeroTerminal } from "@/components/hero/hero-terminal";
+import { initWork } from "@/components/projects/work";
+import { initToolchain } from "@/components/toolstack/toolchain";
+import { initHeader } from "@/components/navbar/header";
+import { initExperience } from "@/components/experience/experience";
+import { initContact } from "@/components/contact/contact";
+import { initHowIWork } from "@/components/how-it-works/how-i-work";
+import { initPipelineRail } from "@/components/pipeline-rail/pipeline-rail";
+import { initSectionNav, SECTION_IDS, getTargetScrollY, smoothScrollTo } from "@/scripts/section-nav";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
 import { mockMatchMedia, mount, track } from "./helpers";
 
@@ -67,11 +66,8 @@ describe("HeroTerminal", () => {
       expect(Array.from(pills).map((p) => p.textContent?.trim())).toEqual([
         "help",
         "whoami",
-        "deploy",
         "kubectl get pods",
         "docker ps",
-        "docker compose",
-        "terraform plan",
         "sudo hire shanto",
       ]);
 
@@ -134,140 +130,49 @@ describe("HeroTerminal", () => {
     );
     expect(document.querySelector('a[href="mailto:hello@shanto.dev"]')).not.toBeNull();
   });
-});
 
-describe("DeployFlow", () => {
-  it("renders the 7-stage strip without an outer card and progresses to HEALTHY", async () => {
+  it("auto-runs help on load with simulated typing, rendering two-column commands list", async () => {
+    mount("hero-terminal");
     vi.useFakeTimers();
-    mount("deploy-flow");
-    track(initDeployFlow());
     try {
-      expect(document.querySelector(".deploy-widget")).toBeNull();
-      expect(document.body.textContent).toContain("DEPLOYMENT · CORE-API:V2463");
-      const status = document.querySelector("[data-deploy-status]")!;
-      expect(text(status)).toBe("IN PROGRESS");
-
-      const stages = document.querySelectorAll("[data-stage]");
-      expect(stages.length).toBe(7);
-      expect(stages[0]?.getAttribute("data-state")).toBe("active");
-      expect(stages[1]?.getAttribute("data-state")).toBe("pending");
-      for (const label of ["GIT", "DOCKER", "REGISTRY", "K8S", "PODS", "PROM", "GRAFANA"]) {
-        expect(document.querySelector(`[data-stage-label="${label}"]`)).not.toBeNull();
-      }
-
-      const connectors = document.querySelectorAll<HTMLElement>("[data-connector-index]");
-      expect(connectors.length).toBe(6);
-      connectors.forEach((c, i) => {
-        expect(c.style.gridColumn).toBe(String(i * 2 + 2));
-        expect(c.getAttribute("data-connector-active")).toBe("false");
-      });
-
-      vi.advanceTimersByTime(1600 * 4);
-      expect(stages[3]?.getAttribute("data-state")).toBe("done");
-      expect(stages[4]?.getAttribute("data-state")).toBe("active");
-      expect(connectors[3]?.getAttribute("data-connector-active")).toBe("true");
-      expect(connectors[4]?.getAttribute("data-connector-active")).toBe("false");
-
-      vi.advanceTimersByTime(1600 * 2);
-      expect(stages[6]?.getAttribute("data-state")).toBe("active");
-      expect(text(status)).toBe("HEALTHY");
-      connectors.forEach((c) => expect(c.getAttribute("data-connector-active")).toBe("true"));
-
-      vi.advanceTimersByTime(1600); // completed pass
-      stages.forEach((s) => expect(s.getAttribute("data-state")).toBe("done"));
-      vi.advanceTimersByTime(1600); // loops back
-      expect(stages[0]?.getAttribute("data-state")).toBe("active");
+      track(initHeroTerminal());
+      vi.advanceTimersByTime(200 + 5 * 35 + 50);
+      const history = document.querySelector("[data-terminal-history]")!;
+      expect(history.textContent).toContain("AVAILABLE COMMANDS:");
+      expect(history.textContent).toContain("kubectl get pods");
+      expect(history.textContent).toContain("inspect live cluster workloads");
+      expect(history.querySelector(".terminal-help-grid")).not.toBeNull();
+      // Fresh empty prompt line ($ _) is ready below output
+      expect(document.querySelector<HTMLElement>("[data-terminal-placeholder]")!.hidden).toBe(true);
+      const cursor = document.querySelector<HTMLElement>("[data-terminal-cursor]")!;
+      expect(cursor.dataset["cursorBlinking"]).toBe("true");
     } finally {
       vi.useRealTimers();
     }
   });
 
-  it("shows the static all-done HEALTHY state under reduced motion", async () => {
+  it("auto-runs help instantly under prefers-reduced-motion without typing animation", async () => {
     mockMatchMedia("prefers-reduced-motion");
-    mount("deploy-flow");
-    track(initDeployFlow());
-    expect(text(document.querySelector("[data-deploy-status]"))).toBe("HEALTHY");
-    document
-      .querySelectorAll("[data-stage]")
-      .forEach((s) => expect(s.getAttribute("data-state")).toBe("done"));
-    document
-      .querySelectorAll("[data-connector-index]")
-      .forEach((c) => expect(c.getAttribute("data-connector-active")).toBe("true"));
+    mount("hero-terminal");
+    track(initHeroTerminal());
+    const history = document.querySelector("[data-terminal-history]")!;
+    expect(history.textContent).toContain("AVAILABLE COMMANDS:");
+    expect(document.querySelector<HTMLElement>("[data-terminal-placeholder]")!.hidden).toBe(true);
   });
-});
 
-describe("DeployPipeline", () => {
-  it("renders the 11-node diagram with orthogonal connectors and advances to HEALTHY", async () => {
+  it("auto-runs help only once per element and does not re-trigger", async () => {
+    mount("hero-terminal");
     vi.useFakeTimers();
-    mount("deploy-pipeline");
-    track(initDeployPipeline());
     try {
-      for (const zone of [
-        "SOURCE",
-        "CI PIPELINE",
-        "ARTIFACTS · INFRA",
-        "ORCHESTRATION",
-        "RUNTIME",
-      ]) {
-        expect(document.querySelector(`[data-zone-label="${zone}"]`)).not.toBeNull();
-      }
-      const num = (sel: string, attr: string) =>
-        Number(document.querySelector(sel)?.getAttribute(attr));
-      const deployLabelY = num('[data-node-label="DEPLOY"]', "y");
-      const k8sY = num('[data-pipeline-node="K8S"] rect', "y");
-      const orchY = num('[data-zone-label="ORCHESTRATION"]', "y");
-      expect(orchY - deployLabelY).toBeGreaterThanOrEqual(40);
-      expect(k8sY - orchY).toBeGreaterThanOrEqual(40);
-      expect(
-        num('[data-pipeline-node="MONITOR"] rect', "y") - num('[data-zone-label="RUNTIME"]', "y"),
-      ).toBeGreaterThanOrEqual(40);
-      expect(num('[data-zone-label="RUNTIME"]', "x")).toBeGreaterThan(440);
-
-      const nodes = document.querySelectorAll("[data-pipeline-node]");
-      expect(nodes.length).toBe(11);
-      expect(nodes[0]?.getAttribute("data-node-state")).toBe("done");
-      expect(nodes[1]?.getAttribute("data-node-state")).toBe("pending");
-
-      const connectors = document.querySelectorAll("[data-pipeline-connector]");
-      expect(connectors.length).toBe(10);
-      connectors.forEach((line) => {
-        const [x1, y1, x2, y2] = ["x1", "y1", "x2", "y2"].map((a) => line.getAttribute(a));
-        expect(x1 === x2 || y1 === y2).toBe(true);
-        expect(line.getAttribute("data-connector-done")).toBe("false");
-      });
-
-      const feedback = document.querySelector("[data-feedback-loop]")!;
-      const dot = document.querySelector("[data-monitor-dot]")!;
-      expect(feedback.getAttribute("data-feedback-active")).toBe("false");
-      expect(dot.getAttribute("data-dot-active")).toBe("false");
-      expect(text(document.querySelector("[data-pipeline-status]"))).toBe("RUNNING");
-
-      vi.advanceTimersByTime(900 * 10);
-      nodes.forEach((n) => expect(n.getAttribute("data-node-state")).toBe("done"));
-      connectors.forEach((c) => expect(c.getAttribute("data-connector-done")).toBe("true"));
-      expect(feedback.getAttribute("data-feedback-active")).toBe("true");
-      expect(dot.getAttribute("data-dot-active")).toBe("true");
-      expect(text(document.querySelector("[data-pipeline-status]"))).toBe("HEALTHY");
-      expect(text(document.querySelector("[data-release-num]"))).toBe("2463");
-
-      vi.advanceTimersByTime(900 * 2); // pass 11 -> restart, release bumps
-      expect(text(document.querySelector("[data-release-num]"))).toBe("2464");
+      track(initHeroTerminal());
+      vi.advanceTimersByTime(200 + 5 * 35 + 50);
+      expect(document.querySelectorAll(".terminal-help-grid").length).toBe(1);
+      initHeroTerminal();
+      vi.advanceTimersByTime(500);
+      expect(document.querySelectorAll(".terminal-help-grid").length).toBe(1);
     } finally {
       vi.useRealTimers();
     }
-  });
-
-  it("shows the static all-done state under reduced motion without the pulse animation", async () => {
-    mockMatchMedia("prefers-reduced-motion");
-    mount("deploy-pipeline");
-    track(initDeployPipeline());
-    expect(text(document.querySelector("[data-pipeline-status]"))).toBe("HEALTHY");
-    expect(
-      document.querySelector("[data-feedback-loop]")?.getAttribute("data-feedback-active"),
-    ).toBe("true");
-    const dot = document.querySelector("[data-monitor-dot]")!;
-    expect(dot.getAttribute("data-dot-active")).toBe("true");
-    expect(dot.getAttribute("class")).not.toContain("monitor-pulse");
   });
 });
 
@@ -392,7 +297,7 @@ describe("Toolchain", () => {
     const body = mount("toolchain");
     track(initToolchain());
 
-    expect(text(body)).toContain("02 / The toolchain");
+    expect(text(body)).toContain("03 / The toolchain");
     expect(text(body)).toContain("Every layer, deployed with intent.");
     expect(text(body.querySelector("[data-tool-counter]"))).toContain("30 tools");
 
@@ -701,7 +606,7 @@ describe("Static sections", () => {
 
   it("renders the Experience commit-log timeline with standard section heading, placeholders, HEAD badge, and CTA", async () => {
     const body = mount("experience");
-    expect(text(body)).toContain("04 / Experience");
+    expect(text(body)).toContain("02 / Experience");
     expect(text(body)).toContain("Years spent keeping");
     expect(text(body)).toContain("systems");
     expect(text(body)).toContain("honest.");
@@ -757,14 +662,6 @@ describe("Static sections", () => {
     track(initExperience(body));
     const bar = body.querySelector<HTMLElement>("[data-timeline-progress]")!;
     expect(bar.style.transform).toBe("scaleY(1)");
-  });
-
-  it("renders the 3 placeholder Testimonials quote cards", async () => {
-    const body = mount("testimonials");
-    expect(text(body)).toContain("What people say");
-    expect(text(body).match(/\[Name Surname\] — \[Role, Company\]/g)?.length).toBe(3);
-    expect(body.querySelectorAll("blockquote.mode-dark").length).toBe(2);
-    expect(body.querySelectorAll("blockquote.mode-light").length).toBe(1);
   });
 
   it("renders the terminal-style contact footer with commands, email row, CTAs, and bottom bar", async () => {
@@ -887,17 +784,20 @@ describe("Header", () => {
 });
 
 describe("PipelineRail", () => {
-  it("becomes visible after scrolling past 50% of #build and marks the active stage", () => {
+  it("becomes visible after scrolling past 50% of #hero and marks the active section", () => {
     const body = mount("pipeline-rail");
-    const stageOffsets: Record<string, { top: number; height: number }> = {
-      build: { top: 0, height: 800 },
-      test: { top: 800, height: 800 },
-      deploy: { top: 1600, height: 800 },
-      monitor: { top: 2400, height: 800 },
-      scale: { top: 3200, height: 800 },
+    const sectionOffsets: Record<string, { top: number; height: number }> = {
+      hero: { top: 0, height: 800 },
+      projects: { top: 800, height: 800 },
+      experience: { top: 1600, height: 800 },
+      toolchain: { top: 2400, height: 800 },
+      certifications: { top: 3200, height: 800 },
+      process: { top: 4000, height: 800 },
+      principles: { top: 4800, height: 800 },
+      contact: { top: 5600, height: 800 },
     };
 
-    for (const [id, box] of Object.entries(stageOffsets)) {
+    for (const [id, box] of Object.entries(sectionOffsets)) {
       const sec = document.createElement("section");
       sec.id = id;
       Object.defineProperty(sec, "offsetHeight", { value: box.height, configurable: true });
@@ -918,7 +818,7 @@ describe("PipelineRail", () => {
 
     Object.defineProperty(window, "innerHeight", { value: 800, configurable: true });
     Object.defineProperty(document.documentElement, "scrollHeight", {
-      value: 4000,
+      value: 6400,
       configurable: true,
     });
     Object.defineProperty(window, "scrollY", { value: 100, configurable: true });
@@ -928,7 +828,7 @@ describe("PipelineRail", () => {
     expect(rail.dataset["visible"]).toBe("false");
     expect(rail.getAttribute("aria-hidden")).toBe("true");
 
-    // Scroll past 50% of #build (400px) so midpoint (scrollY + 400 = 900) crosses #test (800)
+    // Scroll past 50% of #hero (400px) so midpoint (scrollY + 400 = 900) crosses #projects (800)
     Object.defineProperty(window, "scrollY", { value: 500, configurable: true });
     let rafCb: FrameRequestCallback | null = null;
     const origRaf = window.requestAnimationFrame;
@@ -942,7 +842,7 @@ describe("PipelineRail", () => {
 
     expect(rail.dataset["visible"]).toBe("true");
     expect(rail.getAttribute("aria-hidden")).toBe("false");
-    expect(body.querySelector('[data-rail-link="test"]')?.getAttribute("aria-current")).toBe(
+    expect(body.querySelector('[data-rail-link="projects"]')?.getAttribute("aria-current")).toBe(
       "step",
     );
   });
@@ -985,3 +885,80 @@ describe("TechMarquee", () => {
     expect(badge?.querySelector("svg")).not.toBeNull();
   });
 });
+
+describe("SectionNav", () => {
+  it("renders all eight eyebrows as real anchor links with matching IDs", () => {
+    const body = mount("index");
+    const eyebrows = Array.from(body.querySelectorAll<HTMLAnchorElement>("[data-section-eyebrow]"));
+    expect(eyebrows.length).toBe(8);
+
+    const mapped = eyebrows.map((a) => ({
+      eyebrow: a.dataset.sectionEyebrow,
+      href: a.getAttribute("href"),
+      tagName: a.tagName.toLowerCase(),
+    }));
+
+    expect(mapped).toEqual([
+      { eyebrow: "hero", href: "#hero", tagName: "a" },
+      { eyebrow: "projects", href: "#projects", tagName: "a" },
+      { eyebrow: "experience", href: "#experience", tagName: "a" },
+      { eyebrow: "toolchain", href: "#toolchain", tagName: "a" },
+      { eyebrow: "certifications", href: "#certifications", tagName: "a" },
+      { eyebrow: "process", href: "#process", tagName: "a" },
+      { eyebrow: "principles", href: "#principles", tagName: "a" },
+      { eyebrow: "contact", href: "#contact", tagName: "a" },
+    ]);
+  });
+
+  it("activates the clicked eyebrow, triggers highlight, and sets aria-current", () => {
+    const body = mount("index");
+    track(initSectionNav(body));
+
+    const initialActive = body.querySelector<HTMLAnchorElement>('[data-section-eyebrow="hero"]')!;
+    expect(initialActive.classList.contains("is-active")).toBe(true);
+    expect(initialActive.getAttribute("aria-current")).toBe("location");
+
+    const projectsLink = body.querySelector<HTMLAnchorElement>('[data-section-eyebrow="projects"]')!;
+    projectsLink.click();
+
+    expect(projectsLink.classList.contains("is-active")).toBe(true);
+    expect(projectsLink.getAttribute("aria-current")).toBe("location");
+    expect(projectsLink.classList.contains("is-highlighted")).toBe(true);
+    expect(initialActive.classList.contains("is-active")).toBe(false);
+  });
+
+  it("smoothScrollTo jumps instantly when prefersReducedMotion is true", () => {
+    mockMatchMedia("prefers-reduced-motion");
+    const scrollSpy = vi.fn();
+    window.scrollTo = scrollSpy;
+
+    smoothScrollTo(1200, 700);
+
+    expect(scrollSpy).toHaveBeenCalledWith(0, 1200);
+  });
+
+  it("getTargetScrollY calculates correct offset taking into account scroll-margin-top", () => {
+    const section = document.createElement("section");
+    section.style.scrollMarginTop = "96px";
+    section.getBoundingClientRect = () =>
+      ({
+        top: 500,
+        bottom: 1200,
+        left: 0,
+        right: 800,
+        width: 800,
+        height: 700,
+        x: 0,
+        y: 500,
+        toJSON: () => {},
+      }) as DOMRect;
+    document.body.appendChild(section);
+
+    Object.defineProperty(window, "scrollY", { value: 100, configurable: true });
+
+    const targetY = getTargetScrollY(section);
+    // targetY = scrollY (100) + rect.top (500) - offset (96) = 504
+    expect(targetY).toBe(504);
+  });
+});
+

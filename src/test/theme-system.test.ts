@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { applyTheme, getPreferredTheme, initTheme } from "../scripts/theme";
-import { initHeader } from "../scripts/header";
+import { initHeader } from "../components/navbar/header";
 import { fixture, mockMatchMedia, mount, track } from "./helpers";
 
 describe("Theme System", () => {
