@@ -1,5 +1,5 @@
 ---
-import ConstellationCanvas from "../shared/constellation-canvas.astro";
+import CardParticleBackground from "../shared/card-particle-background.astro";
 
 const PROJECTS = [
   {
@@ -78,7 +78,7 @@ const PROJECTS = [
             data-cursor-interactive="true"
             class="work-card section-surface group flex h-full flex-col justify-between rounded-3xl border hairline p-7 sm:p-8 focus-visible:outline-none transition-all duration-200 hover:border-signal/50"
           >
-            <ConstellationCanvas variant="card" active={false} class="z-0 rounded-[inherit]" />
+            <CardParticleBackground />
             <div class="relative z-10 flex flex-1 flex-col justify-between">
               <div>
                 {/* Top Category & Single GitHub Pill */}

@@ -1,0 +1,16 @@
+---
+import ConstellationCanvas from "./constellation-canvas.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<ConstellationCanvas
+  variant="card"
+  active={false}
+  class:list={["z-0 rounded-[inherit]", className]}
+/>
+

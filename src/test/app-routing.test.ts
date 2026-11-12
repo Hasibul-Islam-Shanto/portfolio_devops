@@ -79,6 +79,15 @@ describe("Astro routes", () => {
     expect(doc.querySelector("h1")?.textContent).toContain("Case studies coming soon.");
   });
 
+  it("/achievements renders all unpaginated credentials and honors in a 3-per-row grid", async () => {
+    const doc = renderPage("achievements");
+    expect(doc.title).toContain("Recognitions & Credentials");
+    expect(meta(doc, 'meta[name="description"]')).toContain("credentials");
+    expect(doc.querySelector("h1")?.textContent).toContain("Recognitions & Credentials");
+    expect(doc.querySelectorAll("article").length).toBe(8);
+    expect(doc.querySelector('a[href="/#certifications"]')).not.toBeNull();
+  });
+
   it("the 404 page is centered and links back home", async () => {
     const doc = renderPage("404");
     expect(doc.querySelector("h1")?.textContent).toBe("404");

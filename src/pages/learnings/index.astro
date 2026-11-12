@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/base-layout.astro";
 import Header from "../../components/navbar/header.astro";
+import CardParticleBackground from "../../components/shared/card-particle-background.astro";
 import learningsData from "../../data/learnings-metadata.json";
 
 const { topics } = learningsData;
@@ -35,52 +36,57 @@ const totalLessons = topics.reduce((sum, t) => sum + t.lessonCount, 0);
       <div class="mt-14 grid gap-8 lg:grid-cols-2">
         {
           topics.map((topic) => (
-            <div class="rounded-3xl border hairline bg-surface/30 p-7 transition-all duration-300 hover:border-signal">
-              <div class="flex items-center justify-between gap-4">
-                <h2 class="text-2xl font-bold tracking-tight">
-                  {topic.title}
-                </h2>
-                <span class="font-mono text-xs font-semibold uppercase tracking-wider text-signal">
-                  {topic.lessonCount > 0 ? `${topic.lessonCount} lessons` : "Blog Guide"}
-                </span>
-              </div>
-              <p class="mt-2 text-sm leading-relaxed dim">
-                {topic.description}
-              </p>
-
-              {topic.lessons.length > 0 ? (
-                <ol class="mt-6 space-y-2 border-t hairline pt-5 font-mono text-xs">
-                  {topic.lessons.map((lesson) => (
-                    <li>
-                      <a
-                        href={`/learnings/${topic.slug}/${lesson.slug}`}
-                        class="group flex items-center justify-between rounded-xl p-2.5 transition-colors hover:bg-surface/80"
-                      >
-                        <span class="flex items-center gap-3 truncate">
-                          <span class="dim group-hover:text-signal">
-                            {String(lesson.order).padStart(2, "0")}.
-                          </span>
-                          <span class="font-medium text-[var(--text)] group-hover:text-signal truncate">
-                            {lesson.title}
-                          </span>
-                        </span>
-                        <span class="dim group-hover:text-signal ml-2 text-xs">
-                          &rarr;
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <div class="mt-6 border-t hairline pt-5">
-                  <a
-                    href="/blog/how-to-setup-jenkins"
-                    class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-signal hover:underline"
-                  >
-                    Read the complete Jenkins CI/CD Guide &rarr;
-                  </a>
+            <div class="group relative overflow-hidden flex flex-col justify-between rounded-3xl border hairline bg-surface/30 p-7 transition-all duration-300 hover:border-signal">
+              <CardParticleBackground />
+              <div class="relative z-10 flex h-full flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-4">
+                    <h2 class="text-2xl font-bold tracking-tight">
+                      {topic.title}
+                    </h2>
+                    <span class="font-mono text-xs font-semibold uppercase tracking-wider text-signal">
+                      {topic.lessonCount > 0 ? `${topic.lessonCount} lessons` : "Blog Guide"}
+                    </span>
+                  </div>
+                  <p class="mt-2 text-sm leading-relaxed dim">
+                    {topic.description}
+                  </p>
                 </div>
-              )}
+
+                {topic.lessons.length > 0 ? (
+                  <ol class="mt-6 space-y-2 border-t hairline pt-5 font-mono text-xs">
+                    {topic.lessons.map((lesson) => (
+                      <li>
+                        <a
+                          href={`/learnings/${topic.slug}/${lesson.slug}`}
+                          class="group/item flex items-center justify-between rounded-xl p-2.5 transition-colors hover:bg-surface/80"
+                        >
+                          <span class="flex items-center gap-3 truncate">
+                            <span class="dim group-hover/item:text-signal">
+                              {String(lesson.order).padStart(2, "0")}.
+                            </span>
+                            <span class="font-medium text-[var(--text)] group-hover/item:text-signal truncate">
+                              {lesson.title}
+                            </span>
+                          </span>
+                          <span class="dim group-hover/item:text-signal ml-2 text-xs">
+                            &rarr;
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <div class="mt-6 border-t hairline pt-5">
+                    <a
+                      href="/blog/how-to-setup-jenkins"
+                      class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-signal hover:underline"
+                    >
+                      Read the complete Jenkins CI/CD Guide &rarr;
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           ))
         }

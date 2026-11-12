@@ -31,6 +31,10 @@
     "blogs": {
       "title": "Blogs",
       "description": "Write-ups on shipping and running software — Kubernetes, pipelines, and the systems behind them."
+    },
+    "achievements": {
+      "title": "Recognitions & Credentials",
+      "description": "Honors, competitive achievements, research publications, and verified credentials of Hasibul Islam Shanto."
     }
   },
   "schemaOrg": {

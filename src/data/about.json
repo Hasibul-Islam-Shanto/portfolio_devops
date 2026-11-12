@@ -5,29 +5,20 @@
     "lede": "I started in product UI, then followed the work into APIs, databases, and the pipelines that keep them shipping. Today I build CI/CD, containers, and cloud infrastructure so production stays boring."
   },
   "photo": {
-    "src": "/images/shanto_dp.webp",
+    "src": "/about-section.png",
     "alt": "Portrait of Hasibul Islam Shanto"
   },
   "story": [
-    "I studied Computer Science & Engineering at Shahjalal University of Science and Technology from 2019 to 2024, graduating with a 3.52 CGPA. While finishing that degree I was already shipping: first as a Junior Web Developer at InnovexIT, building responsive appointment and workforce platforms in React, Next.js, and TypeScript.",
-    "From January 2024 to June 2026 I was a Front-End Engineer at Universal Machine Inc., working on a carbon credit platform for enterprise sustainability teams and on a Minipay wallet used by 200K+ people. That work spanned Next.js and TypeScript on the client, Node.js and PostgreSQL on the server, and GitHub Actions pipelines that test, lint, and deploy on every merge.",
-    "In 2023 I took blockchain systems into competitions and research — 1st runner-up at the Smart Village Idea Competition, a top-10 finish at the Bangladesh Blockchain Olympiad, and a paper at ICCIT on connecting landowners, farmers, and investors. The through-line is the same as my DevOps work: make systems that are transparent, automated, and hard to silently break."
+    "I earned my B.Sc. in Computer Science & Engineering from Shahjalal University of Science and Technology (SUST) between 2019 and 2024, graduating with a 3.35 CGPA. During my undergraduate studies, I built a solid foundation in core computer science—data structures, algorithms, operating systems, and computer networks. I translated that foundation into real-world shipping early on as a Junior Web Developer at InnovexIT, building responsive appointment and workforce management platforms with React, Next.js, and TypeScript.",
+    "From January 2024 to June 2026, I worked as a Front-End Engineer at Universal Machine Inc. I engineered the front-end architecture for an enterprise carbon credit platform handling end-to-end workflows from methodology creation to carbon inventory management. I also contributed to a Web3 Minipay wallet platform used by 200,000+ people, implementing smart contract interactions via Ethers.js and wallet integrations with RainbowKit. To keep systems performant and unified, I designed backend REST APIs using Node.js and Express, managed relational database schemas with PostgreSQL and Prisma ORM, and set up automated GitHub Actions CI/CD pipelines to lint, test, and validate every merge.",
+    "Working across both application code and production delivery showed me how much developer speed and reliability depend on what happens between commit and deploy. That experience drove my focus into DevOps, containerization, and platform engineering. In projects like OrderFirst, I designed an event-driven microservices architecture backed by selective git-diff Jenkins builds, RabbitMQ messaging, zero-downtime rolling container updates, and hardened network isolation.",
+    "In competitive research and hackathons, I led initiatives that secured 1st Runner-Up at the Smart Village Idea Competition, a Top-10 ranking at the Bangladesh Blockchain Olympiad, and a published paper at IEEE ICCIT on decentralized stakeholder collaboration. Today, I am based in Rangpur, Bangladesh, and actively open to work for DevOps, Cloud, and Platform Engineering roles—combining a developer's empathy for user experience with a systems engineer's obsession for resilient, automated production platforms."
   ],
   "quickFacts": [
     {
       "label": "Former",
       "value": "Front-End Engineer",
       "detail": "Universal Machine Inc."
-    },
-    {
-      "label": "Education",
-      "value": "B.Sc. CSE",
-      "detail": "SUST · 3.52 CGPA"
-    },
-    {
-      "label": "Recognition",
-      "value": "1st Runner-Up",
-      "detail": "Smart Village Idea Competition"
     },
     {
       "label": "Status",
@@ -39,6 +30,6 @@
     "degree": "B.Sc. in Computer Science & Engineering",
     "university": "Shahjalal University of Science and Technology",
     "period": "Jan 2019 – Feb 2024",
-    "cgpa": "3.52 / 4.00"
+    "cgpa": "3.35 / 4.00"
   }
 }

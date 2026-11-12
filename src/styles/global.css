@@ -899,6 +899,48 @@ a {
   transform: translateX(0);
 }
 
+/* Credential detail modal: animated backdrop + scaling dialog window */
+.credential-modal {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 250ms ease-out,
+    visibility 250ms ease-out;
+}
+.credential-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.credential-modal-backdrop {
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+.credential-modal.is-open .credential-modal-backdrop {
+  opacity: 1;
+}
+.credential-modal-dialog {
+  opacity: 0;
+  transform: scale(0.96) translateY(8px);
+  transition:
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 250ms ease-out;
+}
+.credential-modal.is-open .credential-modal-dialog {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .credential-modal,
+  .credential-modal-backdrop,
+  .credential-modal-dialog {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 /* ===== Astro migration additions (replace framer-motion / React state styling) ===== */
 
 /* Hero headline words: staggered entrance (delay 0.1s + i * 0.07s), pure CSS. */

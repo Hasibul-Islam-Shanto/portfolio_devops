@@ -1,0 +1,64 @@
+---
+import BaseLayout from "../layouts/base-layout.astro";
+import Header from "../components/navbar/header.astro";
+import CredentialCard from "../components/certifications/credential-card.astro";
+import CredentialModal from "../components/certifications/credential-modal.astro";
+import achievementsData from "../data/achievements.json";
+import type { CredentialItem } from "../components/certifications/credential-card.astro";
+
+const ACHIEVEMENTS: CredentialItem[] = achievementsData;
+---
+
+<BaseLayout
+  title="Recognitions & Credentials — Hasibul Islam Shanto"
+  description="Honors, competitive achievements, research publications, and verified credentials of Hasibul Islam Shanto."
+>
+  <Header currentPath="/achievements" />
+  <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
+    <div class="site-container py-12 md:py-16">
+      <!-- Back navigation link -->
+      <p class="mb-4">
+        <a
+          href="/#certifications"
+          class="group inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-[var(--text)]/60 transition-colors hover:text-signal focus-visible:text-signal focus-visible:outline-none"
+        >
+          <span
+            class="inline-block transition-transform duration-200 group-hover:-translate-x-1"
+            aria-hidden="true"
+          >
+            ←
+          </span>
+          <span>Back to Home</span>
+        </a>
+      </p>
+
+      <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal">
+        04 / Verified skills &amp; honors
+      </p>
+      <h1 class="mt-4 text-[clamp(32px,4vw,52px)] font-bold leading-[1.1] tracking-tight">
+        Recognitions &amp; Credentials
+      </h1>
+      <p class="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed dim">
+        Competitive awards, published research, academic honors, and verified technical credentials in distributed systems, cloud computing, and DevOps engineering.
+      </p>
+
+      <!-- All items in the same 3-per-row card grid -->
+      <div class="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        {
+          ACHIEVEMENTS.map((item, i) => (
+            <CredentialCard item={item} index={i} />
+          ))
+        }
+      </div>
+
+      <!-- Detail Modal -->
+      <CredentialModal items={ACHIEVEMENTS} />
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import { initCredentialModal } from "../components/certifications/credential-modal";
+  initCredentialModal();
+</script>
+

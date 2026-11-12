@@ -1,32 +1,107 @@
 [
   {
-    "id": 1,
-    "event": "Smart Village Idea Competition",
+    "id": "smart-village-idea-competition",
+    "title": "Smart Village Idea Competition",
+    "rank": "1st Runner-Up",
+    "shortDescription": "Ethereum-based Agri-Food Supply Chain System",
+    "fullDescription": "Presented a public Ethereum blockchain architecture designed to enhance transparency, provenance traceability, and fair market compensation across decentralized agricultural supply chains.",
     "year": "2023",
-    "recognition": "1st Runner-Up",
-    "project": "Ethereum-based Agri-Food Supply Chain System",
-    "description": "Presented a public Ethereum blockchain solution designed to enhance transparency, traceability, and sustainability in agricultural supply chains.",
-    "imageUrl": "/images/idea_competition.webp",
-    "externalLink": null
+    "issuer": "District Administration, Sylhet & SUST",
+    "organization": "District Administration, Sylhet & SUST",
+    "images": [
+      "/images/idea_competition.webp"
+    ],
+    "links": []
   },
   {
-    "id": 2,
-    "event": "Bangladesh Blockchain Olympiad",
+    "id": "bangladesh-blockchain-olympiad",
+    "title": "Bangladesh Blockchain Olympiad",
+    "rank": "Top 10 Finalist",
+    "shortDescription": "Digital Sharecropper (Team Block-bit)",
+    "fullDescription": "Engineered a Hyperledger Fabric-based consortium blockchain platform connecting landowners, agricultural investors, and farmers with automated smart-contract harvest sharing and auditable transaction ledgers.",
     "year": "2023",
-    "recognition": "Top 10 Finalist (Team Block-bit)",
-    "project": "Digital Sharecropper",
-    "description": "Developed a Hyperledger Fabric-based private blockchain solution connecting landowners, investors, and farmers to improve transparency and collaboration in agriculture.",
-    "imageUrl": "/images/blockchain_competition.webp",
-    "externalLink": null
+    "issuer": "Blockchain Olympiad Bangladesh",
+    "organization": "Blockchain Olympiad Bangladesh",
+    "images": [
+      "/images/blockchain_competition.webp"
+    ],
+    "links": []
   },
   {
-    "id": 3,
-    "event": "International Conference on Computer and Information Technology (ICCIT)",
+    "id": "iccit-ieee-research-paper",
+    "title": "ICCIT IEEE Research Paper",
+    "rank": "Published Author",
+    "shortDescription": "Blockchain-driven Agriculture Transparency",
+    "fullDescription": "Authored and presented peer-reviewed research addressing underutilized arable land and agricultural investment barriers through decentralized ledger consensus and cryptographic trust, published in IEEE Xplore.",
     "year": "2023",
-    "recognition": "Research Paper Presentation",
-    "project": "Digital Sharecropper: Connecting Landowners, Farmers, and Investors Through Blockchain",
-    "description": "Presented research addressing underutilized arable land and agricultural investment challenges through blockchain-driven transparency and decentralized collaboration.",
-    "imageUrl": null,
-    "externalLink": "https://ieeexplore.ieee.org/abstract/document/10441096"
+    "issuer": "IEEE & Cox's Bazar International University",
+    "organization": "IEEE & Cox's Bazar International University",
+    "images": [],
+    "links": [
+      {
+        "label": "IEEE Xplore Paper",
+        "url": "https://ieeexplore.ieee.org/abstract/document/10441096"
+      }
+    ]
+  },
+  {
+    "id": "bsc-computer-science-engineering",
+    "title": "B.Sc. in Computer Science & Eng.",
+    "rank": "3.35 CGPA",
+    "shortDescription": "Shahjalal University of Sci. & Tech.",
+    "fullDescription": "Completed undergraduate degree in Computer Science and Engineering with a 3.35 CGPA, specializing in distributed systems, operating systems, cloud networking, and modern software architecture.",
+    "year": "2024",
+    "issuer": "Shahjalal University of Science and Technology",
+    "organization": "Shahjalal University of Science and Technology",
+    "images": [],
+    "links": []
+  },
+  {
+    "id": "docker-container-orchestration",
+    "title": "Docker & Container Orchestration",
+    "rank": null,
+    "shortDescription": "Production Container Workloads & Isolation",
+    "fullDescription": "Comprehensive technical mastery in container isolation primitives, multi-stage Docker builds, layer caching optimization, cgroups resource controls, and microservices clustering.",
+    "year": "2023",
+    "issuer": "Cloud Native Computing Lab",
+    "organization": "Cloud Native Computing Lab",
+    "images": [],
+    "links": []
+  },
+  {
+    "id": "automated-cicd-pipeline-engineering",
+    "title": "Automated Pipeline Engineering",
+    "rank": null,
+    "shortDescription": "Zero-Downtime GitHub Actions & Jenkins Delivery",
+    "fullDescription": "Hands-on implementation of end-to-end continuous integration and deployment automation, automated test/lint matrices, vulnerability scans with Trivy and SonarQube, and rolling production deployments.",
+    "year": "2024",
+    "issuer": "DevOps & SRE Practice Lab",
+    "organization": "DevOps & SRE Practice Lab",
+    "images": [],
+    "links": []
+  },
+  {
+    "id": "infrastructure-as-code-terraform",
+    "title": "Infrastructure as Code with Terraform",
+    "rank": null,
+    "shortDescription": "Declarative Cloud Provisioning & State Management",
+    "fullDescription": "Modular infrastructure authoring, remote state locking, resource dependency graphing, and repeatable multi-environment provisioning across cloud providers.",
+    "year": "2024",
+    "issuer": "HashiCorp Stack & Cloud Infrastructure Series",
+    "organization": "HashiCorp Stack & Cloud Infrastructure Series",
+    "images": [],
+    "links": []
+  },
+  {
+    "id": "linux-systems-network-administration",
+    "title": "Linux Systems & Networking",
+    "rank": null,
+    "shortDescription": "Kernel Internals, TCP/IP & System Performance",
+    "fullDescription": "Advanced Linux system operations: POSIX process trees, iptables/nftables packet filtering, DNS resolution paths, systemd unit orchestration, and kernel metric monitoring.",
+    "year": "2023",
+    "issuer": "Enterprise Linux & Networking Initiative",
+    "organization": "Enterprise Linux & Networking Initiative",
+    "images": [],
+    "links": []
   }
 ]

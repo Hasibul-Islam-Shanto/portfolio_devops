@@ -9,6 +9,7 @@ import { initHowIWork } from "@/components/how-it-works/how-i-work";
 import { initPipelineRail } from "@/components/pipeline-rail/pipeline-rail";
 import { initSectionNav, getTargetScrollY, smoothScrollTo } from "@/scripts/section-nav";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
+import { initCredentialModal } from "@/components/certifications/credential-modal";
 import { mockMatchMedia, mount, track } from "./helpers";
 
 const text = (el: Element | null) => el?.textContent ?? "";
@@ -245,6 +246,53 @@ describe("Work", () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it("ensures all card types share the particle background and enforces only one active card canvas sitewide", async () => {
+    // 1. Mount Certifications cards
+    const certsBody = mount("certifications");
+    track(initConstellationCanvases(certsBody));
+    const certCards = certsBody.querySelectorAll<HTMLElement>("article.work-card");
+    expect(certCards.length).toBeGreaterThan(0);
+
+    const canvasOf = (el: Element) =>
+      el.querySelector('[data-constellation-canvas="card"]')?.getAttribute("data-constellation-active");
+
+    // All certification cards should have the particle canvas
+    certCards.forEach((c) => {
+      expect(c.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
+      expect(canvasOf(c)).toBe("false");
+    });
+
+    // Hovering card 0 activates it
+    certCards[0]!.dispatchEvent(new MouseEvent("mouseenter"));
+    expect(canvasOf(certCards[0]!)).toBe("true");
+    expect(canvasOf(certCards[1]!)).toBe("false");
+
+    // Hovering card 1 deactivates card 0 and activates card 1
+    certCards[1]!.dispatchEvent(new MouseEvent("mouseenter"));
+    expect(canvasOf(certCards[0]!)).toBe("false");
+    expect(canvasOf(certCards[1]!)).toBe("true");
+
+    // Leaving card 1 deactivates it
+    certCards[1]!.dispatchEvent(new MouseEvent("mouseleave"));
+    expect(canvasOf(certCards[1]!)).toBe("false");
+
+    // 2. Blog cards also render the particle canvas
+    const blogDoc = mount("blog");
+    const blogCards = blogDoc.querySelectorAll("article");
+    expect(blogCards.length).toBeGreaterThan(0);
+    blogCards.forEach((b) => {
+      expect(b.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
+    });
+
+    // 3. Learnings cards also render the particle canvas
+    const learningsDoc = mount("learnings");
+    const learningCards = learningsDoc.querySelectorAll(".group.relative.overflow-hidden");
+    expect(learningCards.length).toBeGreaterThan(0);
+    learningCards.forEach((l) => {
+      expect(l.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
+    });
   });
 
   it("adds .is-in class when card intersects the viewport without rendering terminal commands", async () => {
@@ -577,13 +625,74 @@ describe("Static sections", () => {
     });
   });
 
-  it("renders the 4 Recognitions & Credentials cards", async () => {
+  it("renders the Recognitions & Credentials preview in a 3-per-row grid with View All CTA", async () => {
     const body = mount("certifications");
     expect(text(body)).toContain("Recognitions");
     expect(text(body)).toContain("Smart Village Idea Competition");
-    expect(body.querySelectorAll("article").length).toBe(4);
+    // Limits preview to 6 cards on the homepage section
+    const articles = body.querySelectorAll("article");
+    expect(articles.length).toBe(6);
     expect(text(body)).toContain("2023");
     expect(text(body)).toContain("2024");
+
+    // Grid layout: 3 cards per row
+    const grid = body.querySelector(".grid");
+    expect(grid?.className).toContain("lg:grid-cols-3");
+
+    // Check rank badge is present for items with rank, omitted when empty
+    const firstCard = body.querySelector('[data-credential-card="smart-village-idea-competition"]');
+    expect(text(firstCard)).toContain("1st Runner-Up");
+
+    const plainCard = body.querySelector('[data-credential-card="docker-container-orchestration"]');
+    expect(text(plainCard)).toContain("Docker & Container Orchestration");
+    // Plain certification has no rank pill
+    expect(plainCard?.querySelector(".rounded-full.bg-signal\\/15")).toBeNull();
+
+    // View details button present on all cards
+    const viewDetailBtns = body.querySelectorAll("[data-credential-open]");
+    expect(viewDetailBtns.length).toBe(6);
+
+    // Centered "View all" link navigates to /achievements
+    const viewAllLink = body.querySelector('a[href="/achievements"]');
+    expect(viewAllLink).not.toBeNull();
+    expect(text(viewAllLink)).toContain("View all recognitions & credentials");
+  });
+
+  it("opens and closes the detail modal with animated contents, focus trapping, and keyboard controls", async () => {
+    const body = mount("certifications");
+    track(initCredentialModal(body));
+
+    const modal = body.querySelector<HTMLElement>("#credential-modal");
+    expect(modal).not.toBeNull();
+    expect(modal?.hidden).toBe(true);
+
+    // Click "View details" on Smart Village item
+    const openBtn = body.querySelector<HTMLElement>(
+      '[data-credential-open="smart-village-idea-competition"]',
+    );
+    openBtn?.click();
+
+    expect(modal?.hidden).toBe(false);
+    expect(modal?.getAttribute("aria-hidden")).toBe("false");
+    expect(modal?.querySelector("#credential-modal-title")?.textContent).toBe(
+      "Smart Village Idea Competition",
+    );
+    expect(modal?.querySelector("#credential-modal-rank")?.textContent).toBe("1st Runner-Up");
+    expect(modal?.querySelector("#credential-modal-desc")?.textContent).toContain(
+      "Ethereum blockchain architecture",
+    );
+    expect(modal?.querySelector("#credential-modal-issuer")?.textContent).toBe(
+      "District Administration, Sylhet & SUST",
+    );
+    expect(modal?.querySelector("#credential-modal-year")?.textContent).toBe("2023");
+
+    // Scanned certificate image is rendered
+    const img = modal?.querySelector<HTMLImageElement>("#credential-modal-images-wrapper img");
+    expect(img?.src).toContain("idea_competition.webp");
+
+    // Press Escape to close modal
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    expect(modal?.getAttribute("aria-hidden")).toBe("true");
   });
 
   it("renders the Experience commit-log timeline with standard section heading, real roles, HEAD badge, and CTA", async () => {
