@@ -65,12 +65,69 @@ describe("Astro routes", () => {
     for (const h of hashes) expect(ids.has(h)).toBe(true);
   });
 
-  it("/blog renders the real blog articles and links to posts", async () => {
+  it("/projects renders all projects in a grid, without pipeline rail", async () => {
+    const doc = renderPage("projects");
+    expect(doc.title).toContain("Projects");
+    expect(meta(doc, 'meta[name="description"]')).toContain("production platforms");
+    expect(doc.querySelector("h1")?.textContent?.replace(/\s+/g, " ")).toContain("All Projects");
+    expect(doc.querySelector('.nav-link[href="/projects"]')?.getAttribute("aria-current")).toBe(
+      "page",
+    );
+    expect(doc.querySelectorAll("[data-project-item]").length).toBeGreaterThanOrEqual(2);
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
+  });
+
+  it("/about renders expanded bio with labeled chapters, git-log experience timeline, and filterable tools without pipeline rail", async () => {
+    const doc = renderPage("about");
+    expect(doc.title).toContain("About");
+    expect(doc.querySelector("h1")?.textContent?.replace(/\s+/g, " ")).toContain(
+      "From product interfaces to production systems",
+    );
+    expect(doc.querySelector('.nav-link[href="/about"]')?.getAttribute("aria-current")).toBe(
+      "page",
+    );
+    expect(doc.querySelector('a[href="/projects"]')).not.toBeNull();
+    expect(doc.querySelector('a[href="/#contact"]')).not.toBeNull();
+
+    // Check bio chapter headings
+    expect(doc.body.textContent).toContain("Background");
+    expect(doc.body.textContent).toContain("Education");
+    expect(doc.body.textContent).toContain("Early Career");
+    expect(doc.body.textContent).toContain("The Shift to DevOps");
+    expect(doc.body.textContent).toContain("Recognition");
+
+    // Check git-log timeline & cards
+    expect(doc.querySelector("[data-timeline]")).not.toBeNull();
+    expect(doc.querySelectorAll("[data-exp-card]").length).toBe(2);
+    expect(doc.querySelectorAll("[data-exp-toggle]").length).toBe(2);
+
+    // Check filterable toolchain catalog
+    expect(doc.querySelector("[data-toolchain]")).not.toBeNull();
+    expect(doc.querySelectorAll("[data-filter-tab]").length).toBe(5);
+    expect(doc.querySelectorAll("[data-tool-card]").length).toBe(29);
+    expect(doc.body.textContent).toContain("Skills & tooling breakdown");
+    expect(doc.body.textContent).not.toContain("Calm systems are monitored systems");
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
+  });
+
+  it("/learnings renders the full curriculum and does not render the pipeline rail", async () => {
+    const doc = renderPage("learnings");
+    expect(doc.title).toContain("DevOps Learnings");
+    expect(doc.querySelector('.nav-link[href="/learnings"]')?.getAttribute("aria-current")).toBe(
+      "page",
+    );
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
+  });
+
+  it("/blog renders the real blog articles and links to posts without pipeline rail", async () => {
     const doc = renderPage("blog");
     expect(doc.title).toContain("Blog");
     expect(meta(doc, 'meta[name="description"]')).toContain("write-ups");
-    expect(doc.querySelector("h1")?.textContent).toContain("Production notes");
+    expect(doc.querySelector("h1")?.textContent?.replace(/\s+/g, " ")).toContain(
+      "Production notes",
+    );
     expect(doc.querySelector('.nav-link[href="/blog"]')?.getAttribute("aria-current")).toBe("page");
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
   });
 
   it("/case-studies renders the case studies placeholder page", async () => {
@@ -84,7 +141,7 @@ describe("Astro routes", () => {
     expect(doc.title).toContain("Recognitions & Credentials");
     expect(meta(doc, 'meta[name="description"]')).toContain("credentials");
     expect(doc.querySelector("h1")?.textContent).toContain("Recognitions & Credentials");
-    expect(doc.querySelectorAll("article").length).toBe(8);
+    expect(doc.querySelectorAll("article").length).toBe(7);
     expect(doc.querySelector('a[href="/#certifications"]')).not.toBeNull();
   });
 

@@ -1,10 +1,10 @@
 export const NAV_LINKS = [
   { label: "Home", href: "/", path: "/", hash: "" },
-  { label: "Projects", href: "/#test", path: "/", hash: "#test" },
+  { label: "Projects", href: "/projects", path: "/projects", hash: "" },
   { label: "About", href: "/about", path: "/about", hash: "" },
   { label: "Learnings", href: "/learnings", path: "/learnings", hash: "" },
   { label: "Blog", href: "/blog", path: "/blog", hash: "" },
-  { label: "Contact", href: "/#scale", path: "/", hash: "#scale" },
+  { label: "Contact", href: "/#contact", path: "/", hash: "#contact" },
 ] as const;
 
 export const SOCIAL_LINKS = [
@@ -22,5 +22,14 @@ export const SOCIAL_LINKS = [
 
 export type NavLink = (typeof NAV_LINKS)[number];
 
-export const isNavActive = (link: NavLink, currentPath: string): boolean =>
-  link.path === currentPath && link.hash === "";
+export const isNavActive = (link: NavLink, currentPath: string): boolean => {
+  const normCurrent = currentPath.replace(/\/$/, "") || "/";
+  const normPath = link.path.replace(/\/$/, "") || "/";
+  if (link.hash !== "") {
+    return false;
+  }
+  if (normPath === "/") {
+    return normCurrent === "/";
+  }
+  return normCurrent === normPath || normCurrent.startsWith(`${normPath}/`);
+};

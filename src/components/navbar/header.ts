@@ -131,6 +131,7 @@ export function initHeader(
 
   const onScroll = () => {
     updateScrolled();
+    updateActive();
 
     const currentY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
     const heroBoundary = getHeroBoundary();
@@ -181,21 +182,98 @@ export function initHeader(
   header.addEventListener("focusin", onHeaderEnter);
   header.addEventListener("focusout", onHeaderLeave);
 
+  const onHeaderNavClick = (e: MouseEvent) => {
+    const anchor = (e.target as HTMLElement)?.closest<HTMLAnchorElement>(
+      "a[href*='#contact'], a[href*='#scale']",
+    );
+    if (!anchor) return;
+    const path =
+      typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
+    if (path === "/") {
+      const contactEl = document.getElementById("contact") || document.getElementById("scale");
+      if (contactEl) {
+        e.preventDefault();
+        setMenuOpen(false);
+        const computed = window.getComputedStyle(contactEl);
+        const scrollMarginTop = parseInt(computed.scrollMarginTop, 10);
+        const fallbackOffset = header ? header.offsetHeight + 24 : 80;
+        const offset =
+          !isNaN(scrollMarginTop) && scrollMarginTop > 0 ? scrollMarginTop : fallbackOffset;
+        const targetY = Math.max(
+          0,
+          window.scrollY + contactEl.getBoundingClientRect().top - offset,
+        );
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+        if (window.location.hash !== "#contact") {
+          history.pushState(null, "", "/#contact");
+        }
+        updateActive();
+      }
+    }
+  };
+
+  header.addEventListener("click", onHeaderNavClick);
+
   cleanup.add(() => {
     clearIdleTimer();
     header.removeEventListener("mouseover", onHeaderEnter);
     header.removeEventListener("mouseout", onHeaderLeave);
     header.removeEventListener("focusin", onHeaderEnter);
     header.removeEventListener("focusout", onHeaderLeave);
+    header.removeEventListener("click", onHeaderNavClick);
   });
 
+  const isContactActiveOnHome = (): boolean => {
+    const contactEl =
+      document.getElementById("contact") ||
+      document.getElementById("scale") ||
+      header.ownerDocument?.getElementById("contact") ||
+      header.ownerDocument?.getElementById("scale");
+
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    if (!contactEl) {
+      return hash === "#contact" || hash === "#scale";
+    }
+
+    if (typeof window === "undefined") return false;
+
+    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight || 0;
+    const scrollY = window.scrollY || 0;
+    const innerHeight = window.innerHeight || 0;
+    const atBottom = scrollHeight > 0 && scrollY + innerHeight >= scrollHeight - 60;
+    if (atBottom) return true;
+
+    const rect = contactEl.getBoundingClientRect();
+    if (rect.top <= innerHeight * 0.5 && rect.bottom > 60) {
+      return true;
+    }
+
+    if (scrollY === 0 && (hash === "#contact" || hash === "#scale")) {
+      return true;
+    }
+
+    return false;
+  };
+
   const updateActive = () => {
-    const path = window.location.pathname.replace(/\/$/, "") || "/";
-    const hash = window.location.hash;
+    const path =
+      typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
+    const isHome = path === "/";
+    const contactActive = isHome && isContactActiveOnHome();
+
     links.forEach((a) => {
       const linkPath = a.dataset["navPath"] ?? "/";
       const linkHash = a.dataset["navHash"] ?? "";
-      const active = linkPath === path && linkHash === hash;
+      let active = false;
+
+      if (linkHash === "#contact" || linkHash === "#scale") {
+        active = contactActive;
+      } else if (linkPath === "/") {
+        active = isHome && !contactActive;
+      } else {
+        active = !isHome && (path === linkPath || path.startsWith(`${linkPath}/`));
+      }
+
       if (active) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");
     });

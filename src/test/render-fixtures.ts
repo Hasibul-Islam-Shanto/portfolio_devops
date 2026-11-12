@@ -15,6 +15,8 @@ import Experience from "../components/experience/experience.astro";
 import Contact from "../components/contact/contact.astro";
 import IndexPage from "../pages/index.astro";
 import BlogPage from "../pages/blog/index.astro";
+import ProjectsPage from "../pages/projects.astro";
+import AboutPage from "../pages/about.astro";
 import CaseStudiesPage from "../pages/case-studies/index.astro";
 import NotFoundPage from "../pages/404.astro";
 import AchievementsPage from "../pages/achievements.astro";
@@ -34,6 +36,8 @@ const COMPONENTS = {
   experience: Experience,
   contact: Contact,
   index: IndexPage,
+  projects: ProjectsPage,
+  about: AboutPage,
   blog: BlogPage,
   "case-studies": CaseStudiesPage,
   "404": NotFoundPage,

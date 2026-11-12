@@ -3,9 +3,11 @@
     "slug": "orderfirst",
     "name": "OrderFirst — Distributed Microservices & Zero-Downtime CI/CD Platform",
     "category": "Distributed Microservices · Cloud-Native CI/CD",
+    "categoryFilter": "microservices",
     "summary": "A distributed restaurant ordering and table reservation platform engineered with an event-driven microservices architecture, schema isolation, and automated zero-downtime deployment.",
     "problem": "Monolithic deployment coupled all services into slow all-or-nothing rebuilds, shared database schema bottlenecks, and downtime risks during releases.",
     "solution": "Decoupled into 6 independent microservices orchestrated by a Jenkins monorepo pipeline featuring selective git-diff change detection, parallel quality gates, and zero-downtime rolling updates.",
+    "flow": ["Commit", "Diff Detect", "Build & Test", "Deploy"],
     "devopsHighlights": [
       "Monorepo change detection: evaluates git diff to run parallel typecheck, unit tests, and Docker builds only for modified services",
       "Zero-downtime rolling deployment using Docker Compose without restarting database, message broker, or untouched containers",
@@ -37,10 +39,12 @@
   {
     "slug": "devtalk",
     "name": "DevTalk — Developer Community & CI/CD Platform",
-    "category": "Full-stack platform · DevOps delivery",
+    "category": "Full-Stack Platform · DevOps Delivery",
+    "categoryFilter": "fullstack",
     "summary": "A LinkedIn-inspired community where developers solve coding problems, publish blogs, and connect through jobs.",
     "problem": "Manual testing, scanning, image builds, and server commands made every release slow and inconsistent.",
     "solution": "A GitHub-triggered Jenkins pipeline tests, analyzes, scans, builds, and deploys the Docker Compose stack.",
+    "flow": ["Push", "Test", "Security Scan", "Deploy"],
     "devopsHighlights": [
       "Push-to-deploy workflow using GitHub webhooks and Jenkins",
       "Reusable stages for tests, SonarQube analysis, and Trivy scanning",
@@ -69,7 +73,7 @@
     ],
     "outcome": "Turned manual releases into one repeatable, quality-gated path from commit to deployment.",
     "githubUrl": "https://github.com/Hasibul-Islam-Shanto/devtalk",
-    "blogHref": "/blogs/how-to-setup-jenkins",
+    "blogHref": "/blog/how-to-setup-jenkins",
     "blogLabel": "Read the implementation guide"
   }
 ]

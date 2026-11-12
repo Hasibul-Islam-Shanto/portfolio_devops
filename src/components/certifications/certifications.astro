@@ -5,7 +5,14 @@ import achievementsData from "../../data/achievements.json";
 import type { CredentialItem } from "./credential-types";
 
 const ACHIEVEMENTS: CredentialItem[] = achievementsData;
-const displayedItems = ACHIEVEMENTS.slice(0, 6);
+const HOMEPAGE_FEATURED_IDS = [
+  "bangladesh-blockchain-olympiad",
+  "docker-escbash-labs",
+  "github-actions-escbash",
+];
+const displayedItems: CredentialItem[] = HOMEPAGE_FEATURED_IDS.map((id) =>
+  ACHIEVEMENTS.find((item) => item.id === id),
+).filter((item): item is CredentialItem => item !== undefined);
 ---
 
 <div class="site-container py-28">

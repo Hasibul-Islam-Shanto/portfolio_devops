@@ -1,0 +1,50 @@
+---
+import type { HTMLTag } from "astro/types";
+
+interface Props {
+  as?: HTMLTag;
+  variant?: "up" | "scale" | "slide" | "slide-left";
+  delay?: number;
+  index?: number;
+  stagger?: number;
+  maxDelay?: number;
+  cols?: number;
+  class?: string;
+  style?: string;
+  [key: string]: unknown;
+}
+
+const {
+  as: Tag = "div",
+  variant = "up",
+  delay,
+  index,
+  stagger = 0.08,
+  maxDelay = 0.32,
+  cols,
+  class: className = "",
+  style = "",
+  ...rest
+} = Astro.props;
+
+let computedDelay = 0;
+if (typeof delay === "number") {
+  computedDelay = delay;
+} else if (typeof index === "number") {
+  const step = typeof cols === "number" && cols > 0 ? index % cols : index;
+  computedDelay = Math.min(maxDelay, step * stagger);
+}
+
+const delayStyle = computedDelay > 0 ? `--reveal-delay: ${computedDelay.toFixed(3)}s;` : "";
+const combinedStyle = [delayStyle, style].filter(Boolean).join(" ");
+const isCustomVariant = variant && variant !== "up";
+---
+
+<Tag
+  data-reveal={isCustomVariant ? variant : ""}
+  class={className}
+  style={combinedStyle || undefined}
+  {...rest}
+>
+  <slot />
+</Tag>
