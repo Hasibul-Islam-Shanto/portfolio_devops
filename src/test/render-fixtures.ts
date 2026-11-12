@@ -20,11 +20,6 @@ import NotFoundPage from "../pages/404.astro";
 import AchievementsPage from "../pages/achievements.astro";
 import LearningsPage from "../pages/learnings/index.astro";
 
-/**
- * Astro components can only be compiled for SSR, which the jsdom test environment doesn't do.
- * So every component/page the tests need is rendered once here (Node side) with the Astro
- * Container API, then provided to the jsdom tests as HTML strings (see helpers.ts).
- */
 const COMPONENTS = {
   header: Header,
   "pipeline-rail": PipelineRail,

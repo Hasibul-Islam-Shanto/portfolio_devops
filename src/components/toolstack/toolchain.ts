@@ -1,17 +1,5 @@
 import { createCleanup, prefersReducedMotion } from "@/scripts/util";
 
-/**
- * Filterable toolchain catalog:
- * - On load: "All" is active, all cards in full-color state.
- * - When a category tab is clicked:
- *   - Active tab gets coral background, ink text.
- *   - Live counter updates to matching tool count.
- *   - Matching cards stay/transition to full color.
- *   - Non-matching cards transition to ghost state (~15% opacity, grayscale, border muted).
- *   - Transition animates smoothly over ~300ms ease-out, staggered card-by-card (~18ms delay).
- * - Keyboard navigation (Arrow keys, Home, End, Enter, Space) with visible coral outline.
- * - Reduced motion: skips stagger and transition delay, snaps immediately.
- */
 export function initToolchain(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -36,7 +24,6 @@ export function initToolchain(
     activeCategory = category;
     const reduced = immediate || prefersReducedMotion();
 
-    // Update tab states
     tabs.forEach((tab) => {
       const match = tab.dataset["filterTab"] === category;
       tab.classList.toggle("is-active", match);
@@ -51,7 +38,6 @@ export function initToolchain(
       const isMatch = category === "All" || cardCategory === category;
       if (isMatch) matchCount++;
 
-      // Stagger delay ~18ms per card (within 15-20ms range requested)
       const delayMs = reduced ? 0 : index * 18;
       card.style.setProperty("--filter-delay", `${delayMs}ms`);
 
@@ -69,7 +55,6 @@ export function initToolchain(
     updateCounter(matchCount);
   };
 
-  // Attach tab events
   tabs.forEach((tab, index) => {
     const category = tab.dataset["filterTab"] ?? "All";
 
@@ -113,7 +98,6 @@ export function initToolchain(
     });
   });
 
-  // Initial state: "All" selected, all cards active, immediate
   applyFilter("All", true);
 
   return () => cleanup.run();

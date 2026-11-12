@@ -83,13 +83,11 @@ describe("Theme System", () => {
       const toggle = body.querySelector<HTMLButtonElement>("[data-theme-toggle]")!;
       expect(toggle).not.toBeNull();
 
-      // Click to toggle from dark to light
       toggle.click();
       expect(document.documentElement.getAttribute("data-theme")).toBe("light");
       expect(window.localStorage.getItem("theme")).toBe("light");
       expect(toggle.getAttribute("aria-label")).toContain("dark");
 
-      // Click again to toggle from light to dark
       toggle.click();
       expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
       expect(window.localStorage.getItem("theme")).toBe("dark");
@@ -105,12 +103,10 @@ describe("Theme System", () => {
       const toggle = body.querySelector<HTMLButtonElement>("[data-theme-toggle]")!;
       expect(toggle).not.toBeNull();
 
-      // Click to toggle from dark to light
       toggle.click();
       expect(document.documentElement.getAttribute("data-theme")).toBe("light");
       expect(window.localStorage.getItem("theme")).toBe("light");
 
-      // Click again to toggle from light to dark
       toggle.click();
       expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
       expect(window.localStorage.getItem("theme")).toBe("dark");
@@ -125,7 +121,6 @@ describe("Theme System", () => {
       expect(html).toContain("text-signal");
       expect(html).toContain("bg-[var(--terminal-chip-bg)]");
       expect(html).toContain("text-[var(--terminal-dim)]");
-      // Window chrome dots retain universal traffic-light colors
       expect(html).toContain("bg-[#FF5F56]");
       expect(html).toContain("bg-[#FFBD2E]");
       expect(html).toContain("bg-[#27C93F]");
@@ -137,7 +132,6 @@ describe("Theme System", () => {
       expect(html).toContain("text-[var(--terminal-fg)]");
       expect(html).toContain("text-[var(--terminal-success)]");
       expect(html).toContain("border-[var(--terminal-border)]");
-      // Window chrome dots retain universal colors
       expect(html).toContain("bg-[#FF5F56]/85");
       expect(html).toContain("bg-[#FFBD2E]/85");
       expect(html).toContain("bg-[#27C93F]/85");
@@ -148,7 +142,6 @@ describe("Theme System", () => {
       expect(html).toContain("bg-[var(--terminal-bg)]");
       expect(html).toContain("border-[var(--terminal-border)]");
       expect(html).toContain("shanto@portfolio:~");
-      // Universal chrome dots
       expect(html).toContain("bg-[#FF5F57]");
       expect(html).toContain("bg-[#FEBC2E]");
       expect(html).toContain("bg-[#28C840]");

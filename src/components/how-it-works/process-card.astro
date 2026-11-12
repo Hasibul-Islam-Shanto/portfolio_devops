@@ -1,0 +1,53 @@
+---
+import type { ProcessStep } from "./how-i-work-data";
+
+interface Props {
+  step: ProcessStep;
+  index: number;
+}
+
+const { step, index } = Astro.props;
+---
+
+<li
+  data-flow-card
+  data-step-index={index}
+  data-step-cmd={step.cmd}
+  class={`flow-card relative z-10 w-full overflow-hidden rounded-2xl border border-[var(--terminal-border)] bg-[var(--terminal-bg)] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out ${step.gridClass}`}
+>
+  <div class="flex items-center border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+    <div class="flex items-center gap-1.5" aria-hidden="true">
+      <span class="h-2 w-2 rounded-full bg-[#FF5F56]/85"></span>
+      <span class="h-2 w-2 rounded-full bg-[#FFBD2E]/85"></span>
+      <span class="h-2 w-2 rounded-full bg-[#27C93F]/85"></span>
+    </div>
+  </div>
+  <div class="p-4 sm:p-5">
+    <div class="font-mono text-xs font-semibold text-[#E8503A] text-signal truncate flex items-center min-h-[1.25rem]">
+      <span data-flow-cmd-text>{step.cmd}</span>
+      <span
+        data-flow-cursor
+        class="ml-0.5 inline-block text-[#E8503A] text-signal font-bold"
+        aria-hidden="true"
+        style="display: none;"
+      >
+        ▍
+      </span>
+    </div>
+    <div data-flow-body class="flow-body">
+      <h3 class="font-display text-base font-bold tracking-tight text-[var(--terminal-fg)] mt-2.5 sm:text-lg">
+        {step.title}
+      </h3>
+      <p class="font-mono text-[11px] leading-relaxed text-[var(--terminal-dim)] mt-1.5 sm:text-xs">
+        {step.desc}
+      </p>
+    </div>
+    <div
+      data-flow-result
+      class="flow-result mt-3.5 flex items-center gap-2 border-t border-[var(--terminal-header-border)] pt-3 font-mono text-[11px] font-medium text-[var(--terminal-success)] sm:text-xs"
+    >
+      <span class="font-bold">✓</span>
+      <span class="truncate">{step.res}</span>
+    </div>
+  </div>
+</li>

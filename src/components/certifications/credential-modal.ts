@@ -1,10 +1,5 @@
-import type { CredentialItem } from "./credential-card.astro";
+import type { CredentialItem } from "./credential-types";
 
-/**
- * Initializes the Credential & Recognition detail modal.
- * Attaches event listeners for opening, closing, focus-trapping, and keyboard navigation.
- * Returns a teardown function.
- */
 export function initCredentialModal(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -21,9 +16,7 @@ export function initCredentialModal(
       for (const it of parsed) {
         itemsMap[it.id] = it;
       }
-    } catch {
-      // ignore JSON parse errors
-    }
+    } catch {}
   }
 
   const titleEl = modal.querySelector<HTMLElement>("#credential-modal-title");
@@ -66,12 +59,10 @@ export function initCredentialModal(
 
     previouslyFocused = triggerEl || (document.activeElement as HTMLElement | null);
 
-    // 1. Full Title
     if (titleEl) {
       titleEl.textContent = item.title;
     }
 
-    // 2. Rank/achievement badge (if any)
     if (rankWrap && rankEl) {
       const rank = item.rank?.trim();
       if (rank) {
@@ -85,12 +76,10 @@ export function initCredentialModal(
       }
     }
 
-    // 3. Full/expanded description (falls back to shortDescription)
     if (descEl) {
       descEl.textContent = item.fullDescription || item.shortDescription;
     }
 
-    // 4. Certificate image(s) at readable size, not cropped/blurry
     if (imagesWrap) {
       imagesWrap.innerHTML = "";
       const images = item.images && item.images.length > 0 ? item.images : [];
@@ -117,7 +106,6 @@ export function initCredentialModal(
       }
     }
 
-    // 5. Relevant links as clickable buttons/links opening in new tab
     if (linksWrap) {
       linksWrap.innerHTML = "";
       const links = item.links && item.links.length > 0 ? item.links : [];
@@ -140,7 +128,6 @@ export function initCredentialModal(
       }
     }
 
-    // 6. Year and issuing organization
     if (issuerEl) {
       issuerEl.textContent = item.issuer || item.organization || "Independent Verification";
     }
@@ -148,7 +135,6 @@ export function initCredentialModal(
       yearEl.textContent = item.year;
     }
 
-    // Show modal container
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -162,7 +148,6 @@ export function initCredentialModal(
         first.focus();
       }
     } else {
-      // Force frame reflow so CSS animation kicks in smoothly
       void modal.offsetWidth;
       requestAnimationFrame(() => {
         modal.classList.add("is-open");
@@ -195,12 +180,10 @@ export function initCredentialModal(
     }
   };
 
-  // Delegated click handler on the container/root
   const onClick = (e: MouseEvent) => {
     const target = e.target as HTMLElement | null;
     if (!target) return;
 
-    // Check if clicked an open trigger button
     const openBtn = target.closest<HTMLElement>("[data-credential-open]");
     if (openBtn) {
       e.preventDefault();
@@ -209,7 +192,6 @@ export function initCredentialModal(
       return;
     }
 
-    // Check if clicked the card surface (without clicking nested links/buttons)
     const card = target.closest<HTMLElement>("[data-credential-card]");
     if (card && !target.closest("a") && !target.closest("button")) {
       const id = card.getAttribute("data-credential-card");
@@ -220,7 +202,6 @@ export function initCredentialModal(
       }
     }
 
-    // Check if clicked a close button or backdrop
     if (target.closest("[data-credential-close]")) {
       e.preventDefault();
       closeModal();
@@ -231,14 +212,12 @@ export function initCredentialModal(
   const onKeydown = (e: KeyboardEvent) => {
     if (!isOpen) return;
 
-    // Escape closes modal
     if (e.key === "Escape") {
       e.preventDefault();
       closeModal();
       return;
     }
 
-    // Tab traps focus inside modal
     if (e.key === "Tab") {
       const focusables = getFocusables();
       if (focusables.length === 0) {

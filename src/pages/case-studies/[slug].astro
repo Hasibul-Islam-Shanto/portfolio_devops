@@ -24,7 +24,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
 
   <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
     <div class="site-container py-10 md:py-14">
-      {/* Back Link */}
       <div>
         <a
           href="/#test"
@@ -35,7 +34,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </a>
       </div>
 
-      {/* Header Eyebrow & Title */}
       <div class="mt-8 border-b hairline pb-8">
         <p class="font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
           {project.category}
@@ -45,7 +43,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </h1>
         <p class="mt-4 max-w-3xl text-base sm:text-lg leading-relaxed dim">{project.summary}</p>
 
-        {/* Action Buttons */}
         <div class="mt-6 flex flex-wrap items-center gap-3">
           {project.githubUrl && (
             <a
@@ -78,7 +75,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </div>
       </div>
 
-      {/* Deep-Dive Grid: Challenge & Architecture */}
       <div class="mt-12 grid gap-8 lg:grid-cols-2">
         <div class="rounded-3xl border hairline bg-surface/40 p-7 sm:p-9 space-y-4">
           <p class="font-mono text-xs uppercase tracking-wider text-signal font-bold">
@@ -101,7 +97,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </div>
       </div>
 
-      {/* DevOps & Key Features Grid */}
       <div class="mt-8 grid gap-8 lg:grid-cols-2">
         <div class="rounded-3xl border hairline bg-surface/40 p-7 sm:p-9">
           <p class="font-mono text-xs uppercase tracking-wider text-signal font-bold mb-4">
@@ -138,7 +133,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </div>
       </div>
 
-      {/* Complete Tech Stack Matrix */}
       <div class="mt-8 rounded-3xl border hairline bg-surface/40 p-7 sm:p-9">
         <p class="font-mono text-xs uppercase tracking-wider text-signal font-bold mb-4">
           05 / Complete Technology Stack
@@ -152,7 +146,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </div>
       </div>
 
-      {/* Outcome Banner */}
       <div class="mt-8 rounded-3xl border border-signal/30 bg-signal/5 p-7 sm:p-9">
         <p class="font-mono text-xs uppercase tracking-widest text-signal font-bold">
           06 / Verified Production Outcome
@@ -162,7 +155,6 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </p>
       </div>
 
-      {/* Next Project Footer */}
       {otherProject && (
         <div class="mt-16 border-t hairline pt-8 flex items-center justify-between">
           <a

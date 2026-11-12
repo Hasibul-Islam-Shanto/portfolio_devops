@@ -1,0 +1,90 @@
+---
+import Icon from "../shared/icon.astro";
+import { NAV_LINKS, SOCIAL_LINKS, isNavActive } from "./header-data";
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+---
+
+<div
+  id="mobile-nav-menu"
+  data-mobile-menu
+  aria-hidden="true"
+  class="float-header section-surface pointer-events-auto mt-2.5 hidden flex-col overflow-hidden rounded-2xl border p-4 shadow-2xl backdrop-blur-xl lg:hidden"
+>
+  <div class="flex items-center justify-between pb-2 border-b hairline">
+    <span class="font-mono text-[10px] uppercase tracking-wider text-[var(--text)]/50">
+      // NAVIGATION
+    </span>
+    <span class="flex items-center gap-1.5 font-mono text-[10px] text-signal font-semibold">
+      <span
+        class="inline-block h-1.5 w-1.5 rounded-full bg-signal animate-pulse"
+        aria-hidden="true"
+      ></span>
+      SYS.READY
+    </span>
+  </div>
+
+  <nav aria-label="Mobile Navigation" class="mt-2">
+    <ul class="flex flex-col gap-1">
+      {NAV_LINKS.map((link, idx) => (
+        <li>
+          <a
+            href={link.href}
+            class="mobile-nav-link group flex items-center justify-between rounded-xl px-3 py-2.5 font-display text-sm font-semibold transition-colors"
+            data-mobile-nav-link
+            data-nav-path={link.path}
+            data-nav-hash={link.hash}
+            aria-current={isNavActive(link, currentPath) ? "page" : undefined}
+          >
+            <span class="flex items-center gap-2.5">
+              <span class="mobile-nav-index font-mono text-xs text-signal/70 group-hover:text-signal">
+                {String(idx + 1).padStart(2, "0")} /
+              </span>
+              <span>{link.label}</span>
+            </span>
+            <span class="font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 text-signal">
+              &rarr;
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="my-3 border-t hairline"></div>
+
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center justify-between px-1">
+      <span class="font-mono text-[11px] text-[var(--text)]/60">Connect</span>
+      <ul class="flex items-center gap-2" aria-label="Social profiles">
+        {SOCIAL_LINKS.map((social) => (
+          <li>
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={social.label}
+              class="flex h-8 w-8 items-center justify-center rounded-full text-[var(--text)]/75 border hairline bg-[var(--text)]/[0.03] transition-colors hover:bg-[var(--text)]/[0.08] hover:text-signal"
+            >
+              <Icon name={social.icon} class="h-4 w-4" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <a
+      href="/#scale"
+      data-mobile-nav-link
+      data-cursor-cta="true"
+      data-cursor-label="HIRE"
+      class="flex w-full items-center justify-center rounded-xl bg-signal py-2.5 font-mono text-xs font-bold text-signal-foreground shadow-md transition-all hover:bg-signal/90 hover:shadow-lg active:scale-[0.98]"
+    >
+      Hire me &rarr;
+    </a>
+  </div>
+</div>

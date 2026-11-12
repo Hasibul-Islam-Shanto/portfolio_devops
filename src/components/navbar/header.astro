@@ -1,36 +1,13 @@
 ---
 import Icon from "../shared/icon.astro";
+import MobileMenu from "./mobile-menu.astro";
+import { NAV_LINKS, SOCIAL_LINKS, isNavActive } from "./header-data";
 
 interface Props {
-  /** Current pathname, used for the server-rendered active nav state (header.ts keeps hash state live). */
   currentPath?: string;
 }
 
 const { currentPath = "/" } = Astro.props;
-
-const NAV = [
-  { label: "Home", href: "/", path: "/", hash: "" },
-  { label: "Projects", href: "/#test", path: "/", hash: "#test" },
-  { label: "About", href: "/about", path: "/about", hash: "" },
-  { label: "Learnings", href: "/learnings", path: "/learnings", hash: "" },
-  { label: "Blog", href: "/blog", path: "/blog", hash: "" },
-  { label: "Contact", href: "/#scale", path: "/", hash: "#scale" },
-] as const;
-
-const SOCIAL = [
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/hasibul-islam-shanto-80487a217/",
-    icon: "Linkedin",
-  },
-  {
-    label: "GitHub",
-    href: "https://github.com/Hasibul-Islam-Shanto",
-    icon: "Github",
-  },
-] as const;
-
-const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash === "";
 ---
 
 <header data-site-header class="pointer-events-none fixed inset-x-0 top-4 z-50 w-full">
@@ -80,14 +57,14 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
 
         <nav aria-label="Main" class="hidden lg:block">
           <ul class="flex items-center gap-1">
-            {NAV.map((n) => (
+            {NAV_LINKS.map((n) => (
               <li>
                 <a
                   href={n.href}
                   class="nav-link"
                   data-nav-path={n.path}
                   data-nav-hash={n.hash}
-                  aria-current={isActive(n) ? "page" : undefined}
+                  aria-current={isNavActive(n, currentPath) ? "page" : undefined}
                 >
                   {n.label}
                 </a>
@@ -98,9 +75,8 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
       </div>
 
       <div class="float-header header-pill section-surface pointer-events-auto flex items-center gap-1.5 sm:gap-2 rounded-full border px-2 sm:pl-3 sm:pr-2">
-        {/* Social profiles (desktop >= lg) */}
         <ul class="hidden items-center gap-1 lg:flex" aria-label="Social profiles">
-          {SOCIAL.map((s) => (
+          {SOCIAL_LINKS.map((s) => (
             <li>
               <a
                 href={s.href}
@@ -115,7 +91,6 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
           ))}
         </ul>
 
-        {/* Theme toggle switch */}
         <button
           type="button"
           data-theme-toggle
@@ -159,7 +134,6 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
           </svg>
         </button>
 
-        {/* Desktop Hire me CTA */}
         <a
           href="/#scale"
           data-cursor-cta="true"
@@ -169,7 +143,6 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
           Hire me
         </a>
 
-        {/* Mobile Hamburger toggle button */}
         <button
           type="button"
           data-mobile-menu-toggle
@@ -178,7 +151,6 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
           aria-label="Open navigation menu"
           class="flex h-9 w-9 items-center justify-center rounded-full text-[var(--text)]/75 transition-colors hover:bg-[var(--text)]/[0.07] hover:text-signal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal lg:hidden"
         >
-          {/* Hamburger lines */}
           <svg
             data-menu-icon="open"
             class="h-4 w-4 pointer-events-none transition-transform duration-200"
@@ -194,7 +166,6 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
             <line x1="4" y1="12" x2="20" y2="12"></line>
             <line x1="4" y1="17" x2="20" y2="17"></line>
           </svg>
-          {/* Close icon X */}
           <svg
             data-menu-icon="close"
             class="hidden h-4 w-4 pointer-events-none transition-transform duration-200"
@@ -213,93 +184,7 @@ const isActive = (n: (typeof NAV)[number]) => n.path === currentPath && n.hash =
       </div>
     </div>
 
-    {/* Mobile Dropdown Drawer: Floating frosted card below the top pills */}
-    <div
-      id="mobile-nav-menu"
-      data-mobile-menu
-      aria-hidden="true"
-      class="float-header section-surface pointer-events-auto mt-2.5 hidden flex-col overflow-hidden rounded-2xl border p-4 shadow-2xl backdrop-blur-xl lg:hidden"
-    >
-      {/* Terminal prompt header */}
-      <div class="flex items-center justify-between pb-2 border-b hairline">
-        <span class="font-mono text-[10px] uppercase tracking-wider text-[var(--text)]/50">
-          // NAVIGATION
-        </span>
-        <span class="flex items-center gap-1.5 font-mono text-[10px] text-signal font-semibold">
-          <span
-            class="inline-block h-1.5 w-1.5 rounded-full bg-signal animate-pulse"
-            aria-hidden="true"
-          ></span>
-          SYS.READY
-        </span>
-      </div>
-
-      {/* Terminal-indexed nav links */}
-      <nav aria-label="Mobile Navigation" class="mt-2">
-        <ul class="flex flex-col gap-1">
-          {NAV.map((n, idx) => {
-            const num = String(idx + 1).padStart(2, "0");
-            return (
-              <li>
-                <a
-                  href={n.href}
-                  class="mobile-nav-link group flex items-center justify-between rounded-xl px-3 py-2.5 font-display text-sm font-semibold transition-colors"
-                  data-mobile-nav-link
-                  data-nav-path={n.path}
-                  data-nav-hash={n.hash}
-                  aria-current={isActive(n) ? "page" : undefined}
-                >
-                  <span class="flex items-center gap-2.5">
-                    <span class="mobile-nav-index font-mono text-xs text-signal/70 group-hover:text-signal">
-                      {num} /
-                    </span>
-                    <span>{n.label}</span>
-                  </span>
-                  <span class="font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 text-signal">
-                    &rarr;
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      {/* Divider */}
-      <div class="my-3 border-t hairline"></div>
-
-      {/* Social links + Full-width "Hire me" CTA */}
-      <div class="flex flex-col gap-3">
-        <div class="flex items-center justify-between px-1">
-          <span class="font-mono text-[11px] text-[var(--text)]/60">Connect</span>
-          <ul class="flex items-center gap-2" aria-label="Social profiles">
-            {SOCIAL.map((s) => (
-              <li>
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={s.label}
-                  class="flex h-8 w-8 items-center justify-center rounded-full text-[var(--text)]/75 border hairline bg-[var(--text)]/[0.03] transition-colors hover:bg-[var(--text)]/[0.08] hover:text-signal"
-                >
-                  <Icon name={s.icon} class="h-4 w-4" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <a
-          href="/#scale"
-          data-mobile-nav-link
-          data-cursor-cta="true"
-          data-cursor-label="HIRE"
-          class="flex w-full items-center justify-center rounded-xl bg-signal py-2.5 font-mono text-xs font-bold text-signal-foreground shadow-md transition-all hover:bg-signal/90 hover:shadow-lg active:scale-[0.98]"
-        >
-          Hire me &rarr;
-        </a>
-      </div>
-    </div>
+    <MobileMenu currentPath={currentPath} />
   </div>
 </header>
 

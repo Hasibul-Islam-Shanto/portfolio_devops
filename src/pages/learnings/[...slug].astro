@@ -35,7 +35,6 @@ const nextLesson =
   <Header currentPath="/learnings" />
   <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
     <div class="site-container py-8 md:py-12">
-      <!-- Breadcrumb -->
       <nav aria-label="Breadcrumb" class="mb-8 font-mono text-xs uppercase tracking-wider">
         <a href="/learnings" class="dim hover:text-signal">
           Learnings
@@ -45,7 +44,6 @@ const nextLesson =
       </nav>
 
       <div class="grid gap-12 lg:grid-cols-[1fr_280px]">
-        <!-- Main Lesson Content -->
         <article class="min-w-0">
           <header class="border-b hairline pb-6">
             <span class="font-mono text-xs uppercase tracking-widest text-signal">
@@ -61,7 +59,6 @@ const nextLesson =
             <Content />
           </div>
 
-          <!-- Bottom Prev / Next Nav -->
           <nav
             aria-label="Lesson navigation"
             class="mt-14 border-t hairline pt-8 flex flex-wrap items-center justify-between gap-4 font-mono text-xs"
@@ -94,7 +91,6 @@ const nextLesson =
           </nav>
         </article>
 
-        <!-- Sidebar Topic Index (Desktop) -->
         <aside class="hidden lg:block">
           <div class="sticky top-28 rounded-2xl border hairline bg-surface/30 p-5">
             <div class="font-mono text-xs uppercase tracking-wider text-signal font-semibold">

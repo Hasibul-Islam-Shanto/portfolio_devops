@@ -2,7 +2,6 @@ import { createCleanup, prefersReducedMotion } from "@/scripts/util";
 
 const MINI_STEP_MS = 220;
 
-/** Reveals project cards in view and runs hover/focus effects on their mini pipeline flows and canvas. */
 export function initWork(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -24,7 +23,6 @@ export function initWork(
     const line = flow.querySelector<HTMLElement>("[data-flow-line]");
     const dot = flow.querySelector<HTMLElement>("[data-flow-dot]");
 
-    // ---- in-view reveal ----
     const revealTargets = [
       wrapper,
       ...Array.from(card.querySelectorAll<HTMLElement>("[data-reveal]")),
@@ -42,7 +40,6 @@ export function initWork(
       io.disconnect();
     });
 
-    // ---- hover / focus: constellation + mini flow ----
     let step = -1;
     let timer = 0;
 

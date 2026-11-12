@@ -1,17 +1,6 @@
 import { initTheme } from "@/scripts/theme";
 import { createCleanup } from "@/scripts/util";
 
-/**
- * Header behaviour:
- * - toggles `.is-scrolled` on every pill when scrollY > 60% of the viewport height
- * - scroll-direction-aware auto-hide when past hero:
- *   - always visible in hero section
- *   - hides on scroll down, reappears on scroll up
- *   - auto-hides after ~1.8s idle, paused while cursor is over the header
- * - keeps the active nav link in sync with pathname + hash (`/`, `/#test`, `/#scale`, `/blog`, ...)
- * - initializes the theme toggle button and synchronizes theme state
- * - controls the mobile drawer menu (hamburger toggle, auto-close on nav/click-outside/Escape)
- */
 export function initHeader(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -45,7 +34,6 @@ export function initHeader(
       mobileMenu?.classList.add("flex");
       iconOpen?.classList.add("hidden");
       iconClose?.classList.remove("hidden");
-      // Keep header visible when mobile drawer is open
       setHeaderVisibility(true);
     } else {
       mobileMenu?.classList.remove("flex");
@@ -67,14 +55,12 @@ export function initHeader(
     mobileToggle.addEventListener("click", onToggleClick);
     cleanup.add(() => mobileToggle.removeEventListener("click", onToggleClick));
 
-    // Close menu when clicking any mobile nav link
     mobileLinks.forEach((link) => {
       const onLinkClick = () => setMenuOpen(false);
       link.addEventListener("click", onLinkClick);
       cleanup.add(() => link.removeEventListener("click", onLinkClick));
     });
 
-    // Close menu when clicking outside the header
     const onDocClick = (e: MouseEvent) => {
       if (isMenuOpen && !header.contains(e.target as Node)) {
         setMenuOpen(false);
@@ -83,7 +69,6 @@ export function initHeader(
     document.addEventListener("click", onDocClick);
     cleanup.add(() => document.removeEventListener("click", onDocClick));
 
-    // Close menu on Escape key
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isMenuOpen) {
         setMenuOpen(false);
@@ -94,9 +79,8 @@ export function initHeader(
     cleanup.add(() => document.removeEventListener("keydown", onKeyDown));
   }
 
-  // --- Scroll-direction-aware header visibility ---
   const SCROLL_DELTA_THRESHOLD = 5;
-  const IDLE_HIDE_MS = 1800; // ~1.8s (within 1.5 - 2s requirement)
+  const IDLE_HIDE_MS = 1800;
 
   let isHidden = false;
   let isHovered = false;
@@ -115,7 +99,6 @@ export function initHeader(
     if (heroEl) {
       return heroEl.offsetTop + heroEl.offsetHeight;
     }
-    // Fallback for pages without #hero (e.g. /about, /blog)
     return typeof window !== "undefined" ? Math.max(200, window.innerHeight * 0.4) : 400;
   };
 
@@ -152,7 +135,6 @@ export function initHeader(
     const currentY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
     const heroBoundary = getHeroBoundary();
 
-    // Rule 1: While within hero section, header is always visible
     if (currentY <= heroBoundary) {
       clearIdleTimer();
       setHeaderVisibility(true);
@@ -162,21 +144,17 @@ export function initHeader(
 
     const delta = currentY - lastScrollY;
 
-    // Ignore tiny scroll jitter
     if (Math.abs(delta) < SCROLL_DELTA_THRESHOLD) {
       return;
     }
 
     if (delta > 0) {
-      // Rule 2: Scrolling DOWN past hero -> hide immediately
       clearIdleTimer();
       if (!isHovered) {
         setHeaderVisibility(false);
       }
     } else {
-      // Rule 3: Scrolling UP past hero -> reappear
       setHeaderVisibility(true);
-      // Rule 4: Idle timeout -> hide after ~1.8s
       startIdleTimer();
     }
 
@@ -217,7 +195,6 @@ export function initHeader(
     links.forEach((a) => {
       const linkPath = a.dataset["navPath"] ?? "/";
       const linkHash = a.dataset["navHash"] ?? "";
-      // "Home" is only active at the top of "/"; hash links are active when their hash matches.
       const active = linkPath === path && linkHash === hash;
       if (active) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");

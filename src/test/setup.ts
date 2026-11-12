@@ -29,9 +29,7 @@ try {
     value: storageMock,
     writable: true,
   });
-} catch {
-  // Ignore in environments where globalThis.localStorage is read-only
-}
+} catch {}
 
 Object.defineProperty(window, "scrollTo", {
   writable: true,

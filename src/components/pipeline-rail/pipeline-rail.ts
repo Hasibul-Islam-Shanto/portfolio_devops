@@ -8,12 +8,6 @@ const STAGE_FALLBACKS: Record<string, string> = {
   scale: "contact",
 };
 
-/**
- * Fixed right-side scroll progress rail. A single rAF-throttled measure handles scroll + resize:
- * visible after scrolling 50% of the first section (hero), active section = last section whose top crossed the
- * viewport midpoint, progress interpolated between sections and eased with a spring
- * (stiffness 140, damping 26; direct under reduced motion).
- */
 export function initPipelineRail(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {

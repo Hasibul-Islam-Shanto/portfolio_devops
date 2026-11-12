@@ -44,7 +44,6 @@ coverage/
 .impeccable/
 .kiro/
 .opencode/
-portfolio-export
 
 # Editor directories and files
 .vscode/*

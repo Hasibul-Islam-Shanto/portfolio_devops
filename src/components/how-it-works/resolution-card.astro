@@ -1,0 +1,38 @@
+---
+import { RESOLUTION_STATS } from "./how-i-work-data";
+---
+
+<li
+  data-flow-card
+  data-flow-resolution
+  data-step-index={5}
+  class="flow-card flow-resolution-card relative z-10 w-full overflow-hidden rounded-2xl border border-signal/40 bg-signal/[0.06] text-[var(--terminal-fg)] shadow-[var(--terminal-shadow)] transition-all duration-300 ease-out min-[860px]:[grid-column:1] min-[860px]:[grid-row:3]"
+>
+  <div class="flex items-center justify-between border-b border-[var(--terminal-header-border)] bg-[var(--terminal-header-bg)] px-4 py-2.5">
+    <div class="flex items-center gap-2">
+      <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+        <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-signal opacity-75"></span>
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-signal"></span>
+      </span>
+      <span class="font-mono text-[11px] font-bold tracking-wider text-signal uppercase">
+        INCIDENT RESOLVED
+      </span>
+    </div>
+    <span class="font-mono text-[9px] tracking-widest text-[var(--terminal-dim)] uppercase">
+      SYSTEM STABLE
+    </span>
+  </div>
+
+  <div data-flow-body class="flow-body p-4 sm:p-5">
+    <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+      {RESOLUTION_STATS.map((stat) => (
+        <div class="rounded-xl border border-[var(--terminal-header-border)] bg-[var(--terminal-bg)]/60 p-2 sm:p-2.5">
+          <div class="font-mono text-sm font-bold text-signal sm:text-base">{stat.value}</div>
+          <div class="mt-0.5 font-mono text-[10px] leading-tight text-[var(--terminal-dim)]">
+            {stat.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</li>

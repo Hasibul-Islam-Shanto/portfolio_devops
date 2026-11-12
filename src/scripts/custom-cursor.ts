@@ -3,12 +3,6 @@ import { createCleanup, isTouchOnlyDevice, prefersReducedMotion } from "./util";
 const INTERACTIVE_SELECTOR =
   'a, button, [role="button"], input, textarea, select, summary, [data-cursor-interactive], [data-cursor-label], [data-cursor-cta]';
 
-/**
- * Custom cursor: 8px dot + trailing 36px ring (56px on interactive targets, with optional label),
- * 100ms minimum squeeze on mouse-down and a 400ms ripple on `[data-cursor-cta]` clicks.
- * Disabled on touch/coarse pointers; the trailing ring and ripple are skipped under reduced motion.
- * Returns a cleanup that removes every listener, timer and animation frame.
- */
 export function initCustomCursor(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -101,7 +95,6 @@ export function initCustomCursor(
   const tick = (now: number) => {
     const dt = lastFrame ? Math.min(now - lastFrame, 64) : 16.67;
     lastFrame = now;
-    // Frame-rate independent lerp (~0.18 per 60Hz frame)
     const alpha = 1 - Math.pow(1 - 0.18, dt / 16.67);
     const dx = mouse.x - ringPos.x;
     const dy = mouse.y - ringPos.y;

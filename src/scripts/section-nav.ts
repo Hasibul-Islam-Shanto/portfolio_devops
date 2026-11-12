@@ -13,7 +13,6 @@ export const SECTION_IDS = [
 
 export type SectionId = (typeof SECTION_IDS)[number];
 
-/** Alias map allowing stage names (build, test, deploy, monitor, scale) to resolve to their corresponding sections */
 export const TARGET_ALIASES: Record<string, SectionId> = {
   hero: "hero",
   build: "hero",
@@ -30,10 +29,6 @@ export const TARGET_ALIASES: Record<string, SectionId> = {
   scale: "contact",
 };
 
-/**
- * Calculates the landing scroll position for a target element,
- * dynamically respecting section scroll-margin-top or the fixed header height.
- */
 export function getTargetScrollY(targetEl: HTMLElement): number {
   const sectionEl = targetEl.closest<HTMLElement>("section") || targetEl;
   const computed = window.getComputedStyle(sectionEl);
@@ -47,11 +42,6 @@ export function getTargetScrollY(targetEl: HTMLElement): number {
   return Math.max(0, targetY);
 }
 
-/**
- * Animated smooth scroll to a target position over roughly 700ms (within 600-800ms).
- * Eases using cubic bezier ease-in-out.
- * Respects prefers-reduced-motion (instant jump if enabled).
- */
 export function smoothScrollTo(
   targetY: number,
   duration = 700,
@@ -72,7 +62,6 @@ export function smoothScrollTo(
     return () => {};
   }
 
-  // Temporarily disable CSS scroll-behavior: smooth so rAF steps are not interpolated twice
   const prevScrollBehavior = document.documentElement.style.scrollBehavior;
   document.documentElement.style.scrollBehavior = "auto";
 
@@ -122,12 +111,6 @@ export function smoothScrollTo(
   };
 }
 
-/**
- * Initializes section navigation:
- * 1. Makes section eyebrows and rail links smoothly scroll to their target sections (~700ms).
- * 2. Provides active and landing pulse visual feedback on eyebrows.
- * 3. Uses IntersectionObserver for lightweight scroll-spy tracking.
- */
 export function initSectionNav(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -162,7 +145,6 @@ export function initSectionNav(
     const el = eyebrows.find((a) => a.dataset["sectionEyebrow"] === id);
     if (!el) return;
     el.classList.remove("is-highlighted");
-    // Trigger reflow to restart animation if clicked repeatedly
     void el.offsetWidth;
     el.classList.add("is-highlighted");
     window.setTimeout(() => {
@@ -170,10 +152,8 @@ export function initSectionNav(
     }, 400);
   };
 
-  // Set initial state
   setActiveEyebrow("hero");
 
-  // Scroll-spy via IntersectionObserver
   if (typeof IntersectionObserver !== "undefined") {
     const visibleSections = new Set<SectionId>();
 
@@ -190,20 +170,17 @@ export function initSectionNav(
           }
         });
 
-        // If at the very top of the page, activate hero
         if (window.scrollY < 80) {
           setActiveEyebrow("hero");
           return;
         }
 
-        // If at the very bottom of the page, activate contact
         if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 50) {
           setActiveEyebrow("contact");
           return;
         }
 
         if (visibleSections.size > 0) {
-          // Choose the section with the highest presence or closest to top margin
           let closestId: SectionId = activeSectionId;
           let minDistance = Infinity;
 
@@ -231,7 +208,6 @@ export function initSectionNav(
     cleanup.add(() => observer.disconnect());
   }
 
-  // Handle smooth scroll clicks on eyebrows, rail links, and internal section anchors
   let activeScrollCancel: (() => void) | null = null;
 
   const onAnchorClick = (e: MouseEvent) => {
@@ -257,7 +233,6 @@ export function initSectionNav(
       activeScrollCancel = null;
     }
 
-    // Immediately highlight the eyebrow during navigation for visual confirmation
     setActiveEyebrow(canonicalId);
     pulseEyebrow(canonicalId);
 

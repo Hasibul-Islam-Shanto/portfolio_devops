@@ -4,10 +4,10 @@ export interface InitHowIWorkOptions {
   immediate?: boolean;
 }
 
-export function initHowIWork(
+export const initHowIWork = (
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
   options?: InitHowIWorkOptions,
-): () => void {
+): (() => void) => {
   if (!root) return () => {};
   const stage = root.querySelector<HTMLElement>("[data-flow-stage]");
   if (!stage) return () => {};
@@ -15,10 +15,9 @@ export function initHowIWork(
   const cleanup = createCleanup();
   const cards = Array.from(stage.querySelectorAll<HTMLElement>("[data-flow-card]"));
   const connectors = Array.from(stage.querySelectorAll<HTMLElement>("[data-flow-connector]"));
-  const reduce = prefersReducedMotion();
+  const isReducedMotion = prefersReducedMotion();
 
-  // Immediate full render under prefers-reduced-motion
-  if (reduce) {
+  if (isReducedMotion) {
     cards.forEach((c) => {
       c.dataset["revealed"] = "true";
       c.dataset["state"] = "settled";
@@ -71,20 +70,8 @@ export function initHowIWork(
     });
   };
 
-  // Immediate reset on initialization so cards start completely blank/unrevealed
   resetAll();
 
-  /**
-   * Continuous Relay Sequence:
-   * 1. Card container reveals (border + chrome appear, content empty)
-   * 2. Command line types character by character
-   * 3. Title and description fade in
-   * 4. Green result confirmation line fades in
-   * 5. Card settles, then connector leading to next card draws
-   * 6. Once connector finishes, next card begins step 1
-   * 7. Resolution card reveals, stats fade in, holds glow ~1.8s, settles
-   * 8. Brief pause (~1.4s), resets all, loop restarts
-   */
   const runRelayLoop = async () => {
     const loopId = ++activeLoopId;
 
@@ -93,7 +80,6 @@ export function initHowIWork(
       await sleep(250);
       if (isCancelled(loopId)) return;
 
-      // Steps 1 to 5 (Cards 0 to 4)
       for (let i = 0; i < 5; i++) {
         if (isCancelled(loopId)) return;
         const card = cards[i];
@@ -104,14 +90,12 @@ export function initHowIWork(
         const res = card.querySelector<HTMLElement>("[data-flow-result]");
         const fullCmd = card.dataset["stepCmd"] || "";
 
-        // 1. The card container fades/slides in (border appears, chrome bar appears) — at this moment it should be otherwise empty
         card.dataset["revealed"] = "true";
         card.dataset["state"] = "active";
         if (cursor) cursor.style.display = "inline";
         await sleep(180);
         if (isCancelled(loopId)) return;
 
-        // 2. The command line then types out character by character
         for (let c = 1; c <= fullCmd.length; c++) {
           if (isCancelled(loopId)) return;
           if (cmdText) cmdText.textContent = fullCmd.slice(0, c);
@@ -119,58 +103,46 @@ export function initHowIWork(
         }
         if (isCancelled(loopId)) return;
 
-        // Command finished typing -> hide cursor
         if (cursor) cursor.style.display = "none";
         await sleep(80);
         if (isCancelled(loopId)) return;
 
-        // 3. The title and description then appear (fade in)
         if (bodyEl) bodyEl.dataset["visible"] = "true";
         await sleep(300);
         if (isCancelled(loopId)) return;
 
-        // 4. The green result/confirmation line fades in last
         if (res) res.dataset["visible"] = "true";
         await sleep(250);
         if (isCancelled(loopId)) return;
 
-        // Card settles
         card.dataset["state"] = "settled";
         await sleep(100);
         if (isCancelled(loopId)) return;
 
-        // 5. Only once ALL of the above has completed for this card does the connector leading to the NEXT card begin drawing
         const conn = connectors[i];
         if (conn) {
           conn.dataset["drawn"] = "true";
-          // 6. Only once that connector finishes does the NEXT card begin step 1
           await sleep(380);
           if (isCancelled(loopId)) return;
         }
       }
 
-      // Step 6: Sixth Element (Resolution Card, index 5)
       const resCard = cards[5];
       if (resCard && !isCancelled(loopId)) {
         const resBody = resCard.querySelector<HTMLElement>("[data-flow-body]");
-        // 1. Container reveals (border + header with pulsing dot & label)
         resCard.dataset["revealed"] = "true";
         resCard.dataset["state"] = "active";
         await sleep(250);
         if (isCancelled(loopId)) return;
 
-        // 2. 2x2 stats body fades in
         if (resBody) resBody.dataset["visible"] = "true";
 
-        // 3. Hold active glow for ~1.8s
         await sleep(1800);
         if (isCancelled(loopId)) return;
 
-        // 4. Glow settles
         resCard.dataset["state"] = "settled";
       }
 
-      // Brief pause (~1.4s) before restarting loop
       await sleep(1400);
     }
   };
@@ -178,12 +150,12 @@ export function initHowIWork(
   if (options?.immediate) {
     runRelayLoop();
   } else if (typeof IntersectionObserver !== "undefined") {
-    let triggered = false;
+    let isTriggered = false;
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        if (entry?.isIntersecting && !triggered) {
-          triggered = true;
+        if (entry?.isIntersecting && !isTriggered) {
+          isTriggered = true;
           runRelayLoop();
         }
       },
@@ -196,4 +168,4 @@ export function initHowIWork(
   }
 
   return () => cleanup.run();
-}
+};
