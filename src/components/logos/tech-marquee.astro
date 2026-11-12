@@ -160,20 +160,16 @@ const TECH_LOGOS: TechLogo[] = [
     <div class="tech-marquee-track flex w-max">
       {/* Set 1: Screen-reader announced set */}
       <div class="tech-marquee-group flex shrink-0 items-center gap-4 sm:gap-5 pr-4 sm:pr-5">
-        {
-          TECH_LOGOS.map((tech) => (
-            <div
-              class="tech-pill inline-flex items-center rounded-full bg-[var(--marquee-pill-bg)] border border-[var(--marquee-pill-border)] py-2 px-3.5 sm:py-2.5 sm:px-5 gap-2.5 sm:gap-3 shrink-0 shadow-xs transition-colors duration-200 hover:border-[var(--marquee-pill-hover)]"
-            >
-              <div class="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-xs p-1 sm:p-1.5">
-                <Fragment set:html={tech.svg} />
-              </div>
-              <span class="font-sans text-[14px] sm:text-[16px] font-medium tracking-tight text-[var(--marquee-text)] whitespace-nowrap">
-                {tech.name}
-              </span>
+        {TECH_LOGOS.map((tech) => (
+          <div class="tech-pill inline-flex items-center rounded-full bg-[var(--marquee-pill-bg)] border border-[var(--marquee-pill-border)] py-2 px-3.5 sm:py-2.5 sm:px-5 gap-2.5 sm:gap-3 shrink-0 shadow-xs transition-colors duration-200 hover:border-[var(--marquee-pill-hover)]">
+            <div class="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-xs p-1 sm:p-1.5">
+              <Fragment set:html={tech.svg} />
             </div>
-          ))
-        }
+            <span class="font-sans text-[14px] sm:text-[16px] font-medium tracking-tight text-[var(--marquee-text)] whitespace-nowrap">
+              {tech.name}
+            </span>
+          </div>
+        ))}
       </div>
 
       {/* Set 2: Duplicate set for seamless continuous marquee loop */}
@@ -181,21 +177,19 @@ const TECH_LOGOS: TechLogo[] = [
         class="tech-marquee-group flex shrink-0 items-center gap-4 sm:gap-5 pr-4 sm:pr-5"
         aria-hidden="true"
       >
-        {
-          TECH_LOGOS.map((tech) => (
-            <div
-              tabindex="-1"
-              class="tech-pill inline-flex items-center rounded-full bg-[var(--marquee-pill-bg)] border border-[var(--marquee-pill-border)] py-2 px-3.5 sm:py-2.5 sm:px-5 gap-2.5 sm:gap-3 shrink-0 shadow-xs transition-colors duration-200 hover:border-[var(--marquee-pill-hover)]"
-            >
-              <div class="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-xs p-1 sm:p-1.5">
-                <Fragment set:html={tech.svg} />
-              </div>
-              <span class="font-sans text-[14px] sm:text-[16px] font-medium tracking-tight text-[var(--marquee-text)] whitespace-nowrap">
-                {tech.name}
-              </span>
+        {TECH_LOGOS.map((tech) => (
+          <div
+            tabindex="-1"
+            class="tech-pill inline-flex items-center rounded-full bg-[var(--marquee-pill-bg)] border border-[var(--marquee-pill-border)] py-2 px-3.5 sm:py-2.5 sm:px-5 gap-2.5 sm:gap-3 shrink-0 shadow-xs transition-colors duration-200 hover:border-[var(--marquee-pill-hover)]"
+          >
+            <div class="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-xs p-1 sm:p-1.5">
+              <Fragment set:html={tech.svg} />
             </div>
-          ))
-        }
+            <span class="font-sans text-[14px] sm:text-[16px] font-medium tracking-tight text-[var(--marquee-text)] whitespace-nowrap">
+              {tech.name}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   </div>
@@ -207,13 +201,7 @@ const TECH_LOGOS: TechLogo[] = [
   }
 
   .tech-marquee-wrapper {
-    mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      black 5vw,
-      black 95vw,
-      transparent 100%
-    );
+    mask-image: linear-gradient(to right, transparent 0%, black 5vw, black 95vw, transparent 100%);
     -webkit-mask-image: linear-gradient(
       to right,
       transparent 0%,
@@ -280,4 +268,3 @@ const TECH_LOGOS: TechLogo[] = [
     }
   }
 </style>
-

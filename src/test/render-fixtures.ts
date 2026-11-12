@@ -17,6 +17,8 @@ import IndexPage from "../pages/index.astro";
 import BlogPage from "../pages/blog/index.astro";
 import CaseStudiesPage from "../pages/case-studies/index.astro";
 import NotFoundPage from "../pages/404.astro";
+import AchievementsPage from "../pages/achievements.astro";
+import LearningsPage from "../pages/learnings/index.astro";
 
 /**
  * Astro components can only be compiled for SSR, which the jsdom test environment doesn't do.
@@ -40,6 +42,8 @@ const COMPONENTS = {
   blog: BlogPage,
   "case-studies": CaseStudiesPage,
   "404": NotFoundPage,
+  achievements: AchievementsPage,
+  learnings: LearningsPage,
 } as const;
 
 export type FixtureName = keyof typeof COMPONENTS;

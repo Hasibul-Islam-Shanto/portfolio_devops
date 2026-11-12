@@ -1,0 +1,34 @@
+{
+  "engineeringSkills": {
+    "Programming Languages": ["JavaScript", "TypeScript", "Java", "C / C++", "SQL"],
+    "Frontend": ["React.js", "Next.js", "Tailwind CSS"],
+    "Backend": ["Node.js", "Express.js"],
+    "DevOps": [
+      "GitHub Actions",
+      "Docker",
+      "Kubernetes",
+      "Jenkins",
+      "CI/CD",
+      "Terraform",
+      "Ansible",
+      "Linux",
+      "Bash"
+    ],
+    "Databases": ["PostgreSQL", "MongoDB"],
+    "Tools & Other": ["Git", "REST APIs", "Authentication", "Web3 / Ethers.js"]
+  },
+  "highlightedTools": [
+    { "id": "docker", "label": "Docker" },
+    { "id": "kubernetes", "label": "Kubernetes" },
+    { "id": "terraform", "label": "Terraform" },
+    { "id": "aws", "label": "AWS" },
+    { "id": "github", "label": "GitHub" },
+    { "id": "git", "label": "Git" },
+    { "id": "github-actions", "label": "GitHub Actions" },
+    { "id": "nginx", "label": "Nginx" },
+    { "id": "prometheus", "label": "Prometheus" },
+    { "id": "grafana", "label": "Grafana" },
+    { "id": "bash", "label": "Bash" },
+    { "id": "linux", "label": "Linux" }
+  ]
+}

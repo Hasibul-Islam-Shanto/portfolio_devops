@@ -7,8 +7,9 @@ import { initExperience } from "@/components/experience/experience";
 import { initContact } from "@/components/contact/contact";
 import { initHowIWork } from "@/components/how-it-works/how-i-work";
 import { initPipelineRail } from "@/components/pipeline-rail/pipeline-rail";
-import { initSectionNav, SECTION_IDS, getTargetScrollY, smoothScrollTo } from "@/scripts/section-nav";
+import { initSectionNav, getTargetScrollY, smoothScrollTo } from "@/scripts/section-nav";
 import { initConstellationCanvases } from "@/scripts/constellation-canvas";
+import { initCredentialModal } from "@/components/certifications/credential-modal";
 import { mockMatchMedia, mount, track } from "./helpers";
 
 const text = (el: Element | null) => el?.textContent ?? "";
@@ -128,7 +129,9 @@ describe("HeroTerminal", () => {
     expect(document.body.textContent).toMatch(
       /ACCESS GRANTED — Shanto provisioned for Platform \/ DevOps leadership/i,
     );
-    expect(document.querySelector('a[href="mailto:hello@shanto.dev"]')).not.toBeNull();
+    expect(
+      document.querySelector('a[href="mailto:mdhasibulislamshanto007@gmail.com"]'),
+    ).not.toBeNull();
   });
 
   it("auto-runs help on load with simulated typing, rendering two-column commands list", async () => {
@@ -177,28 +180,38 @@ describe("HeroTerminal", () => {
 });
 
 describe("Work", () => {
-  it("renders six cards with mini flows, inactive canvases and the case-study link", async () => {
+  it("renders two cards with mini flows, inactive canvases, GitHub links, and specific project details", async () => {
     const body = mount("work");
-    expect(body.querySelectorAll('[aria-label="Project pipeline stages"]').length).toBe(6);
-    expect(text(body)).toContain("Reconcile");
-    expect(text(body)).toContain("Hypothesis");
+    expect(body.querySelectorAll('[aria-label="Project pipeline stages"]').length).toBe(2);
+    expect(text(body)).toContain("OrderFirst");
+    expect(text(body)).toContain("DevTalk");
 
     const cards = body.querySelectorAll("article.work-card");
-    expect(cards.length).toBe(6);
+    expect(cards.length).toBe(2);
     cards.forEach((card) => {
       expect(card).not.toHaveAttribute("data-cursor-label");
       expect(card.className).not.toMatch(/tone-m-|tone-d-/);
       expect(card.querySelector(".work-cat-tick")).not.toBeNull();
-      expect(text(card.querySelector(".work-case-link")).trim()).toBe("View case study →");
+      expect(text(card.querySelector(".work-case-link")).replace(/\s+/g, " ").trim()).toBe(
+        "View project details →",
+      );
       expect(
         card
           .querySelector('[data-constellation-canvas="card"]')
           ?.getAttribute("data-constellation-active"),
       ).toBe("false");
+
+      // Single GitHub logo + text link on top
+      const ghLinks = card.querySelectorAll('a[href^="https://github.com/"]');
+      expect(ghLinks.length).toBe(1);
+      expect(text(ghLinks[0]!)).toContain("GitHub");
+
+      // CLI command elements are completely removed
+      expect(card.querySelector("[data-work-cmd]")).toBeNull();
+      expect(card.querySelector("[data-work-res]")).toBeNull();
+      expect(text(card)).not.toContain("$ gh workflow run");
+      expect(text(card)).not.toContain("$ trivy image");
     });
-    // CLI content is in the HTML before any script runs.
-    expect(text(body)).toContain("$ gh workflow run release.yml");
-    expect(text(body)).toContain("✓ 7m02s · 1,284 tests passed");
   });
 
   it("activates the hovered/focused card's canvas and flow, and deactivates on leave", async () => {
@@ -226,16 +239,65 @@ describe("Work", () => {
       expect(canvasOf(first)).toBe("false");
       expect(first.querySelector(".flow-node.is-on")).toBeNull();
 
-      cards[2]!.dispatchEvent(new Event("focusin", { bubbles: true }));
-      expect(canvasOf(cards[2]!)).toBe("true");
-      cards[2]!.dispatchEvent(new Event("focusout", { bubbles: true }));
-      expect(canvasOf(cards[2]!)).toBe("false");
+      cards[1]!.dispatchEvent(new Event("focusin", { bubbles: true }));
+      expect(canvasOf(cards[1]!)).toBe("true");
+      cards[1]!.dispatchEvent(new Event("focusout", { bubbles: true }));
+      expect(canvasOf(cards[1]!)).toBe("false");
     } finally {
       vi.useRealTimers();
     }
   });
 
-  it("types $ <cmd> at 22ms/char then the result at 18ms/char when scrolled into view", async () => {
+  it("ensures all card types share the particle background and enforces only one active card canvas sitewide", async () => {
+    // 1. Mount Certifications cards
+    const certsBody = mount("certifications");
+    track(initConstellationCanvases(certsBody));
+    const certCards = certsBody.querySelectorAll<HTMLElement>("article.work-card");
+    expect(certCards.length).toBeGreaterThan(0);
+
+    const canvasOf = (el: Element) =>
+      el
+        .querySelector('[data-constellation-canvas="card"]')
+        ?.getAttribute("data-constellation-active");
+
+    // All certification cards should have the particle canvas
+    certCards.forEach((c) => {
+      expect(c.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
+      expect(canvasOf(c)).toBe("false");
+    });
+
+    // Hovering card 0 activates it
+    certCards[0]!.dispatchEvent(new MouseEvent("mouseenter"));
+    expect(canvasOf(certCards[0]!)).toBe("true");
+    expect(canvasOf(certCards[1]!)).toBe("false");
+
+    // Hovering card 1 deactivates card 0 and activates card 1
+    certCards[1]!.dispatchEvent(new MouseEvent("mouseenter"));
+    expect(canvasOf(certCards[0]!)).toBe("false");
+    expect(canvasOf(certCards[1]!)).toBe("true");
+
+    // Leaving card 1 deactivates it
+    certCards[1]!.dispatchEvent(new MouseEvent("mouseleave"));
+    expect(canvasOf(certCards[1]!)).toBe("false");
+
+    // 2. Blog cards also render the particle canvas
+    const blogDoc = mount("blog");
+    const blogCards = blogDoc.querySelectorAll("article");
+    expect(blogCards.length).toBeGreaterThan(0);
+    blogCards.forEach((b) => {
+      expect(b.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
+    });
+
+    // 3. Learnings cards also render the particle canvas
+    const learningsDoc = mount("learnings");
+    const learningCards = learningsDoc.querySelectorAll(".group.relative.overflow-hidden");
+    expect(learningCards.length).toBeGreaterThan(0);
+    learningCards.forEach((l) => {
+      expect(l.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
+    });
+  });
+
+  it("adds .is-in class when card intersects the viewport without rendering terminal commands", async () => {
     const observers: Array<(entries: Array<{ isIntersecting: boolean }>) => void> = [];
     const Original = window.IntersectionObserver;
     window.IntersectionObserver = class {
@@ -252,54 +314,23 @@ describe("Work", () => {
 
     const body = mount("work");
     track(initWork());
-    vi.useFakeTimers();
-    try {
-      const card = body.querySelector<HTMLElement>("article.work-card")!;
-      const cmd = card.querySelector("[data-work-cmd]")!;
-      const res = card.querySelector("[data-work-res]")!;
-      const caret = card.querySelector<HTMLElement>("[data-work-caret]")!;
-      expect(cmd.textContent).toBe("");
-      expect(caret.hidden).toBe(false);
 
-      observers[0]!([{ isIntersecting: true }]);
-      expect(card.parentElement).toHaveClass("is-in");
+    const card = body.querySelector<HTMLElement>("article.work-card")!;
+    expect(card.parentElement).not.toHaveClass("is-in");
 
-      const full = "$ gh workflow run release.yml";
-      vi.advanceTimersByTime(22 * 5);
-      expect(cmd.textContent).toBe(full.slice(0, 5));
-      vi.advanceTimersByTime(22 * (full.length - 5));
-      expect(cmd.textContent).toBe(full);
-
-      const result = "✓ 7m02s · 1,284 tests passed";
-      vi.advanceTimersByTime(18 * 4);
-      expect(res.textContent).toBe(result.slice(0, 4));
-      expect(caret.hidden).toBe(false);
-      vi.advanceTimersByTime(18 * result.length);
-      expect(res.textContent).toBe(result);
-      expect(caret.hidden).toBe(true);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it("shows full command text immediately under reduced motion", async () => {
-    mockMatchMedia("prefers-reduced-motion");
-    const body = mount("work");
-    track(initWork());
-    const card = body.querySelector("article.work-card")!;
-    expect(text(card.querySelector("[data-work-cmd]"))).toBe("$ gh workflow run release.yml");
-    expect(text(card.querySelector("[data-work-res]"))).toBe("✓ 7m02s · 1,284 tests passed");
+    observers[0]!([{ isIntersecting: true }]);
+    expect(card.parentElement).toHaveClass("is-in");
   });
 });
 
 describe("Toolchain", () => {
-  it("renders the 30-tool catalog with header counter and 8 filter tabs", async () => {
+  it("renders the 18-tool catalog with header counter and 8 filter tabs", async () => {
     const body = mount("toolchain");
     track(initToolchain());
 
     expect(text(body)).toContain("03 / The toolchain");
     expect(text(body)).toContain("Every layer, deployed with intent.");
-    expect(text(body.querySelector("[data-tool-counter]"))).toContain("30 tools");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("18 tools");
 
     const tabs = body.querySelectorAll<HTMLButtonElement>("[data-filter-tab]");
     expect(tabs.length).toBe(8);
@@ -316,7 +347,7 @@ describe("Toolchain", () => {
     ]);
 
     const cards = body.querySelectorAll<HTMLElement>("[data-tool-card]");
-    expect(cards.length).toBe(30);
+    expect(cards.length).toBe(18);
 
     // Initial state: "All" selected, all cards active
     const allTab = body.querySelector<HTMLButtonElement>('[data-filter-tab="All"]')!;
@@ -341,15 +372,15 @@ describe("Toolchain", () => {
     expect(containersTab.getAttribute("aria-selected")).toBe("true");
     expect(body.querySelector('[data-filter-tab="All"]')).not.toHaveClass("is-active");
 
-    // Counter updates to 4 tools
-    expect(text(body.querySelector("[data-tool-counter]"))).toContain("4 tools");
+    // Counter updates to 3 tools
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("3 tools");
 
     const cards = Array.from(body.querySelectorAll<HTMLElement>("[data-tool-card]"));
     const matching = cards.filter((c) => c.dataset["toolCat"] === "Containers");
     const nonMatching = cards.filter((c) => c.dataset["toolCat"] !== "Containers");
 
-    expect(matching.length).toBe(4);
-    expect(nonMatching.length).toBe(26);
+    expect(matching.length).toBe(3);
+    expect(nonMatching.length).toBe(15);
 
     matching.forEach((c) => {
       expect(c).toHaveClass("is-active-tool");
@@ -372,7 +403,7 @@ describe("Toolchain", () => {
     allTab.click();
 
     expect(allTab).toHaveClass("is-active");
-    expect(text(body.querySelector("[data-tool-counter]"))).toContain("30 tools");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("18 tools");
     cards.forEach((c) => {
       expect(c).toHaveClass("is-active-tool");
       expect(c).not.toHaveClass("is-ghost-tool");
@@ -391,12 +422,12 @@ describe("Toolchain", () => {
 
     // Moved to CI/CD tab
     expect(tabs[1]).toHaveClass("is-active");
-    expect(text(body.querySelector("[data-tool-counter]"))).toContain("5 tools");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("4 tools");
 
     // Space/Enter activation
     tabs[2]!.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
     expect(tabs[2]).toHaveClass("is-active");
-    expect(text(body.querySelector("[data-tool-counter]"))).toContain("4 tools");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("2 tools");
   });
 
   it("snaps instantly without stagger delays under reduced motion", async () => {
@@ -411,7 +442,7 @@ describe("Toolchain", () => {
     cards.forEach((card) => {
       expect(card.style.getPropertyValue("--filter-delay")).toBe("0ms");
     });
-    expect(text(body.querySelector("[data-tool-counter]"))).toContain("5 tools");
+    expect(text(body.querySelector("[data-tool-counter]"))).toContain("4 tools");
   });
 });
 
@@ -596,28 +627,91 @@ describe("Static sections", () => {
     });
   });
 
-  it("renders the 4 placeholder Certifications cards", async () => {
+  it("renders the Recognitions & Credentials preview in a 3-per-row grid with View All CTA", async () => {
     const body = mount("certifications");
-    expect(text(body)).toContain("Certifications");
-    expect(text(body)).toContain("[Certification Name — e.g. AWS Solutions Architect]");
-    expect(body.querySelectorAll("article").length).toBe(4);
-    expect(text(body).match(/\[Year\]/g)?.length).toBe(4);
+    expect(text(body)).toContain("Recognitions");
+    expect(text(body)).toContain("Smart Village Idea Competition");
+    // Limits preview to 6 cards on the homepage section
+    const articles = body.querySelectorAll("article");
+    expect(articles.length).toBe(6);
+    expect(text(body)).toContain("2023");
+    expect(text(body)).toContain("2024");
+
+    // Grid layout: 3 cards per row
+    const grid = body.querySelector(".grid");
+    expect(grid?.className).toContain("lg:grid-cols-3");
+
+    // Check rank badge is present for items with rank, omitted when empty
+    const firstCard = body.querySelector('[data-credential-card="smart-village-idea-competition"]');
+    expect(text(firstCard)).toContain("1st Runner-Up");
+
+    const plainCard = body.querySelector('[data-credential-card="docker-container-orchestration"]');
+    expect(text(plainCard)).toContain("Docker & Container Orchestration");
+    // Plain certification has no rank pill
+    expect(plainCard?.querySelector(".rounded-full.bg-signal\\/15")).toBeNull();
+
+    // View details button present on all cards
+    const viewDetailBtns = body.querySelectorAll("[data-credential-open]");
+    expect(viewDetailBtns.length).toBe(6);
+
+    // Centered "View all" link navigates to /achievements
+    const viewAllLink = body.querySelector('a[href="/achievements"]');
+    expect(viewAllLink).not.toBeNull();
+    expect(text(viewAllLink)).toContain("View all recognitions & credentials");
   });
 
-  it("renders the Experience commit-log timeline with standard section heading, placeholders, HEAD badge, and CTA", async () => {
+  it("opens and closes the detail modal with animated contents, focus trapping, and keyboard controls", async () => {
+    const body = mount("certifications");
+    track(initCredentialModal(body));
+
+    const modal = body.querySelector<HTMLElement>("#credential-modal");
+    expect(modal).not.toBeNull();
+    expect(modal?.hidden).toBe(true);
+
+    // Click "View details" on Smart Village item
+    const openBtn = body.querySelector<HTMLElement>(
+      '[data-credential-open="smart-village-idea-competition"]',
+    );
+    openBtn?.click();
+
+    expect(modal?.hidden).toBe(false);
+    expect(modal?.getAttribute("aria-hidden")).toBe("false");
+    expect(modal?.querySelector("#credential-modal-title")?.textContent).toBe(
+      "Smart Village Idea Competition",
+    );
+    expect(modal?.querySelector("#credential-modal-rank")?.textContent).toBe("1st Runner-Up");
+    expect(modal?.querySelector("#credential-modal-desc")?.textContent).toContain(
+      "Ethereum blockchain architecture",
+    );
+    expect(modal?.querySelector("#credential-modal-issuer")?.textContent).toBe(
+      "District Administration, Sylhet & SUST",
+    );
+    expect(modal?.querySelector("#credential-modal-year")?.textContent).toBe("2023");
+
+    // Scanned certificate image is rendered
+    const img = modal?.querySelector<HTMLImageElement>("#credential-modal-images-wrapper img");
+    expect(img?.src).toContain("idea_competition.webp");
+
+    // Press Escape to close modal
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    expect(modal?.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("renders the Experience commit-log timeline with standard section heading, real roles, HEAD badge, and CTA", async () => {
     const body = mount("experience");
     expect(text(body)).toContain("02 / Experience");
     expect(text(body)).toContain("Years spent keeping");
     expect(text(body)).toContain("systems");
     expect(text(body)).toContain("honest.");
-    expect(text(body)).toContain("[3] roles");
-    expect(text(body)).toContain("since [year]");
-    expect(text(body)).toContain("[Month Year] → Present");
-    expect(text(body).match(/\[Company Name\]/g)?.length).toBe(3);
-    expect(text(body).match(/\[Job Title\]/g)?.length).toBe(3);
-    expect(text(body)).toContain("[a3f9c21]");
-    expect(text(body)).toContain("[7be41d0]");
-    expect(text(body)).toContain("[4c19e85]");
+    expect(text(body)).toContain("2 roles");
+    expect(text(body)).toContain("since 2022");
+    expect(text(body)).toContain("Jan 2024 → Jun 2026");
+    expect(text(body)).toContain("Universal Machine Inc.");
+    expect(text(body)).toContain("InnovexIT");
+    expect(text(body)).toContain("Front-End Engineer");
+    expect(text(body)).toContain("Junior Web Developer");
+    expect(text(body)).toContain("a3f9c21");
+    expect(text(body)).toContain("7be41d0");
     expect(text(body)).not.toContain("<!--");
     expect(text(body)).not.toContain("-->");
 
@@ -634,10 +728,9 @@ describe("Static sections", () => {
     track(initExperience(body));
 
     const cards = body.querySelectorAll<HTMLElement>("[data-exp-card]");
-    expect(cards.length).toBe(3);
+    expect(cards.length).toBe(2);
     expect(cards[0]?.classList.contains("is-expanded")).toBe(true);
     expect(cards[1]?.classList.contains("is-expanded")).toBe(false);
-    expect(cards[2]?.classList.contains("is-expanded")).toBe(false);
 
     const toggles = body.querySelectorAll<HTMLButtonElement>("[data-exp-toggle]");
     expect(toggles[0]?.getAttribute("aria-expanded")).toBe("true");
@@ -669,17 +762,17 @@ describe("Static sections", () => {
     expect(text(body)).toContain("07 · CONTACT");
     expect(text(body)).toContain("shanto@portfolio:~");
     expect(text(body)).toContain("whoami");
-    expect(text(body)).toContain("> Platform engineer · open to remote roles");
+    expect(text(body)).toContain("> DevOps Engineer · open to DevOps roles & freelance");
     expect(text(body)).toContain("$ cat contact.txt");
     expect(text(body)).toContain("Let's ship something");
     expect(text(body)).toContain("that doesn't page anyone.");
-    expect(text(body)).toContain("hello@shanto.dev");
+    expect(text(body)).toContain("mdhasibulislamshanto007@gmail.com");
     expect(text(body)).toContain("Start a conversation →");
     expect(text(body)).toContain("Download résumé ↓");
     expect(body.querySelector('a[aria-label="GitHub"]')).not.toBeNull();
     expect(body.querySelector('a[aria-label="LinkedIn"]')).not.toBeNull();
     expect(body.querySelector('a[aria-label="X (Twitter)"]')).not.toBeNull();
-    expect(text(body)).toContain("© 2026 Shanto · Dhaka, Bangladesh");
+    expect(text(body)).toContain("© 2026 Hasibul Islam Shanto · Rangpur, Bangladesh");
     expect(text(body)).toContain("BST");
     expect(text(body)).toContain("Bangladesh");
   });
@@ -731,7 +824,7 @@ describe("Header", () => {
     const hrefs = Array.from(body.querySelectorAll("nav[aria-label='Main'] a")).map((a) =>
       a.getAttribute("href"),
     );
-    expect(hrefs).toEqual(["/", "/#test", "/case-studies", "/blog", "/#scale"]);
+    expect(hrefs).toEqual(["/", "/#test", "/about", "/learnings", "/blog", "/#scale"]);
 
     const current = () =>
       Array.from(body.querySelectorAll("nav[aria-label='Main'] a[aria-current='page']")).map((a) =>
@@ -780,6 +873,62 @@ describe("Header", () => {
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     expect(menu).toHaveClass("hidden");
+  });
+
+  it("handles scroll-direction-aware auto-hide, idle timer, and hover exception past hero", async () => {
+    vi.useFakeTimers();
+    try {
+      const body = mount("header");
+      const hero = document.createElement("section");
+      hero.id = "hero";
+      Object.defineProperty(hero, "offsetTop", { value: 0, configurable: true });
+      Object.defineProperty(hero, "offsetHeight", { value: 800, configurable: true });
+      body.appendChild(hero);
+
+      track(initHeader(body));
+      const header = body.querySelector<HTMLElement>("[data-site-header]")!;
+
+      // 1. Within hero (scrollY <= 800) -> always visible
+      Object.defineProperty(window, "scrollY", { value: 400, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+
+      // 2. Scrolling down past hero (800 -> 1000) -> auto-hides immediately
+      Object.defineProperty(window, "scrollY", { value: 1000, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).toHaveClass("header-hidden");
+
+      // 3. Scrolling up past hero (1000 -> 900) -> reappears
+      Object.defineProperty(window, "scrollY", { value: 900, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+
+      // 4. Idle timeout: after 1.8s of no scroll -> hides
+      vi.advanceTimersByTime(1850);
+      expect(header).toHaveClass("header-hidden");
+
+      // 5. Scroll up again -> reappears
+      Object.defineProperty(window, "scrollY", { value: 850, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+
+      // 6. Hover over header -> cancels/pauses idle timer
+      header.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+      vi.advanceTimersByTime(2500);
+      expect(header).not.toHaveClass("header-hidden"); // Still visible because hovered!
+
+      // 7. Mouse leaves header -> resumes idle timer and hides after delay
+      header.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
+      vi.advanceTimersByTime(1850);
+      expect(header).toHaveClass("header-hidden");
+
+      // 8. Scrolling back up into hero section -> reappears immediately
+      Object.defineProperty(window, "scrollY", { value: 200, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 
@@ -893,7 +1042,7 @@ describe("SectionNav", () => {
     expect(eyebrows.length).toBe(8);
 
     const mapped = eyebrows.map((a) => ({
-      eyebrow: a.dataset.sectionEyebrow,
+      eyebrow: a.dataset["sectionEyebrow"],
       href: a.getAttribute("href"),
       tagName: a.tagName.toLowerCase(),
     }));
@@ -918,7 +1067,9 @@ describe("SectionNav", () => {
     expect(initialActive.classList.contains("is-active")).toBe(true);
     expect(initialActive.getAttribute("aria-current")).toBe("location");
 
-    const projectsLink = body.querySelector<HTMLAnchorElement>('[data-section-eyebrow="projects"]')!;
+    const projectsLink = body.querySelector<HTMLAnchorElement>(
+      '[data-section-eyebrow="projects"]',
+    )!;
     projectsLink.click();
 
     expect(projectsLink.classList.contains("is-active")).toBe(true);
@@ -961,4 +1112,3 @@ describe("SectionNav", () => {
     expect(targetY).toBe(504);
   });
 });
-

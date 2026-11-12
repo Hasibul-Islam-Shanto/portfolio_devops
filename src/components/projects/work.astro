@@ -1,84 +1,55 @@
 ---
-import ConstellationCanvas from "../shared/constellation-canvas.astro";
+import CardParticleBackground from "../shared/card-particle-background.astro";
 
 const PROJECTS = [
   {
-    stage: "Build",
-    cat: "CI/CD",
-    title: "Monorepo pipeline rebuild",
-    frame: "Cut a 41-minute pipeline to 7 for 120 engineers.",
-    p: "Serial jobs, flaky tests and no caching blocked every merge.",
-    a: "Affected-graph builds, remote cache, test sharding across spot runners.",
-    o: "−83% build time, 3× deploy frequency, $14k/mo saved.",
-    tags: ["GitHub Actions", "Bazel", "Buildkite"],
-    flow: ["Commit", "Build", "Test", "Deploy"],
-    cmd: "gh workflow run release.yml",
-    res: "✓ 7m02s · 1,284 tests passed",
+    slug: "orderfirst",
+    cat: "Distributed Microservices · Cloud-Native CI/CD",
+    name: "OrderFirst — Distributed Microservices & Zero-Downtime CI/CD Platform",
+    summary:
+      "A distributed restaurant ordering and table reservation platform engineered with an event-driven microservices architecture, schema isolation, and automated zero-downtime deployment.",
+    stack: [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Vite",
+      "Node.js",
+      "Express.js",
+      "PostgreSQL",
+      "Prisma",
+      "RabbitMQ",
+      "Docker",
+      "Jenkins",
+      "Nginx",
+      "Linux",
+    ],
+    flow: ["Commit", "Diff Detect", "Build & Test", "Deploy"],
+    githubUrl: "https://github.com/Hasibul-Islam-Shanto/orderfirst",
   },
   {
-    stage: "Build",
-    cat: "IaC",
-    title: "Terraform landing zone",
-    frame: "Every cloud account, born compliant.",
-    p: "Click-ops accounts drifted; audits took weeks.",
-    a: "Module registry, policy-as-code, plan reviews in PRs.",
-    o: "42 accounts codified, zero drift, SOC2 in one quarter.",
-    tags: ["Terraform", "OPA", "Atlantis"],
-    flow: ["Plan", "Review", "Apply", "Verify"],
-    cmd: "terraform plan -out=release.plan",
-    res: "✓ plan ready · 0 destroys",
-  },
-  {
-    stage: "Deploy",
-    cat: "Kubernetes",
-    title: "Internal developer platform",
-    frame: "Golden paths from repo to production in a day.",
-    p: "Each team hand-rolled manifests and ingress.",
-    a: "EKS multi-tenant clusters, Helm templates, Backstage scaffolds.",
-    o: "New service onboarding: 3 weeks → 4 hours.",
-    tags: ["EKS", "Helm", "Backstage"],
-    flow: ["Manifest", "Helm", "Rollout", "Healthy"],
-    cmd: "kubectl rollout status deploy/api",
-    res: "✓ successfully rolled out · 6/6",
-  },
-  {
-    stage: "Monitor",
-    cat: "Observability",
-    title: "SLO-first monitoring",
-    frame: "Fewer alerts, faster answers.",
-    p: "900 noisy alerts; MTTR over an hour.",
-    a: "OpenTelemetry tracing, burn-rate alerts, shared dashboards.",
-    o: "−70% pages, MTTR down to 11 minutes.",
-    tags: ["Prometheus", "Grafana", "OTel"],
-    flow: ["Metric", "Alert", "Triage", "Resolve"],
-    cmd: "promtool check rules slo.yml",
-    res: "✓ SUCCESS · 24 rules found",
-  },
-  {
-    stage: "Deploy",
-    cat: "GitOps",
-    title: "Declarative releases",
-    frame: "Git is the only way into production.",
-    p: "Manual kubectl applies and unknown cluster state.",
-    a: "Argo CD app-of-apps, progressive canaries, auto-rollback.",
-    o: "400+ deploys/week, 0 manual cluster writes.",
-    tags: ["Argo CD", "Argo Rollouts", "Kustomize"],
-    flow: ["Push", "Sync", "Reconcile", "Live"],
-    cmd: "argocd app sync payments",
-    res: "✓ Synced · Healthy · canary 100%",
-  },
-  {
-    stage: "Test",
-    cat: "Chaos",
-    title: "Game-day program",
-    frame: "Break it on Tuesday so it holds on Black Friday.",
-    p: "Failover was untested and assumed.",
-    a: "Scheduled chaos experiments, AZ evacuation drills, runbooks.",
-    o: "Survived a full AZ outage with zero customer impact.",
-    tags: ["Chaos Mesh", "Litmus", "k6"],
-    flow: ["Hypothesis", "Inject", "Observe", "Recover"],
-    cmd: "chaos run az-failure.yaml",
-    res: "✓ steady state held · 0 errors",
+    slug: "devtalk",
+    cat: "Full-Stack Platform · DevOps Delivery",
+    name: "DevTalk — Developer Community & CI/CD Platform",
+    summary:
+      "A LinkedIn-inspired community where developers solve coding problems, publish blogs, and connect through jobs.",
+    stack: [
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Zustand",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Redis",
+      "Jenkins",
+      "GitHub",
+      "Docker",
+      "SonarQube",
+      "Trivy",
+      "Linux",
+    ],
+    flow: ["Push", "Test", "Security Scan", "Deploy"],
+    githubUrl: "https://github.com/Hasibul-Islam-Shanto/devtalk",
   },
 ];
 ---
@@ -95,64 +66,83 @@ const PROJECTS = [
     </a>
   </p>
   <h2 class="mt-4 max-w-3xl text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight">
-    Six systems, each <span class="text-signal">tested</span> in production.
+    Production platforms <span class="text-signal">engineered</span> for resilience and zero
+    downtime.
   </h2>
-  <div class="mt-14 grid gap-6 md:grid-cols-2">
-    {
-      PROJECTS.map((p, i) => (
-        <div data-reveal data-reveal-managed style={`--reveal-delay: ${(i % 2) * 0.15}s`}>
-          <article
-            data-work-card
-            data-cmd={`$ ${p.cmd}`}
-            data-res={p.res}
-            tabindex="0"
-            data-cursor-interactive="true"
-            class="work-card section-surface group flex h-full flex-col rounded-3xl border hairline p-7 focus-visible:outline-none"
-          >
-            <ConstellationCanvas variant="card" active={false} class="z-0 rounded-[inherit]" />
-            <div class="relative z-10 flex flex-1 flex-col">
-              <div class="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest">
-                <span class="flex items-center text-signal">
+  <div class="mt-14 grid gap-8 lg:grid-cols-2">
+    {PROJECTS.map((p, i) => (
+      <div data-reveal data-reveal-managed style={`--reveal-delay: ${(i % 2) * 0.15}s`}>
+        <article
+          data-work-card
+          tabindex="0"
+          data-cursor-interactive="true"
+          class="work-card section-surface group flex h-full flex-col justify-between rounded-3xl border hairline p-7 sm:p-8 focus-visible:outline-none transition-all duration-200 hover:border-signal/50"
+        >
+          <CardParticleBackground />
+          <div class="relative z-10 flex flex-1 flex-col justify-between">
+            <div>
+              {/* Top Category & Single GitHub Pill */}
+              <div class="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest gap-2">
+                <span class="flex items-center text-signal font-semibold">
                   <span class="work-cat-tick" aria-hidden="true" />
-                  <span>
-                    {p.stage} / {p.cat}
-                  </span>
+                  <span>{p.cat}</span>
                 </span>
-                <span class="dim">Project / {String(i + 1).padStart(2, "0")}</span>
-              </div>
-              <h3 class="mt-5 text-2xl font-bold tracking-tight">{p.title}</h3>
-              <p class="mt-1 dim">{p.frame}</p>
-              <dl class="mt-6 grid gap-5 text-sm sm:grid-cols-2">
-                <div>
-                  <dt class="font-mono text-[10px] uppercase tracking-widest dim">Problem</dt>
-                  <dd class="mt-1.5 leading-snug">{p.p}</dd>
-                </div>
-                <div>
-                  <dt class="font-mono text-[10px] uppercase tracking-widest dim">Approach</dt>
-                  <dd class="mt-1.5 leading-snug">{p.a}</dd>
-                </div>
-              </dl>
-              <p class="mt-6 font-medium text-signal">✓ Outcome: {p.o}</p>
-              <ul class="mt-5 flex flex-wrap gap-2">
-                {p.tags.map((t, j) => (
-                  <li
-                    data-reveal="scale"
-                    data-reveal-managed
-                    style={`--reveal-delay: ${0.4 + j * 0.1}s`}
-                    class="rounded-full border hairline px-3 py-1 font-mono text-[10px] uppercase transition-colors duration-250 group-hover:border-signal"
+                <a
+                  href={p.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${p.name} on GitHub`}
+                  class="inline-flex items-center gap-1.5 rounded-full border hairline bg-surface/60 px-3 py-1 font-mono text-[11px] text-[var(--text)]/80 transition-colors hover:border-signal hover:text-signal"
+                >
+                  <svg
+                    class="h-3.5 w-3.5 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
                   >
-                    {t}
-                  </li>
-                ))}
-              </ul>
+                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                  </svg>
+                  <span>GitHub</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
 
+              {/* Title */}
+              <h3 class="mt-4 text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]">
+                {p.name}
+              </h3>
+
+              {/* Short Description */}
+              <p class="mt-2 text-sm sm:text-[15px] leading-relaxed dim">{p.summary}</p>
+
+              {/* Tech Stack */}
+              <div class="mt-5">
+                <p class="font-mono text-[10px] uppercase tracking-wider dim font-semibold mb-2">
+                  Tech Stack
+                </p>
+                <ul class="flex flex-wrap gap-1.5">
+                  {p.stack.map((t) => (
+                    <li class="rounded-full border hairline bg-surface/40 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--text)]/85 transition-colors group-hover:border-signal/60">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Deployment flow */}
               <div
                 data-mini-flow
                 class="mt-6 border-t hairline pt-4 font-mono"
                 aria-label="Project pipeline stages"
               >
+                <p class="font-mono text-[10px] uppercase tracking-wider dim font-semibold mb-2">
+                  Deployment Flow
+                </p>
                 <div class="relative flex items-start justify-between">
-                  <span class="absolute left-3.5 right-3.5 top-3.5 h-px bg-current opacity-20" aria-hidden="true" />
+                  <span
+                    class="absolute left-3.5 right-3.5 top-3.5 h-px bg-current opacity-20"
+                    aria-hidden="true"
+                  />
                   <span
                     data-flow-line
                     class="absolute left-3.5 right-3.5 top-3.5 h-px origin-left bg-signal"
@@ -174,36 +164,37 @@ const PROJECTS = [
                       >
                         0{idx + 1}
                       </div>
-                      <span data-flow-label class="flow-label dim text-[9px] uppercase tracking-wider">
+                      <span
+                        data-flow-label
+                        class="flow-label dim text-[9px] uppercase tracking-wider"
+                      >
                         {label}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
-
-              <div class="mt-4 border-t hairline pt-4 font-mono text-[11px] leading-5">
-                <div data-work-cmd class="truncate dim">{`$ ${p.cmd}`}</div>
-                <div class="work-result-line truncate text-signal">
-                  <span data-work-res>{p.res}</span>
-                  <span data-work-caret class="cursor" hidden>
-                    ▋
-                  </span>
-                </div>
-              </div>
-              <div class="mt-3 flex justify-end">
-                <a
-                  href="/case-studies"
-                  class="work-case-link font-mono text-[11px] font-bold uppercase tracking-wider text-signal"
-                >
-                  View case study →
-                </a>
-              </div>
             </div>
-          </article>
-        </div>
-      ))
-    }
+
+            {/* Bottom Action: View Project Details Link (no divider line) */}
+            <div class="mt-8 flex items-center">
+              <a
+                href={`/case-studies/${p.slug}`}
+                class="work-case-link group/link inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text)]/60 transition-all duration-200 hover:text-signal group-hover:text-signal focus-visible:text-signal focus-visible:outline-none"
+              >
+                <span class="transition-colors duration-200">View project details</span>{" "}
+                <span
+                  class="inline-block transition-transform duration-200 group-hover/link:translate-x-1.5 group-hover:translate-x-1"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    ))}
   </div>
 </div>
 

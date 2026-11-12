@@ -8,6 +8,7 @@ interface Props {
   ogTitle?: string;
   ogDescription?: string;
   ogType?: string;
+  ogImage?: string;
   twitterCard?: "summary" | "summary_large_image";
 }
 
@@ -17,8 +18,38 @@ const {
   ogTitle = title,
   ogDescription = description,
   ogType = "website",
-  twitterCard = "summary",
+  ogImage = "/images/shanto_dp.webp",
+  twitterCard = "summary_large_image",
 } = Astro.props;
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://www.hi-shanto.me/#person",
+  name: "Hasibul Islam Shanto",
+  givenName: "Hasibul",
+  familyName: "Shanto",
+  jobTitle: "DevOps Engineer",
+  description:
+    "I started in product UI, then followed the work into APIs, databases, and the pipelines that keep them shipping. Today I build CI/CD, containers, and cloud infrastructure so production stays boring.",
+  url: "https://www.hi-shanto.me",
+  image: "https://www.hi-shanto.me/images/shanto_dp.webp",
+  email: "mailto:mdhasibulislamshanto007@gmail.com",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Rangpur",
+    addressCountry: "BD",
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Shahjalal University of Science and Technology",
+  },
+  sameAs: [
+    "https://github.com/Hasibul-Islam-Shanto",
+    "https://www.linkedin.com/in/hasibul-islam-shanto-80487a217/",
+    "https://x.com/hi_shanto078",
+  ],
+};
 ---
 
 <!doctype html>
@@ -31,7 +62,10 @@ const {
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={ogDescription} />
     <meta property="og:type" content={ogType} />
+    <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -64,13 +98,14 @@ const {
       // Early click listener so theme toggling responds instantly even before JS modules hydrate
       document.addEventListener("click", function (e) {
         if (e.defaultPrevented) return;
-        var btn = e.target && e.target.closest ? e.target.closest("[data-theme-toggle]") : null;
+        const target = e.target;
+        const btn = target && target.closest ? target.closest("[data-theme-toggle]") : null;
         if (!btn) return;
         e.preventDefault();
-        var current =
+        const current =
           document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-        var next = current === "light" ? "dark" : "light";
-        var reduced =
+        const next = current === "light" ? "dark" : "light";
+        const reduced =
           window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (!reduced) {
           document.documentElement.classList.add("theme-transitioning");
@@ -82,16 +117,18 @@ const {
         document.documentElement.classList.toggle("dark", next === "dark");
         try {
           localStorage.setItem("theme", next);
-        } catch (err) {}
-        var toggles = document.querySelectorAll("[data-theme-toggle]");
-        for (var i = 0; i < toggles.length; i++) {
-          toggles[i].setAttribute(
+        } catch (_err) {
+          // ignore storage errors
+        }
+        const toggles = document.querySelectorAll("[data-theme-toggle]");
+        for (let i = 0; i < toggles.length; i++) {
+          toggles[i]?.setAttribute(
             "aria-label",
-            "Switch to " + (next === "dark" ? "light" : "dark") + " theme"
+            "Switch to " + (next === "dark" ? "light" : "dark") + " theme",
           );
-          toggles[i].setAttribute(
+          toggles[i]?.setAttribute(
             "title",
-            "Switch to " + (next === "dark" ? "light" : "dark") + " theme"
+            "Switch to " + (next === "dark" ? "light" : "dark") + " theme",
           );
         }
       });

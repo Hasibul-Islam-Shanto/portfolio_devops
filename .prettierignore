@@ -1,5 +1,6 @@
 node_modules
 dist
+.astro
 .output
 .vinxi
 .wrangler
@@ -7,6 +8,7 @@ dist
 pnpm-lock.yaml
 package-lock.json
 bun.lock
+yarn.lock
 AGENTS.md
 routeTree.gen.ts
 src/routeTree.gen.ts

@@ -46,30 +46,31 @@ const categoryCounts = CATEGORIES.reduce(
       aria-label="Tool categories"
       class="flex flex-wrap gap-2 overflow-x-auto pb-2"
     >
-      {
-        CATEGORIES.map((cat, i) => {
-          const count = categoryCounts[cat] ?? 0;
-          const isInitial = i === 0;
-          return (
-            <button
-              type="button"
-              role="tab"
-              data-filter-tab={cat}
-              aria-selected={isInitial ? "true" : "false"}
-              tabindex={isInitial ? 0 : -1}
-              class:list={[
-                "tool-tab group relative inline-flex cursor-pointer items-center justify-center rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider select-none",
-                isInitial ? "is-active" : "",
-              ]}
+      {CATEGORIES.map((cat, i) => {
+        const count = categoryCounts[cat] ?? 0;
+        const isInitial = i === 0;
+        return (
+          <button
+            type="button"
+            role="tab"
+            data-filter-tab={cat}
+            aria-selected={isInitial ? "true" : "false"}
+            tabindex={isInitial ? 0 : -1}
+            class:list={[
+              "tool-tab group relative inline-flex cursor-pointer items-center justify-center rounded-full border px-4 py-2 font-mono text-xs uppercase tracking-wider select-none",
+              isInitial ? "is-active" : "",
+            ]}
+          >
+            <span>{cat}</span>
+            <sup
+              class="ml-1 font-mono text-[9px] font-bold opacity-80"
+              aria-label={`${count} tools`}
             >
-              <span>{cat}</span>
-              <sup class="ml-1 font-mono text-[9px] font-bold opacity-80" aria-label={`${count} tools`}>
-                {count}
-              </sup>
-            </button>
-          );
-        })
-      }
+              {count}
+            </sup>
+          </button>
+        );
+      })}
     </div>
 
     {/* Tool grid */}
@@ -77,43 +78,41 @@ const categoryCounts = CATEGORIES.reduce(
       data-tool-grid
       class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6"
     >
-      {
-        TOOLS.map((tool, i) => {
-          const staggerDelay = ((i % 6) * 0.05 + Math.floor(i / 6) * 0.06).toFixed(2);
-          return (
-            <div data-reveal style={`--reveal-delay: ${staggerDelay}s`}>
-              <div
-                data-tool-card
-                data-tool-name={tool.name}
-                data-tool-cat={tool.category}
-                tabindex="0"
-                data-cursor-interactive="true"
-                class="tool-catalog-card is-active-tool flex aspect-square flex-col justify-between rounded-2xl p-4 sm:p-5 transition-all focus-visible:outline-none"
-              >
-                {/* Brand Logo / Icon */}
-                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-xs border border-black/5 p-2 transition-transform duration-200">
-                  <svg
-                    viewBox={tool.viewBox ?? "0 0 24 24"}
-                    class="h-6 w-6 transition-transform duration-200"
-                    aria-hidden="true"
-                    set:html={tool.svgInner}
-                  />
-                </div>
+      {TOOLS.map((tool, i) => {
+        const staggerDelay = ((i % 6) * 0.05 + Math.floor(i / 6) * 0.06).toFixed(2);
+        return (
+          <div data-reveal style={`--reveal-delay: ${staggerDelay}s`}>
+            <div
+              data-tool-card
+              data-tool-name={tool.name}
+              data-tool-cat={tool.category}
+              tabindex="0"
+              data-cursor-interactive="true"
+              class="tool-catalog-card is-active-tool flex aspect-square flex-col justify-between rounded-2xl p-4 sm:p-5 transition-all focus-visible:outline-none"
+            >
+              {/* Brand Logo / Icon */}
+              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-xs border border-black/5 p-2 transition-transform duration-200">
+                <svg
+                  viewBox={tool.viewBox ?? "0 0 24 24"}
+                  class="h-6 w-6 transition-transform duration-200"
+                  aria-hidden="true"
+                  set:html={tool.svgInner}
+                />
+              </div>
 
-                {/* Tool name and tag */}
-                <div class="mt-auto pt-3">
-                  <h3 class="font-display text-sm font-bold tracking-tight text-[var(--text)] leading-snug">
-                    {tool.name}
-                  </h3>
-                  <p class="mt-1 font-mono text-[10px] lowercase tracking-wider text-[var(--text)]/60">
-                    {tool.tag}
-                  </p>
-                </div>
+              {/* Tool name and tag */}
+              <div class="mt-auto pt-3">
+                <h3 class="font-display text-sm font-bold tracking-tight text-[var(--text)] leading-snug">
+                  {tool.name}
+                </h3>
+                <p class="mt-1 font-mono text-[10px] lowercase tracking-wider text-[var(--text)]/60">
+                  {tool.tag}
+                </p>
               </div>
             </div>
-          );
-        })
-      }
+          </div>
+        );
+      })}
     </div>
   </div>
 </div>

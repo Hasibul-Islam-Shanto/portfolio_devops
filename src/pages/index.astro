@@ -25,18 +25,39 @@ const sectionClass = (mode: string = "dark") =>
   <Header currentPath="/" />
   <PipelineRail />
   <main class="overflow-x-clip">
-    <section id="hero" class={sectionClass("dark")}><span id="build" class="section-stage-anchor" aria-hidden="true"></span><Hero /></section>
+    <section id="hero" class={sectionClass("dark")}>
+      <span id="build" class="section-stage-anchor" aria-hidden="true"></span>
+      <Hero />
+    </section>
     <TechMarquee />
-    <section id="projects" class={sectionClass("dark")}><span id="test" class="section-stage-anchor" aria-hidden="true"></span><Work /></section>
+    <section id="projects" class={sectionClass("dark")}>
+      <span id="test" class="section-stage-anchor" aria-hidden="true"></span>
+      <Work />
+    </section>
     <!-- PLACEHOLDER: Replace all company names, roles, dates, locations, bullet points, and tech tags below with real work history before publishing -->
-    <section id="experience" class={sectionClass("dark")}><Experience /></section>
-    <section id="toolchain" class={sectionClass("dark")}><span id="deploy" class="section-stage-anchor" aria-hidden="true"></span><Toolchain /></section>
+    <section id="experience" class={sectionClass("dark")}>
+      <Experience />
+    </section>
+    <section id="toolchain" class={sectionClass("dark")}>
+      <span id="deploy" class="section-stage-anchor" aria-hidden="true"></span>
+      <Toolchain />
+    </section>
     <!-- PLACEHOLDER: Replace certification names, years, and icons with real credentials before publishing -->
-    <section id="certifications" class={sectionClass("dark")}><Certifications /></section>
-    <section id="process" class={sectionClass("dark")}><HowIWork /></section>
-    <section id="principles" class={sectionClass("dark")}><span id="monitor" class="section-stage-anchor" aria-hidden="true"></span><Principles /></section>
+    <section id="certifications" class={sectionClass("dark")}>
+      <Certifications />
+    </section>
+    <section id="process" class={sectionClass("dark")}>
+      <HowIWork />
+    </section>
+    <section id="principles" class={sectionClass("dark")}>
+      <span id="monitor" class="section-stage-anchor" aria-hidden="true"></span>
+      <Principles />
+    </section>
     <!-- PLACEHOLDER: Writings section goes here once added -->
-    <section id="contact" class={sectionClass("dark")}><span id="scale" class="section-stage-anchor" aria-hidden="true"></span><Contact /></section>
+    <section id="contact" class={sectionClass("dark")}>
+      <span id="scale" class="section-stage-anchor" aria-hidden="true"></span>
+      <Contact />
+    </section>
   </main>
 </BaseLayout>
 
@@ -44,4 +65,3 @@ const sectionClass = (mode: string = "dark") =>
   import { initSectionNav } from "../scripts/section-nav";
   initSectionNav();
 </script>
-

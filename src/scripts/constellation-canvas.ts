@@ -21,6 +21,25 @@ const CONFIG = {
 const CURSOR_RADIUS = 140;
 const CURSOR_LERP = 0.16;
 
+// Tracks the currently active card canvas across the entire application to guarantee
+// that only one card instance runs requestAnimationFrame at any time.
+let activeCardCanvas: HTMLCanvasElement | null = null;
+
+function activateCard(canvas: HTMLCanvasElement) {
+  if (activeCardCanvas && activeCardCanvas !== canvas) {
+    activeCardCanvas.dataset["constellationActive"] = "false";
+  }
+  activeCardCanvas = canvas;
+  canvas.dataset["constellationActive"] = "true";
+}
+
+function deactivateCard(canvas: HTMLCanvasElement) {
+  if (activeCardCanvas === canvas) {
+    activeCardCanvas = null;
+  }
+  canvas.dataset["constellationActive"] = "false";
+}
+
 const mix = (a: number, b: number, t: number) => Math.round(a + (b - a) * t);
 
 function createParticles(count: number, width: number, height: number): Particle[] {
@@ -239,16 +258,56 @@ function initCanvas(canvas: HTMLCanvasElement): () => void {
   };
 
   const sync = () => {
-    if (canvas.dataset["constellationActive"] === "true") start();
-    else stopLoop?.();
+    if (canvas.dataset["constellationActive"] === "true") {
+      if (variant === "card") {
+        if (activeCardCanvas && activeCardCanvas !== canvas) {
+          activeCardCanvas.dataset["constellationActive"] = "false";
+        }
+        activeCardCanvas = canvas;
+      }
+      start();
+    } else {
+      if (variant === "card" && activeCardCanvas === canvas) {
+        activeCardCanvas = null;
+      }
+      stopLoop?.();
+    }
   };
 
   sync();
   const observer = new MutationObserver(sync);
   observer.observe(canvas, { attributes: true, attributeFilter: ["data-constellation-active"] });
 
+  let cardCleanup: (() => void) | null = null;
+  if (variant === "card") {
+    const onEnter = () => activateCard(canvas);
+    const onLeave = (e?: Event) => {
+      if (e?.type === "focusout") {
+        const fe = e as FocusEvent;
+        if (fe.relatedTarget && container.contains(fe.relatedTarget as Node)) {
+          return;
+        }
+      }
+      deactivateCard(canvas);
+    };
+
+    container.addEventListener("mouseenter", onEnter);
+    container.addEventListener("mouseleave", onLeave);
+    container.addEventListener("focusin", onEnter);
+    container.addEventListener("focusout", onLeave);
+
+    cardCleanup = () => {
+      container.removeEventListener("mouseenter", onEnter);
+      container.removeEventListener("mouseleave", onLeave);
+      container.removeEventListener("focusin", onEnter);
+      container.removeEventListener("focusout", onLeave);
+      deactivateCard(canvas);
+    };
+  }
+
   return () => {
     observer.disconnect();
+    cardCleanup?.();
     stopLoop?.();
   };
 }
@@ -260,5 +319,8 @@ export function initConstellationCanvases(
   const cleanups = Array.from(
     root.querySelectorAll<HTMLCanvasElement>("canvas[data-constellation-canvas]"),
   ).map(initCanvas);
-  return () => cleanups.forEach((fn) => fn());
+  return () => {
+    cleanups.forEach((fn) => fn());
+    activeCardCanvas = null;
+  };
 }

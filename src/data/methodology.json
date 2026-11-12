@@ -1,0 +1,50 @@
+[
+  {
+    "number": "01",
+    "title": "Diagnose what broke",
+    "description": "Map the live path — services, traffic, and the symptom — before changing anything. Logs and metrics beat the architecture diagram.",
+    "knowledge": ["Observability", "Incident response"],
+    "stack": [
+      { "id": "prometheus", "label": "Prometheus" },
+      { "id": "grafana", "label": "Grafana" },
+      { "id": "linux", "label": "Linux" },
+      { "id": "bash", "label": "Bash" }
+    ]
+  },
+  {
+    "number": "02",
+    "title": "Design the fix in code",
+    "description": "Codify the change so it rebuilds from scratch: networking, IAM, and the modules the next engineer can read.",
+    "knowledge": ["Cloud infrastructure", "Infrastructure as code"],
+    "stack": [
+      { "id": "terraform", "label": "Terraform" },
+      { "id": "aws", "label": "AWS" },
+      { "id": "git", "label": "Git" },
+      { "id": "ansible", "label": "Ansible" }
+    ]
+  },
+  {
+    "number": "03",
+    "title": "Automate the delivery",
+    "description": "Wrap it in a pipeline anyone can re-run: cached builds, containers, gated environments, and a rollback that is not a hallway conversation.",
+    "knowledge": ["CI/CD", "Containers"],
+    "stack": [
+      { "id": "github-actions", "label": "GitHub Actions" },
+      { "id": "docker", "label": "Docker" },
+      { "id": "kubernetes", "label": "Kubernetes" },
+      { "id": "nginx", "label": "Nginx" }
+    ]
+  },
+  {
+    "number": "04",
+    "title": "Watch, harden, iterate",
+    "description": "Page on symptoms, not noise. Tighten cost, security, and recovery time on every cycle.",
+    "knowledge": ["Monitoring", "Reliability"],
+    "stack": [
+      { "id": "prometheus", "label": "Prometheus" },
+      { "id": "grafana", "label": "Grafana" },
+      { "id": "github", "label": "GitHub" },
+      { "id": "linux", "label": "Linux" }
+    ]
+  }
+]

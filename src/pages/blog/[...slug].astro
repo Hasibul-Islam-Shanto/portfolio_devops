@@ -1,0 +1,92 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/base-layout.astro";
+import Header from "../../components/navbar/header.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blogs");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout
+  title={`${post.data.title} — Hasibul Islam Shanto`}
+  description={post.data.description}
+  ogImage={post.data.featuredImage || "/images/shanto_dp.webp"}
+  ogType="article"
+>
+  <Header currentPath="/blog" />
+  <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
+    <article class="site-container py-10 md:py-16 max-w-4xl mx-auto">
+      <nav aria-label="Breadcrumbs" class="mb-8">
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-signal hover:underline"
+        >
+          &larr; Back to all articles
+        </a>
+      </nav>
+
+      <header class="border-b hairline pb-8">
+        <div class="flex items-center gap-3 font-mono text-xs dim">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </time>
+          {post.data.readTime && (
+            <>
+              <span>·</span>
+              <span class="text-signal">{post.data.readTime}</span>
+            </>
+          )}
+        </div>
+        <h1 class="mt-4 text-[clamp(28px,3.8vw,46px)] font-bold leading-[1.15] tracking-tight">
+          {post.data.title}
+        </h1>
+        <p class="mt-4 text-base leading-relaxed dim sm:text-lg">{post.data.description}</p>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          {post.data.tags.map((t) => (
+            <span class="rounded-full border hairline px-3 py-1 font-mono text-[11px] uppercase text-[var(--text)]/75">
+              #{t}
+            </span>
+          ))}
+        </div>
+      </header>
+
+      {post.data.featuredImage && (
+        <div class="my-10 overflow-hidden rounded-2xl border hairline bg-surface/60">
+          <img src={post.data.featuredImage} alt={post.data.title} class="w-full object-cover" />
+        </div>
+      )}
+
+      <div class="markdown-body mt-10">
+        <Content />
+      </div>
+
+      <footer class="mt-16 border-t hairline pt-8 flex flex-wrap items-center justify-between gap-4">
+        <a
+          href="/blog"
+          class="font-mono text-xs font-bold uppercase tracking-wider text-signal hover:underline"
+        >
+          &larr; Back to all articles
+        </a>
+        <a
+          href="/#scale"
+          class="font-mono text-xs font-bold uppercase tracking-wider text-[var(--text)]/80 hover:text-signal"
+        >
+          Have questions? Get in touch &rarr;
+        </a>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>

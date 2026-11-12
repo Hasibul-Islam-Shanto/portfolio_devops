@@ -1,5 +1,6 @@
 import js from "@eslint/js";
-import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
+import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginAstro from "eslint-plugin-astro";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -8,6 +9,7 @@ export default tseslint.config(
     ignores: [
       "dist",
       ".astro",
+      "node_modules",
       ".output",
       ".vinxi",
       ".wrangler",
@@ -24,19 +26,29 @@ export default tseslint.config(
       ".lovable",
     ],
   },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...eslintPluginAstro.configs["flat/recommended"],
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["**/*.{ts,mjs}"],
+    files: ["**/*.{ts,tsx,astro}"],
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: {
         ...globals.browser,
         ...globals.node,
       },
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
     },
   },
-  eslintPluginPrettier,
+  eslintConfigPrettier,
 );
