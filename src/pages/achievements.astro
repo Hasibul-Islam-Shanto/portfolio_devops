@@ -39,16 +39,15 @@ const ACHIEVEMENTS: CredentialItem[] = achievementsData;
         Recognitions &amp; Credentials
       </h1>
       <p class="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed dim">
-        Competitive awards, published research, academic honors, and verified technical credentials in distributed systems, cloud computing, and DevOps engineering.
+        Competitive awards, published research, academic honors, and verified technical credentials
+        in distributed systems, cloud computing, and DevOps engineering.
       </p>
 
       <!-- All items in the same 3-per-row card grid -->
       <div class="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {
-          ACHIEVEMENTS.map((item, i) => (
-            <CredentialCard item={item} index={i} />
-          ))
-        }
+        {ACHIEVEMENTS.map((item, i) => (
+          <CredentialCard item={item} index={i} />
+        ))}
       </div>
 
       <!-- Detail Modal -->
@@ -61,4 +60,3 @@ const ACHIEVEMENTS: CredentialItem[] = achievementsData;
   import { initCredentialModal } from "../components/certifications/credential-modal";
   initCredentialModal();
 </script>
-

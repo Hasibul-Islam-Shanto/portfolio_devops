@@ -52,9 +52,7 @@ const { Content } = await render(post);
         <h1 class="mt-4 text-[clamp(28px,3.8vw,46px)] font-bold leading-[1.15] tracking-tight">
           {post.data.title}
         </h1>
-        <p class="mt-4 text-base leading-relaxed dim sm:text-lg">
-          {post.data.description}
-        </p>
+        <p class="mt-4 text-base leading-relaxed dim sm:text-lg">{post.data.description}</p>
 
         <div class="mt-6 flex flex-wrap gap-2">
           {post.data.tags.map((t) => (
@@ -67,11 +65,7 @@ const { Content } = await render(post);
 
       {post.data.featuredImage && (
         <div class="my-10 overflow-hidden rounded-2xl border hairline bg-surface/60">
-          <img
-            src={post.data.featuredImage}
-            alt={post.data.title}
-            class="w-full object-cover"
-          />
+          <img src={post.data.featuredImage} alt={post.data.title} class="w-full object-cover" />
         </div>
       )}
 
@@ -96,4 +90,3 @@ const { Content } = await render(post);
     </article>
   </main>
 </BaseLayout>
-

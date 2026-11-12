@@ -26,11 +26,9 @@ const displayedItems = ACHIEVEMENTS.slice(0, 6);
 
   <!-- 3 cards per row grid matching Projects card system -->
   <div class="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-    {
-      displayedItems.map((item, i) => (
-        <CredentialCard item={item} index={i} />
-      ))
-    }
+    {displayedItems.map((item, i) => (
+      <CredentialCard item={item} index={i} />
+    ))}
   </div>
 
   <!-- Single centered "View all →" button/link -->

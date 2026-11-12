@@ -12,42 +12,40 @@ const SECTIONS = [
 ---
 
 <div class="rail-float pointer-events-none fixed bottom-10 right-3.5 top-32 z-40 hidden md:block md:right-4 lg:right-3 lg:top-36 xl:right-4">
-  <nav
-    data-pipeline-rail
-    aria-label="Section navigation rail"
-    class="pipeline-rail h-full"
-  >
+  <nav data-pipeline-rail aria-label="Section navigation rail" class="pipeline-rail h-full">
     <ol class="relative flex h-full flex-col justify-between">
-      <span class="absolute bottom-2 right-[5.5px] top-2 w-px bg-current opacity-40" aria-hidden="true"></span>
+      <span
+        class="absolute bottom-2 right-[5.5px] top-2 w-px bg-current opacity-40"
+        aria-hidden="true"
+      ></span>
       <span
         data-rail-progress
         class="absolute bottom-2 right-[5.5px] top-2 w-px origin-top bg-signal"
         style="transform: scaleY(0)"
-        aria-hidden="true"></span>
-      {
-        SECTIONS.map((s) => (
-          <li class="relative z-10 h-4">
-            <a
-              href={`#${s.id}`}
-              data-rail-link={s.id}
-              tabindex="-1"
-              class="flex h-4 items-center justify-end gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+        aria-hidden="true"
+      ></span>
+      {SECTIONS.map((s) => (
+        <li class="relative z-10 h-4">
+          <a
+            href={`#${s.id}`}
+            data-rail-link={s.id}
+            tabindex="-1"
+            class="flex h-4 items-center justify-end gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal"
+          >
+            <span
+              data-rail-label
+              class="rail-label hidden font-mono text-[10px] uppercase tracking-widest lg:inline"
             >
-              <span
-                data-rail-label
-                class="rail-label hidden font-mono text-[10px] uppercase tracking-widest lg:inline"
-              >
-                {s.label}
-              </span>
-              <span class="sr-only lg:hidden">{s.label}</span>
-              <span
-                data-rail-dot
-                class="rail-dot block h-3 w-3 shrink-0 rounded-full border-2 border-current bg-transparent"
-              />
-            </a>
-          </li>
-        ))
-      }
+              {s.label}
+            </span>
+            <span class="sr-only lg:hidden">{s.label}</span>
+            <span
+              data-rail-dot
+              class="rail-dot block h-3 w-3 shrink-0 rounded-full border-2 border-current bg-transparent"
+            />
+          </a>
+        </li>
+      ))}
     </ol>
   </nav>
 </div>
@@ -56,4 +54,3 @@ const SECTIONS = [
   import { initPipelineRail } from "./pipeline-rail";
   initPipelineRail();
 </script>
-

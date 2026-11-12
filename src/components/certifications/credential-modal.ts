@@ -42,8 +42,7 @@ export function initCredentialModal(
 
   const isReducedMotion = () => {
     return (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
   };
 
@@ -51,8 +50,8 @@ export function initCredentialModal(
     if (!dialogEl) return [];
     return Array.from(
       dialogEl.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      )
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
     ).filter((el) => el.offsetParent !== null || el.classList.contains("credential-modal-close"));
   };
 
@@ -100,8 +99,7 @@ export function initCredentialModal(
         imagesWrap.style.display = "";
         for (const imgUrl of images) {
           const figure = document.createElement("figure");
-          figure.className =
-            "overflow-hidden rounded-2xl border hairline bg-surface/50 p-2 sm:p-3";
+          figure.className = "overflow-hidden rounded-2xl border hairline bg-surface/50 p-2 sm:p-3";
 
           const img = document.createElement("img");
           img.src = imgUrl;

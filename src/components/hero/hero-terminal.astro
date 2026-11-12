@@ -1,11 +1,5 @@
 ---
-const PILLS = [
-  "help",
-  "whoami",
-  "kubectl get pods",
-  "docker ps",
-  "sudo hire shanto",
-];
+const PILLS = ["help", "whoami", "kubectl get pods", "docker ps", "sudo hire shanto"];
 ---
 
 <div data-terminal-root class="w-full max-w-full min-w-0 font-mono">
@@ -36,14 +30,18 @@ const PILLS = [
           <span
             data-terminal-typed="true"
             hidden
-            class="whitespace-pre font-semibold text-signal"></span>
+            class="whitespace-pre font-semibold text-signal"
+          ></span>
           <span
             data-terminal-cursor="true"
             data-cursor-blinking="true"
             aria-hidden="true"
             class="terminal-cursor-blink inline-block h-[15px] w-[9px] shrink-0 rounded-[2px] bg-signal align-middle"
           ></span>
-          <span data-terminal-placeholder="true" class="ml-2 select-none text-[var(--terminal-dim)]">
+          <span
+            data-terminal-placeholder="true"
+            class="ml-2 select-none text-[var(--terminal-dim)]"
+          >
             type a command, try help
           </span>
           <input
@@ -66,17 +64,15 @@ const PILLS = [
     role="group"
     aria-label="Preset terminal commands"
   >
-    {
-      PILLS.map((cmd) => (
-        <button
-          type="button"
-          data-terminal-pill={cmd}
-          class="flex flex-1 items-center justify-center whitespace-nowrap rounded-full border border-[var(--terminal-chip-border)] bg-[var(--terminal-chip-bg)] px-2 py-1.5 font-mono text-[11px] text-[var(--terminal-chip-fg)] transition-colors hover:border-signal hover:text-signal focus-visible:border-signal focus-visible:text-signal focus-visible:outline-none sm:px-2.5 sm:text-xs xl:px-3"
-        >
-          {cmd}
-        </button>
-      ))
-    }
+    {PILLS.map((cmd) => (
+      <button
+        type="button"
+        data-terminal-pill={cmd}
+        class="flex flex-1 items-center justify-center whitespace-nowrap rounded-full border border-[var(--terminal-chip-border)] bg-[var(--terminal-chip-bg)] px-2 py-1.5 font-mono text-[11px] text-[var(--terminal-chip-fg)] transition-colors hover:border-signal hover:text-signal focus-visible:border-signal focus-visible:text-signal focus-visible:outline-none sm:px-2.5 sm:text-xs xl:px-3"
+      >
+        {cmd}
+      </button>
+    ))}
   </div>
 </div>
 
@@ -84,4 +80,3 @@ const PILLS = [
   import { initHeroTerminal } from "./hero-terminal";
   initHeroTerminal();
 </script>
-

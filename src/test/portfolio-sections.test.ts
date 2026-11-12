@@ -256,7 +256,9 @@ describe("Work", () => {
     expect(certCards.length).toBeGreaterThan(0);
 
     const canvasOf = (el: Element) =>
-      el.querySelector('[data-constellation-canvas="card"]')?.getAttribute("data-constellation-active");
+      el
+        .querySelector('[data-constellation-canvas="card"]')
+        ?.getAttribute("data-constellation-active");
 
     // All certification cards should have the particle canvas
     certCards.forEach((c) => {

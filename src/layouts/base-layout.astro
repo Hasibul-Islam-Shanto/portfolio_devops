@@ -98,13 +98,14 @@ const personSchema = {
       // Early click listener so theme toggling responds instantly even before JS modules hydrate
       document.addEventListener("click", function (e) {
         if (e.defaultPrevented) return;
-        var btn = e.target && e.target.closest ? e.target.closest("[data-theme-toggle]") : null;
+        const target = e.target;
+        const btn = target && target.closest ? target.closest("[data-theme-toggle]") : null;
         if (!btn) return;
         e.preventDefault();
-        var current =
+        const current =
           document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-        var next = current === "light" ? "dark" : "light";
-        var reduced =
+        const next = current === "light" ? "dark" : "light";
+        const reduced =
           window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (!reduced) {
           document.documentElement.classList.add("theme-transitioning");
@@ -116,16 +117,18 @@ const personSchema = {
         document.documentElement.classList.toggle("dark", next === "dark");
         try {
           localStorage.setItem("theme", next);
-        } catch (err) {}
-        var toggles = document.querySelectorAll("[data-theme-toggle]");
-        for (var i = 0; i < toggles.length; i++) {
-          toggles[i].setAttribute(
+        } catch (_err) {
+          // ignore storage errors
+        }
+        const toggles = document.querySelectorAll("[data-theme-toggle]");
+        for (let i = 0; i < toggles.length; i++) {
+          toggles[i]?.setAttribute(
             "aria-label",
-            "Switch to " + (next === "dark" ? "light" : "dark") + " theme"
+            "Switch to " + (next === "dark" ? "light" : "dark") + " theme",
           );
-          toggles[i].setAttribute(
+          toggles[i]?.setAttribute(
             "title",
-            "Switch to " + (next === "dark" ? "light" : "dark") + " theme"
+            "Switch to " + (next === "dark" ? "light" : "dark") + " theme",
           );
         }
       });

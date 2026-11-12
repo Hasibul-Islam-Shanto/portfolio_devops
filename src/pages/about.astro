@@ -23,9 +23,7 @@ const { intro, photo, story, quickFacts, education } = aboutData;
           <h1 class="mt-4 text-[clamp(32px,4vw,52px)] font-bold leading-[1.1] tracking-tight">
             {intro.headline}
           </h1>
-          <p class="mt-4 text-lg leading-relaxed text-signal font-medium">
-            {intro.lede}
-          </p>
+          <p class="mt-4 text-lg leading-relaxed text-signal font-medium">{intro.lede}</p>
 
           <div class="mt-8 space-y-4 text-base leading-relaxed dim sm:text-lg">
             {story.map((paragraph) => (
@@ -93,9 +91,7 @@ const { intro, photo, story, quickFacts, education } = aboutData;
                 Formal Education
               </h2>
               <div class="mt-4">
-                <h3 class="text-base font-bold tracking-tight">
-                  {education.degree}
-                </h3>
+                <h3 class="text-base font-bold tracking-tight">{education.degree}</h3>
                 <p class="mt-1 font-mono text-xs dim">
                   {education.university} · {education.period}
                 </p>
@@ -110,4 +106,3 @@ const { intro, photo, story, quickFacts, education } = aboutData;
     </div>
   </main>
 </BaseLayout>
-
