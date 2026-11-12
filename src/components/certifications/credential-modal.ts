@@ -159,8 +159,9 @@ export function initCredentialModal(
     if (isReducedMotion()) {
       modal.classList.add("is-open");
       const focusables = getFocusables();
-      if (focusables.length > 0) {
-        focusables[0].focus();
+      const first = focusables[0];
+      if (first) {
+        first.focus();
       }
     } else {
       // Force frame reflow so CSS animation kicks in smoothly
@@ -168,8 +169,9 @@ export function initCredentialModal(
       requestAnimationFrame(() => {
         modal.classList.add("is-open");
         const focusables = getFocusables();
-        if (focusables.length > 0) {
-          focusables[0].focus();
+        const first = focusables[0];
+        if (first) {
+          first.focus();
         }
       });
     }
@@ -247,6 +249,11 @@ export function initCredentialModal(
       }
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
+
+      if (!first || !last) {
+        e.preventDefault();
+        return;
+      }
 
       if (e.shiftKey) {
         if (document.activeElement === first || !dialogEl?.contains(document.activeElement)) {

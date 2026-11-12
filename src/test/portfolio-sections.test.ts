@@ -872,6 +872,62 @@ describe("Header", () => {
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     expect(menu).toHaveClass("hidden");
   });
+
+  it("handles scroll-direction-aware auto-hide, idle timer, and hover exception past hero", async () => {
+    vi.useFakeTimers();
+    try {
+      const body = mount("header");
+      const hero = document.createElement("section");
+      hero.id = "hero";
+      Object.defineProperty(hero, "offsetTop", { value: 0, configurable: true });
+      Object.defineProperty(hero, "offsetHeight", { value: 800, configurable: true });
+      body.appendChild(hero);
+
+      track(initHeader(body));
+      const header = body.querySelector<HTMLElement>("[data-site-header]")!;
+
+      // 1. Within hero (scrollY <= 800) -> always visible
+      Object.defineProperty(window, "scrollY", { value: 400, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+
+      // 2. Scrolling down past hero (800 -> 1000) -> auto-hides immediately
+      Object.defineProperty(window, "scrollY", { value: 1000, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).toHaveClass("header-hidden");
+
+      // 3. Scrolling up past hero (1000 -> 900) -> reappears
+      Object.defineProperty(window, "scrollY", { value: 900, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+
+      // 4. Idle timeout: after 1.8s of no scroll -> hides
+      vi.advanceTimersByTime(1850);
+      expect(header).toHaveClass("header-hidden");
+
+      // 5. Scroll up again -> reappears
+      Object.defineProperty(window, "scrollY", { value: 850, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+
+      // 6. Hover over header -> cancels/pauses idle timer
+      header.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+      vi.advanceTimersByTime(2500);
+      expect(header).not.toHaveClass("header-hidden"); // Still visible because hovered!
+
+      // 7. Mouse leaves header -> resumes idle timer and hides after delay
+      header.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
+      vi.advanceTimersByTime(1850);
+      expect(header).toHaveClass("header-hidden");
+
+      // 8. Scrolling back up into hero section -> reappears immediately
+      Object.defineProperty(window, "scrollY", { value: 200, configurable: true });
+      window.dispatchEvent(new Event("scroll"));
+      expect(header).not.toHaveClass("header-hidden");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
 
 describe("PipelineRail", () => {

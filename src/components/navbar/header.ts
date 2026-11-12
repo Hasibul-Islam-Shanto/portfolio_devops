@@ -4,6 +4,10 @@ import { createCleanup } from "@/scripts/util";
 /**
  * Header behaviour:
  * - toggles `.is-scrolled` on every pill when scrollY > 60% of the viewport height
+ * - scroll-direction-aware auto-hide when past hero:
+ *   - always visible in hero section
+ *   - hides on scroll down, reappears on scroll up
+ *   - auto-hides after ~1.8s idle, paused while cursor is over the header
  * - keeps the active nav link in sync with pathname + hash (`/`, `/#test`, `/#scale`, `/blog`, ...)
  * - initializes the theme toggle button and synchronizes theme state
  * - controls the mobile drawer menu (hamburger toggle, auto-close on nav/click-outside/Escape)
@@ -41,11 +45,17 @@ export function initHeader(
       mobileMenu?.classList.add("flex");
       iconOpen?.classList.add("hidden");
       iconClose?.classList.remove("hidden");
+      // Keep header visible when mobile drawer is open
+      setHeaderVisibility(true);
     } else {
       mobileMenu?.classList.remove("flex");
       mobileMenu?.classList.add("hidden");
       iconOpen?.classList.remove("hidden");
       iconClose?.classList.add("hidden");
+      const currentY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
+      if (currentY > getHeroBoundary()) {
+        startIdleTimer();
+      }
     }
   };
 
@@ -84,10 +94,122 @@ export function initHeader(
     cleanup.add(() => document.removeEventListener("keydown", onKeyDown));
   }
 
+  // --- Scroll-direction-aware header visibility ---
+  const SCROLL_DELTA_THRESHOLD = 5;
+  const IDLE_HIDE_MS = 1800; // ~1.8s (within 1.5 - 2s requirement)
+
+  let isHidden = false;
+  let isHovered = false;
+  let lastScrollY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
+  let idleTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const clearIdleTimer = () => {
+    if (idleTimer !== null) {
+      clearTimeout(idleTimer);
+      idleTimer = null;
+    }
+  };
+
+  const getHeroBoundary = (): number => {
+    const heroEl = document.getElementById("hero");
+    if (heroEl) {
+      return heroEl.offsetTop + heroEl.offsetHeight;
+    }
+    // Fallback for pages without #hero (e.g. /about, /blog)
+    return typeof window !== "undefined" ? Math.max(200, window.innerHeight * 0.4) : 400;
+  };
+
+  const setHeaderVisibility = (visible: boolean) => {
+    if (!visible && isMenuOpen) return;
+    if (isHidden === !visible) return;
+    isHidden = !visible;
+    header.classList.toggle("header-hidden", !visible);
+    header.setAttribute("aria-hidden", String(!visible));
+  };
+
+  const startIdleTimer = () => {
+    clearIdleTimer();
+    if (isHovered) return;
+    const currentY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
+    if (currentY <= getHeroBoundary() || isHidden) return;
+
+    idleTimer = setTimeout(() => {
+      const liveY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
+      if (!isHovered && liveY > getHeroBoundary()) {
+        setHeaderVisibility(false);
+      }
+    }, IDLE_HIDE_MS);
+  };
+
   const updateScrolled = () => {
     const scrolled = window.scrollY > window.innerHeight * 0.6;
     pills.forEach((p) => p.classList.toggle("is-scrolled", scrolled));
   };
+
+  const onScroll = () => {
+    updateScrolled();
+
+    const currentY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
+    const heroBoundary = getHeroBoundary();
+
+    // Rule 1: While within hero section, header is always visible
+    if (currentY <= heroBoundary) {
+      clearIdleTimer();
+      setHeaderVisibility(true);
+      lastScrollY = currentY;
+      return;
+    }
+
+    const delta = currentY - lastScrollY;
+
+    // Ignore tiny scroll jitter
+    if (Math.abs(delta) < SCROLL_DELTA_THRESHOLD) {
+      return;
+    }
+
+    if (delta > 0) {
+      // Rule 2: Scrolling DOWN past hero -> hide immediately
+      clearIdleTimer();
+      if (!isHovered) {
+        setHeaderVisibility(false);
+      }
+    } else {
+      // Rule 3: Scrolling UP past hero -> reappear
+      setHeaderVisibility(true);
+      // Rule 4: Idle timeout -> hide after ~1.8s
+      startIdleTimer();
+    }
+
+    lastScrollY = currentY;
+  };
+
+  const onHeaderEnter = () => {
+    isHovered = true;
+    clearIdleTimer();
+  };
+
+  const onHeaderLeave = (e: MouseEvent | FocusEvent) => {
+    const next = (e as MouseEvent).relatedTarget as Node | null;
+    if (next && header.contains(next)) return;
+    isHovered = false;
+    const currentY = typeof window !== "undefined" ? Math.max(0, window.scrollY || 0) : 0;
+    if (currentY > getHeroBoundary() && !isHidden) {
+      startIdleTimer();
+    }
+  };
+
+  header.addEventListener("mouseover", onHeaderEnter);
+  header.addEventListener("mouseout", onHeaderLeave);
+  header.addEventListener("focusin", onHeaderEnter);
+  header.addEventListener("focusout", onHeaderLeave);
+
+  cleanup.add(() => {
+    clearIdleTimer();
+    header.removeEventListener("mouseover", onHeaderEnter);
+    header.removeEventListener("mouseout", onHeaderLeave);
+    header.removeEventListener("focusin", onHeaderEnter);
+    header.removeEventListener("focusout", onHeaderLeave);
+  });
 
   const updateActive = () => {
     const path = window.location.pathname.replace(/\/$/, "") || "/";
@@ -104,10 +226,10 @@ export function initHeader(
 
   updateScrolled();
   updateActive();
-  window.addEventListener("scroll", updateScrolled, { passive: true });
+  window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("hashchange", updateActive);
   cleanup.add(() => {
-    window.removeEventListener("scroll", updateScrolled);
+    window.removeEventListener("scroll", onScroll);
     window.removeEventListener("hashchange", updateActive);
   });
   return () => cleanup.run();
