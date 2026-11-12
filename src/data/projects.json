@@ -75,5 +75,42 @@
     "githubUrl": "https://github.com/Hasibul-Islam-Shanto/devtalk",
     "blogHref": "/blog/how-to-setup-jenkins",
     "blogLabel": "Read the implementation guide"
+  },
+  {
+    "slug": "url-shortener",
+    "name": "Serverless URL Shortener — Hexagonal AWS Architecture & IaC Delivery",
+    "category": "Serverless Platform · 100% Terraform IaC",
+    "categoryFilter": "serverless",
+    "summary": "A high-throughput, enterprise-grade serverless URL shortening and link management platform on AWS featuring pure functional hexagonal architecture, 100% Terraform IaC, and automated sub-second CI/CD.",
+    "problem": "Monolithic URL shorteners carry idle compute costs, cold-start latency, database write collisions, and security risks from public S3 access and unpartitioned multi-tenancy.",
+    "solution": "Architected a serverless hexagonal platform on AWS (Lambda, API Gateway v2, DynamoDB on-demand, CloudFront OAC, private S3) with 100% Terraform IaC and 208 automated unit/integration tests running sub-second.",
+    "flow": ["Push", "208 Tests", "Terraform IaC", "Edge Deploy"],
+    "devopsHighlights": [
+      "100% Terraform-managed cloud topology across Lambda, DynamoDB on-demand, private S3, and CloudFront with remote S3 state locking",
+      "Four automated GitHub Actions CI/CD workflows for PR plan summaries, state application, and atomic CloudFront cache invalidation",
+      "Zero public S3 access via CloudFront Origin Access Control (OAC), scoped least-privilege IAM execution roles, and dynamic origin-locked CORS"
+    ],
+    "applicationFeatures": [
+      "Hexagonal architecture with curried pure functional use cases, zero OOP classes, and explicit Result<T, E> error handling monads",
+      "Collision-resistant 7-character short codes (62^7 ≈ 3.52 trillion unique URLs) with bounded retry and DynamoDB conditional writes",
+      "React 19 / Vite 8 single-page dashboard with accessible WAI-ARIA modals, optimistic UI updates, and stateless HS256 JWT auth"
+    ],
+    "stack": [
+      { "id": "aws", "label": "AWS Lambda" },
+      { "id": "terraform", "label": "Terraform" },
+      { "id": "dynamodb", "label": "DynamoDB" },
+      { "id": "amazonapigateway", "label": "API Gateway v2" },
+      { "id": "amazoncloudfront", "label": "CloudFront" },
+      { "id": "amazons3", "label": "Amazon S3" },
+      { "id": "githubactions", "label": "GitHub Actions" },
+      { "id": "typescript", "label": "TypeScript" },
+      { "id": "react", "label": "React 19" },
+      { "id": "tailwindcss", "label": "Tailwind CSS" },
+      { "id": "vite", "label": "Vite 8" },
+      { "id": "vitest", "label": "Vitest" },
+      { "id": "zod", "label": "Zod" }
+    ],
+    "outcome": "Achieved single-digit millisecond link redirection, near-$0 idle running costs, and 208 automated tests running in under 900ms without touching the network.",
+    "githubUrl": "https://github.com/Hasibul-Islam-Shanto/url-shortener"
   }
 ]

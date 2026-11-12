@@ -12,7 +12,9 @@ export function getStaticPaths() {
 
 const { project } = Astro.props;
 
-const otherProject = projectsData.find((p) => p.slug !== project.slug);
+const currentIndex = projectsData.findIndex((p) => p.slug === project.slug);
+const nextProject =
+  projectsData.length > 1 ? projectsData[(currentIndex + 1) % projectsData.length] : undefined;
 ---
 
 <BaseLayout
@@ -155,7 +157,7 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
         </p>
       </div>
 
-      {otherProject && (
+      {nextProject && (
         <div class="mt-16 border-t hairline pt-8 flex items-center justify-between">
           <a
             href="/projects"
@@ -164,10 +166,10 @@ const otherProject = projectsData.find((p) => p.slug !== project.slug);
             &larr; Back to all projects
           </a>
           <a
-            href={`/case-studies/${otherProject.slug}`}
+            href={`/case-studies/${nextProject.slug}`}
             class="font-mono text-xs font-bold uppercase tracking-wider text-signal hover:underline"
           >
-            Next Project: {otherProject.name.split("—")[0]?.trim() ?? "Next"} &rarr;
+            Next Project: {nextProject.name.split("—")[0]?.trim() ?? "Next"} &rarr;
           </a>
         </div>
       )}

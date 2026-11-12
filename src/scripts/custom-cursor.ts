@@ -1,7 +1,7 @@
 import { createCleanup, isTouchOnlyDevice, prefersReducedMotion } from "./util";
 
 const INTERACTIVE_SELECTOR =
-  'a, button, [role="button"], input, textarea, select, summary, [data-cursor-interactive], [data-cursor-label], [data-cursor-cta]';
+  'a, button, [data-cursor-hover], [role="button"], input, textarea, select, summary, [data-cursor-interactive], [data-cursor-label], [data-cursor-cta]';
 
 export function initCustomCursor(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
@@ -12,6 +12,7 @@ export function initCustomCursor(
 
   const cleanup = createCleanup();
   const html = document.documentElement;
+  const doc = root instanceof Document ? root : root.ownerDocument || document;
   const dotOuter = layer.querySelector<HTMLElement>("[data-cursor-dot-outer]");
   const ringOuter = layer.querySelector<HTMLElement>("[data-cursor-ring-outer]");
   const dot = layer.querySelector<HTMLElement>(".cursor-dot");
@@ -31,21 +32,24 @@ export function initCustomCursor(
     disable();
     return () => {};
   }
-  if (reduced) ring?.parentElement?.remove();
 
   html.classList.add("has-custom-cursor");
 
-  const mouse = { x: -100, y: -100 };
-  const ringPos = { x: -100, y: -100 };
+  let mouseX = -100;
+  let mouseY = -100;
+  let dotX = -100;
+  let dotY = -100;
+  let ringX = -100;
+  let ringY = -100;
   let hasMoved = false;
   let visible = false;
-  let raf = 0;
-  let lastFrame = 0;
+  let rafId = 0;
+  let isLoopRunning = false;
   let pressStart = 0;
   let releaseTimeout = 0;
-  let idleTimeout = 0;
-  let scrollRaf = 0;
   const timeouts = new Set<number>();
+
+  let currentInteractive: HTMLElement | null = null;
 
   const toggle = (el: Element | null | undefined, cls: string, on: boolean) =>
     el?.classList.toggle(cls, on);
@@ -61,6 +65,10 @@ export function initCustomCursor(
     toggle(ring, "is-pressed", on);
   };
 
+  const place = (el: HTMLElement | null | undefined, x: number, y: number) => {
+    if (el) el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  };
+
   const setTarget = (hovered: boolean, inverted: boolean, text: string | null) => {
     const hasLabel = Boolean(text) && hovered;
     toggle(dot, "is-hovered", hovered);
@@ -70,77 +78,130 @@ export function initCustomCursor(
     toggle(ring, "has-label", hasLabel);
     toggle(dot, "has-label", hasLabel && !reduced);
     if (label) {
-      label.textContent = text ?? "";
+      label.textContent = hovered && text ? text : "";
       label.classList.toggle("is-shown", hasLabel);
     }
   };
 
-  const evaluateTarget = (target: EventTarget | null) => {
-    if (!(target instanceof Element)) return setTarget(false, false, null);
-    const interactive = target.closest(INTERACTIVE_SELECTOR);
-    if (!interactive) return setTarget(false, false, null);
+  const clearHover = () => {
+    currentInteractive = null;
+    setTarget(false, false, null);
+  };
+
+  const applyHover = (interactive: HTMLElement) => {
+    currentInteractive = interactive;
+    void interactive.getBoundingClientRect();
     const inverted = Boolean(interactive.closest("[data-cursor-invert]"));
     const explicit = interactive.getAttribute("data-cursor-label");
-    if (explicit) return setTarget(true, inverted, explicit);
-    if (interactive instanceof HTMLAnchorElement && interactive.target === "_blank") {
-      return setTarget(true, inverted, "↗");
+    const text =
+      explicit ??
+      (interactive instanceof HTMLAnchorElement && interactive.target === "_blank" ? "↗" : null);
+    setTarget(true, inverted, text);
+  };
+
+  const tick = () => {
+    if (!isLoopRunning) return;
+
+    if (hasMoved) {
+      dotX = mouseX;
+      dotY = mouseY;
+      place(dotOuter, dotX, dotY);
+
+      if (reduced) {
+        ringX = dotX;
+        ringY = dotY;
+      } else {
+        ringX += (dotX - ringX) * 0.15;
+        ringY += (dotY - ringY) * 0.15;
+      }
+      place(ringOuter, Number(ringX.toFixed(2)), Number(ringY.toFixed(2)));
     }
-    setTarget(true, inverted, null);
+
+    rafId = requestAnimationFrame(tick);
   };
 
-  const place = (el: HTMLElement | null | undefined, x: number, y: number) => {
-    if (el) el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  const startLoop = () => {
+    if (isLoopRunning) return;
+    isLoopRunning = true;
+    rafId = requestAnimationFrame(tick);
   };
 
-  const tick = (now: number) => {
-    const dt = lastFrame ? Math.min(now - lastFrame, 64) : 16.67;
-    lastFrame = now;
-    const alpha = 1 - Math.pow(1 - 0.18, dt / 16.67);
-    const dx = mouse.x - ringPos.x;
-    const dy = mouse.y - ringPos.y;
-    ringPos.x += dx * alpha;
-    ringPos.y += dy * alpha;
-    place(ringOuter, Number(ringPos.x.toFixed(2)), Number(ringPos.y.toFixed(2)));
-    if (Math.hypot(dx, dy) > 0.15) {
-      raf = requestAnimationFrame(tick);
-    } else {
-      ringPos.x = mouse.x;
-      ringPos.y = mouse.y;
-      place(ringOuter, ringPos.x, ringPos.y);
-      raf = 0;
-      lastFrame = 0;
+  const stopLoop = () => {
+    isLoopRunning = false;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
     }
-  };
-
-  const startRing = () => {
-    if (reduced || !ringOuter || raf) return;
-    lastFrame = 0;
-    raf = requestAnimationFrame(tick);
   };
 
   const onMouseMove = (e: MouseEvent) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
     if (!hasMoved) {
       hasMoved = true;
-      ringPos.x = e.clientX;
-      ringPos.y = e.clientY;
-      place(ringOuter, e.clientX, e.clientY);
+      dotX = mouseX;
+      dotY = mouseY;
+      ringX = mouseX;
+      ringY = mouseY;
+      place(dotOuter, dotX, dotY);
+      place(ringOuter, ringX, ringY);
     }
+
     if (!visible) setVisible(true);
-    place(dotOuter, e.clientX, e.clientY);
-    window.clearTimeout(idleTimeout);
-    idleTimeout = window.setTimeout(() => setVisible(false), 600);
-    evaluateTarget(e.target);
-    startRing();
+    startLoop();
+
+    // Fallback sync for synthetic events or fast moves if mouseover was bypassed
+    const target = e.target instanceof Element ? e.target : null;
+    if (target) {
+      const interactive = target.closest(INTERACTIVE_SELECTOR) as HTMLElement | null;
+      if (interactive !== currentInteractive) {
+        if (interactive) {
+          applyHover(interactive);
+        } else {
+          clearHover();
+        }
+      }
+    }
   };
 
-  const onScroll = () => {
-    if (!hasMoved || scrollRaf) return;
-    scrollRaf = requestAnimationFrame(() => {
-      scrollRaf = 0;
-      evaluateTarget(document.elementFromPoint(mouse.x, mouse.y));
-    });
+  const onMouseOver = (e: MouseEvent) => {
+    const target = e.target instanceof Element ? e.target : null;
+    if (!target) return;
+
+    const interactive = target.closest(INTERACTIVE_SELECTOR) as HTMLElement | null;
+    if (!interactive) return;
+
+    if (interactive === currentInteractive) return;
+    applyHover(interactive);
+  };
+
+  const onMouseOut = (e: MouseEvent) => {
+    if (!currentInteractive) {
+      if (!e.relatedTarget) onLeave();
+      return;
+    }
+
+    const target = e.target instanceof Element ? e.target : null;
+    if (!target) return;
+
+    const interactive = target.closest(INTERACTIVE_SELECTOR);
+    if (interactive !== currentInteractive) {
+      if (!e.relatedTarget) onLeave();
+      return;
+    }
+
+    // Check if the relatedTarget is still within the same interactive element
+    const related = e.relatedTarget instanceof Element ? e.relatedTarget : null;
+    if (related && related.closest(INTERACTIVE_SELECTOR) === currentInteractive) {
+      return;
+    }
+
+    clearHover();
+
+    if (!e.relatedTarget) {
+      onLeave();
+    }
   };
 
   const onMouseDown = (e: MouseEvent) => {
@@ -170,16 +231,18 @@ export function initCustomCursor(
   };
 
   const onLeave = () => {
-    window.clearTimeout(idleTimeout);
     setVisible(false);
     setPressed(false);
+    clearHover();
+    stopLoop();
   };
-  const onMouseOut = (e: MouseEvent) => {
-    if (!e.relatedTarget) onLeave();
-  };
+
   const onVisibility = () => {
-    if (document.visibilityState !== "visible") onLeave();
+    if (doc.visibilityState !== "visible") {
+      onLeave();
+    }
   };
+
   const onTouchStart = () => {
     cleanup.run();
     disable();
@@ -196,23 +259,20 @@ export function initCustomCursor(
   };
 
   listen(window, "mousemove", onMouseMove as EventListener, { passive: true });
-  listen(window, "scroll", onScroll, { passive: true });
+  listen(doc, "mouseover", onMouseOver as EventListener, { passive: true });
+  listen(doc, "mouseout", onMouseOut as EventListener, { passive: true });
   listen(window, "mousedown", onMouseDown as EventListener, { passive: true });
   listen(window, "mouseup", onMouseUp, { passive: true });
-  listen(window, "mouseout", onMouseOut as EventListener, { passive: true });
   listen(window, "blur", onLeave);
-  listen(window, "keydown", onLeave, { passive: true });
   listen(window, "touchstart", onTouchStart, { passive: true });
-  listen(document, "visibilitychange", onVisibility);
-  listen(document.documentElement, "mouseleave", onLeave);
-  listen(document.documentElement, "pointerleave", onLeave);
+  listen(doc, "visibilitychange", onVisibility);
+  listen(html, "mouseleave", onLeave);
+  listen(html, "pointerleave", onLeave);
 
   cleanup.add(() => {
     html.classList.remove("has-custom-cursor");
-    if (raf) cancelAnimationFrame(raf);
-    if (scrollRaf) cancelAnimationFrame(scrollRaf);
+    stopLoop();
     window.clearTimeout(releaseTimeout);
-    window.clearTimeout(idleTimeout);
     timeouts.forEach((id) => window.clearTimeout(id));
     timeouts.clear();
   });

@@ -94,15 +94,114 @@ describe("custom cursor", () => {
     expect(document.documentElement).not.toHaveClass("has-custom-cursor");
   });
 
-  it("skips the trailing ring and ripple under prefers-reduced-motion", async () => {
+  it("keeps the ring snapped without trailing lag and skips ripple under prefers-reduced-motion", async () => {
     mockMatchMedia("prefers-reduced-motion");
     const body = await setup();
-    expect(body.querySelector(".cursor-dot")).not.toBeNull();
-    expect(body.querySelector(".cursor-ring")).toBeNull();
+    const dot = body.querySelector(".cursor-dot")!;
+    const ring = body.querySelector(".cursor-ring")!;
+    expect(dot).not.toBeNull();
+    expect(ring).not.toBeNull();
+
+    mouse("mousemove", window, { clientX: 150, clientY: 250 });
+    expect((dot.parentElement as HTMLElement).style.transform).toBe("translate3d(150px, 250px, 0)");
+    expect((ring.parentElement as HTMLElement).style.transform).toBe(
+      "translate3d(150px, 250px, 0)",
+    );
 
     const cta = body.querySelector("a")!;
     mouse("mousedown", cta, { button: 0 });
     expect(body.querySelector(".cursor-cta-ripple")).toBeNull();
+  });
+
+  it("handles event delegation and does not flicker when moving over child elements", async () => {
+    const body = mount("custom-cursor");
+    body.insertAdjacentHTML(
+      "beforeend",
+      '<button id="test-btn" data-cursor-label="CLICK"><span id="btn-icon">★</span><span id="btn-text">Action</span></button>',
+    );
+    track(initCustomCursor());
+
+    const btn = body.querySelector<HTMLButtonElement>("#test-btn")!;
+    const icon = body.querySelector<HTMLElement>("#btn-icon")!;
+    const ring = body.querySelector(".cursor-ring")!;
+    const label = body.querySelector(".cursor-ring-label")!;
+
+    // Mouse over the button
+    mouse("mouseover", btn, { relatedTarget: document.body });
+    expect(ring).toHaveClass("is-hovered");
+    expect(ring).toHaveClass("has-label");
+    expect(label.textContent).toBe("CLICK");
+
+    // Mouse moving from button to internal child icon
+    mouse("mouseout", btn, { relatedTarget: icon });
+    expect(ring).toHaveClass("is-hovered");
+    expect(label.textContent).toBe("CLICK");
+
+    mouse("mouseover", icon, { relatedTarget: btn });
+    expect(ring).toHaveClass("is-hovered");
+    expect(label.textContent).toBe("CLICK");
+
+    // Mouse moving from child icon to non-interactive background
+    mouse("mouseout", icon, { relatedTarget: body });
+    expect(ring).not.toHaveClass("is-hovered");
+    expect(ring).not.toHaveClass("has-label");
+    expect(label.textContent).toBe("");
+  });
+
+  it("transitions cleanly between multiple interactive elements with no stuck label text", async () => {
+    const body = mount("custom-cursor");
+    body.insertAdjacentHTML(
+      "beforeend",
+      `
+      <nav>
+        <a id="nav-work" href="#work">Work</a>
+        <a id="hire-btn" href="#contact" data-cursor-cta="true" data-cursor-label="HIRE">Hire me</a>
+        <a id="social-link" href="https://linkedin.com" target="_blank">LinkedIn</a>
+        <button id="theme-btn" type="button">Theme</button>
+      </nav>
+      `,
+    );
+    track(initCustomCursor());
+
+    const navWork = body.querySelector<HTMLAnchorElement>("#nav-work")!;
+    const hireBtn = body.querySelector<HTMLAnchorElement>("#hire-btn")!;
+    const socialLink = body.querySelector<HTMLAnchorElement>("#social-link")!;
+    const themeBtn = body.querySelector<HTMLButtonElement>("#theme-btn")!;
+    const ring = body.querySelector(".cursor-ring")!;
+    const label = body.querySelector(".cursor-ring-label")!;
+
+    // 1. Hover "Hire me" (has custom label "HIRE")
+    mouse("mouseover", hireBtn, { relatedTarget: document.body });
+    expect(ring).toHaveClass("is-hovered");
+    expect(ring).toHaveClass("has-label");
+    expect(label.textContent).toBe("HIRE");
+
+    // 2. Move directly from "Hire me" to social link (target="_blank" shows "↗")
+    mouse("mouseout", hireBtn, { relatedTarget: socialLink });
+    mouse("mouseover", socialLink, { relatedTarget: hireBtn });
+    expect(ring).toHaveClass("is-hovered");
+    expect(ring).toHaveClass("has-label");
+    expect(label.textContent).toBe("↗");
+
+    // 3. Move directly from social link to theme toggle (button with NO label)
+    mouse("mouseout", socialLink, { relatedTarget: themeBtn });
+    mouse("mouseover", themeBtn, { relatedTarget: socialLink });
+    expect(ring).toHaveClass("is-hovered");
+    expect(ring).not.toHaveClass("has-label");
+    expect(label.textContent).toBe("");
+
+    // 4. Move directly from theme toggle to nav link (nav link with NO label)
+    mouse("mouseout", themeBtn, { relatedTarget: navWork });
+    mouse("mouseover", navWork, { relatedTarget: themeBtn });
+    expect(ring).toHaveClass("is-hovered");
+    expect(ring).not.toHaveClass("has-label");
+    expect(label.textContent).toBe("");
+
+    // 5. Move off nav link into empty page
+    mouse("mouseout", navWork, { relatedTarget: body });
+    expect(ring).not.toHaveClass("is-hovered");
+    expect(ring).not.toHaveClass("has-label");
+    expect(label.textContent).toBe("");
   });
 
   it("removes all listeners and the root class on cleanup", async () => {

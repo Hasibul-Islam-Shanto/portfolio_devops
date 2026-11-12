@@ -179,14 +179,15 @@ describe("HeroTerminal", () => {
 });
 
 describe("Work", () => {
-  it("renders two cards with mini flows, inactive canvases, GitHub links, and specific project details", async () => {
+  it("renders cards with mini flows, inactive canvases, GitHub links, and specific project details", async () => {
     const body = mount("work");
-    expect(body.querySelectorAll('[aria-label="Project pipeline stages"]').length).toBe(2);
+    expect(body.querySelectorAll('[aria-label="Project pipeline stages"]').length).toBe(3);
     expect(text(body)).toContain("OrderFirst");
     expect(text(body)).toContain("DevTalk");
+    expect(text(body)).toContain("Serverless URL Shortener");
 
     const cards = body.querySelectorAll("article.work-card");
-    expect(cards.length).toBe(2);
+    expect(cards.length).toBe(3);
     cards.forEach((card) => {
       expect(card).not.toHaveAttribute("data-cursor-label");
       expect(card.className).not.toMatch(/tone-m-|tone-d-/);
@@ -725,7 +726,7 @@ describe("Static sections", () => {
     expect(body.querySelector('a[aria-label="GitHub"]')).not.toBeNull();
     expect(body.querySelector('a[aria-label="LinkedIn"]')).not.toBeNull();
     expect(body.querySelector('a[aria-label="X (Twitter)"]')).not.toBeNull();
-    expect(text(body)).toContain("© 2026 Hasibul Islam Shanto · Rangpur, Bangladesh");
+    expect(text(body)).toContain("© 2026 Hasibul Islam Shanto · Dhaka, Bangladesh");
     expect(text(body)).toContain("BST");
     expect(text(body)).toContain("Bangladesh");
   });
