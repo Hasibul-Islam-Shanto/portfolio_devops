@@ -207,22 +207,39 @@ function initCanvas(canvas: HTMLCanvasElement): () => void {
       window.addEventListener("resize", onResize);
       cleanup.add(() => window.removeEventListener("resize", onResize));
     } else {
+      let containerRect: DOMRect | null = null;
+      const getRect = () => {
+        if (!containerRect) {
+          containerRect = container.getBoundingClientRect();
+        }
+        return containerRect;
+      };
       const onMove = (e: PointerEvent) => {
         if (e.pointerType === "touch") return;
-        const rect = container.getBoundingClientRect();
+        const rect = getRect();
         target.x = e.clientX - rect.left;
         target.y = e.clientY - rect.top;
         target.inside = true;
       };
       const onLeave = () => {
         target.inside = false;
+        containerRect = null;
+      };
+      const onScrollOrResize = () => {
+        if (containerRect) {
+          containerRect = container.getBoundingClientRect();
+        }
       };
       if (!touchOnly) {
+        container.addEventListener("pointerenter", getRect, { passive: true });
         container.addEventListener("pointermove", onMove, { passive: true });
         container.addEventListener("pointerleave", onLeave, { passive: true });
+        window.addEventListener("scroll", onScrollOrResize, { passive: true });
         cleanup.add(() => {
+          container.removeEventListener("pointerenter", getRect);
           container.removeEventListener("pointermove", onMove);
           container.removeEventListener("pointerleave", onLeave);
+          window.removeEventListener("scroll", onScrollOrResize);
         });
       }
       if (typeof ResizeObserver !== "undefined") {

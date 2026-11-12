@@ -725,7 +725,7 @@ describe("Static sections", () => {
     expect(body.querySelector('a[aria-label="GitHub"]')).not.toBeNull();
     expect(body.querySelector('a[aria-label="LinkedIn"]')).not.toBeNull();
     expect(body.querySelector('a[aria-label="X (Twitter)"]')).not.toBeNull();
-    expect(text(body)).toContain("© 2026 Hasibul Islam Shanto · Rangpur, Bangladesh");
+    expect(text(body)).toContain("© 2026 Hasibul Islam Shanto · Dhaka, Bangladesh");
     expect(text(body)).toContain("BST");
     expect(text(body)).toContain("Bangladesh");
   });
