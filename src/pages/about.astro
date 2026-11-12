@@ -3,8 +3,43 @@ import BaseLayout from "../layouts/base-layout.astro";
 import Header from "../components/navbar/header.astro";
 import CardParticleBackground from "../components/shared/card-particle-background.astro";
 import aboutData from "../data/about.json";
+import { EXPERIENCE_ROLES } from "../components/experience/experience-data";
 
 const { intro, photo, story, quickFacts, education } = aboutData;
+
+const PRINCIPLES = [
+  {
+    title: "Design for reliability",
+    desc: "Assume every dependency fails. Budget errors, rehearse recovery, and make the safe path the default one.",
+  },
+  {
+    title: "Automate the repeatable",
+    desc: "If I've done it twice by hand, the third time is a pipeline. Toil is a bug with a ticket number.",
+  },
+  {
+    title: "Keep changes reviewable",
+    desc: "Small diffs, readable plans, versioned everything. Production should never surprise the person who changed it.",
+  },
+];
+
+const SKILL_GROUPS = [
+  {
+    title: "CI/CD & Automation",
+    skills: ["Jenkins", "GitHub Actions", "Docker Compose", "Multi-stage Builds", "SonarQube", "Trivy", "Bash Scripting"],
+  },
+  {
+    title: "Cloud & Container Orchestration",
+    skills: ["Kubernetes", "KinD", "Containerd", "Ingress NGINX", "Helm", "StatefulSets", "PVCs & Storage"],
+  },
+  {
+    title: "Infrastructure & Networking",
+    skills: ["Linux (Ubuntu/Debian)", "Terraform IaC", "Ansible", "TCP/IP & DNS", "Reverse Proxies", "Load Balancing"],
+  },
+  {
+    title: "Full-Stack & Data Architecture",
+    skills: ["TypeScript / JavaScript", "Node.js", "Express.js", "Next.js", "PostgreSQL", "Prisma ORM", "MongoDB", "Redis", "RabbitMQ"],
+  },
+];
 ---
 
 <BaseLayout
@@ -13,14 +48,16 @@ const { intro, photo, story, quickFacts, education } = aboutData;
   ogImage={photo.src}
 >
   <Header currentPath="/about" />
+
   <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
     <div class="site-container py-12 md:py-16">
+      {/* Top Hero & Narrative Section */}
       <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-start">
         <div>
-          <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal">
-            01 / {intro.kicker}
+          <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
+            Background // Narrative &amp; Foundations
           </p>
-          <h1 class="mt-4 text-[clamp(32px,4vw,52px)] font-bold leading-[1.1] tracking-tight">
+          <h1 class="mt-4 text-[clamp(32px,4vw,52px)] font-bold leading-[1.1] tracking-tight text-[var(--text)]">
             {intro.headline}
           </h1>
           <p class="mt-4 text-lg leading-relaxed text-signal font-medium">{intro.lede}</p>
@@ -33,13 +70,13 @@ const { intro, photo, story, quickFacts, education } = aboutData;
 
           <div class="mt-10 flex flex-wrap gap-4">
             <a
-              href="/#test"
+              href="/projects"
               class="rounded-full bg-signal px-6 py-3 font-mono text-xs font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5 sm:text-sm"
             >
-              View the work &rarr;
+              View all projects &rarr;
             </a>
             <a
-              href="/#scale"
+              href="/#contact"
               class="rounded-full border hairline px-6 py-3 font-mono text-xs font-bold uppercase transition-colors hover:border-signal hover:text-signal sm:text-sm"
             >
               Get in touch
@@ -98,6 +135,169 @@ const { intro, photo, story, quickFacts, education } = aboutData;
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Experience Timeline Section */}
+      <section class="mt-24 border-t hairline pt-16">
+        <div>
+          <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
+            Career Journey // Production Experience
+          </p>
+          <h2 class="mt-3 text-[clamp(26px,3vw,40px)] font-bold tracking-tight text-[var(--text)]">
+            Where I've built &amp; shipped.
+          </h2>
+          <p class="mt-3 max-w-2xl text-base dim">
+            A chronological timeline of engineering roles building enterprise web applications, Web3 platforms, and automated pipelines.
+          </p>
+        </div>
+
+        <div class="mt-12 space-y-8">
+          {EXPERIENCE_ROLES.map((role) => (
+            <article class="group relative overflow-hidden rounded-3xl border hairline bg-surface/30 p-7 sm:p-8 transition-colors hover:border-signal/50">
+              <CardParticleBackground />
+              <div class="relative z-10">
+                <div class="flex flex-wrap items-baseline justify-between gap-2 border-b hairline pb-4">
+                  <div>
+                    <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]">
+                      {role.role} <span class="text-signal">@ {role.company}</span>
+                    </h3>
+                    <p class="mt-1 font-mono text-xs dim">
+                      {role.location} · {role.context}
+                    </p>
+                  </div>
+                  <span class="rounded-full border hairline bg-surface/60 px-3 py-1 font-mono text-xs font-semibold uppercase text-signal">
+                    {role.period}
+                  </span>
+                </div>
+
+                <ul class="mt-6 space-y-3 text-sm sm:text-[15px] leading-relaxed dim">
+                  {role.bullets.map((bullet) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-signal" aria-hidden="true" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div class="mt-6 flex flex-wrap gap-2 pt-4 border-t hairline">
+                  {role.tags.map((tag) => (
+                    <span class="rounded-full border hairline bg-surface/40 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-[var(--text)]/80">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Technical Competencies / Skills Breakdown */}
+      <section class="mt-24 border-t hairline pt-16">
+        <div>
+          <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
+            Capabilities // Technical Stack
+          </p>
+          <h2 class="mt-3 text-[clamp(26px,3vw,40px)] font-bold tracking-tight text-[var(--text)]">
+            Skills &amp; tooling breakdown.
+          </h2>
+          <p class="mt-3 max-w-2xl text-base dim">
+            Tools, languages, and platforms applied in production systems and curriculum tutorials.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-6 sm:grid-cols-2">
+          {SKILL_GROUPS.map((group) => (
+            <div class="group relative overflow-hidden rounded-3xl border hairline bg-surface/30 p-6 sm:p-7 transition-colors hover:border-signal/50">
+              <CardParticleBackground />
+              <div class="relative z-10">
+                <h3 class="text-lg font-bold tracking-tight text-[var(--text)]">
+                  {group.title}
+                </h3>
+                <ul class="mt-4 flex flex-wrap gap-2">
+                  {group.skills.map((skill) => (
+                    <li class="rounded-full border hairline bg-surface/50 px-3 py-1 font-mono text-xs text-[var(--text)]/85">
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3 Numbered Principles (Reused from Homepage) */}
+      <section class="mt-24 border-t hairline pt-16">
+        <div class="grid gap-16 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+          <div>
+            <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
+              Philosophy // Engineering Principles
+            </p>
+            <h2 class="mt-3 text-[clamp(26px,3vw,40px)] font-bold leading-[1.1] tracking-tight text-[var(--text)]">
+              Calm systems are <span class="text-signal">monitored</span> systems.
+            </h2>
+            <ol class="mt-10 space-y-6">
+              {PRINCIPLES.map((principle, i) => (
+                <li class="grid grid-cols-[3rem_1fr] border-t hairline pt-5">
+                  <span class="font-mono text-sm text-signal font-bold">0{i + 1}</span>
+                  <div>
+                    <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]">
+                      {principle.title}
+                    </h3>
+                    <p class="mt-1 text-sm sm:text-base leading-relaxed dim">{principle.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div class="relative mx-auto aspect-square w-full max-w-sm" aria-hidden="true">
+            <div class="spin-slow absolute inset-0 rounded-full border border-dashed hairline">
+              {[0, 120, 240].map((d) => (
+                <span
+                  class="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-signal"
+                  style={`transform: rotate(${d}deg) translateY(-50%) translateY(-9rem)`}
+                />
+              ))}
+            </div>
+            <div class="spin-rev absolute inset-[22%] rounded-full border hairline">
+              {[60, 240].map((d) => (
+                <span
+                  class="absolute left-1/2 top-1/2 h-2 w-2 rounded-full bg-current"
+                  style={`transform: rotate(${d}deg) translateY(-5.5rem)`}
+                />
+              ))}
+            </div>
+            <div class="absolute inset-[40%] flex items-center justify-center rounded-full bg-signal font-mono text-[10px] font-bold uppercase text-signal-foreground">
+              core
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Call to Action */}
+      <div class="mt-24 rounded-3xl border hairline bg-surface/30 p-8 sm:p-12 text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text)]">
+          Interested in building together?
+        </h2>
+        <p class="mt-3 max-w-xl mx-auto text-base dim">
+          Whether you need zero-downtime deployment pipelines, resilient Kubernetes infrastructure, or full-stack platform engineering, I'm open to discussing opportunities.
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <a
+            href="/#contact"
+            class="rounded-full bg-signal px-6 py-3 font-mono text-xs font-bold uppercase text-signal-foreground transition-transform hover:-translate-y-0.5 sm:text-sm"
+          >
+            Get in touch &rarr;
+          </a>
+          <a
+            href="/projects"
+            class="rounded-full border hairline px-6 py-3 font-mono text-xs font-bold uppercase transition-colors hover:border-signal hover:text-signal sm:text-sm"
+          >
+            Browse all projects
+          </a>
         </div>
       </div>
     </div>

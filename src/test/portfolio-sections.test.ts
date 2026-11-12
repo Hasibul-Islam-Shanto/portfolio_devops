@@ -767,13 +767,13 @@ describe("Header", () => {
     pills.forEach((p) => expect(p).not.toHaveClass("is-scrolled"));
   });
 
-  it("links to the page anchors and keeps the active link in sync with the hash", async () => {
+  it("links to dedicated pages and contact anchor, keeping active link in sync", async () => {
     const body = mount("header");
     track(initHeader(body));
     const hrefs = Array.from(body.querySelectorAll("nav[aria-label='Main'] a")).map((a) =>
       a.getAttribute("href"),
     );
-    expect(hrefs).toEqual(["/", "/#test", "/about", "/learnings", "/blog", "/#scale"]);
+    expect(hrefs).toEqual(["/", "/projects", "/about", "/learnings", "/blog", "/#contact"]);
 
     const current = () =>
       Array.from(body.querySelectorAll("nav[aria-label='Main'] a[aria-current='page']")).map((a) =>
@@ -781,10 +781,12 @@ describe("Header", () => {
       );
     expect(current()).toEqual(["/"]);
 
-    window.location.hash = "#scale";
+    window.location.hash = "#contact";
     window.dispatchEvent(new HashChangeEvent("hashchange"));
-    expect(current()).toEqual(["/#scale"]);
+    expect(current()).toEqual(["/#contact"]);
     window.location.hash = "";
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    expect(current()).toEqual(["/"]);
   });
 
   it("toggles mobile drawer menu, responds to nav links and Escape key", async () => {

@@ -1,0 +1,179 @@
+---
+import BaseLayout from "../layouts/base-layout.astro";
+import Header from "../components/navbar/header.astro";
+import CardParticleBackground from "../components/shared/card-particle-background.astro";
+import projectsData from "../data/projects.json";
+---
+
+<BaseLayout
+  title="Projects — Hasibul Islam Shanto | DevOps & Platform Engineer"
+  description="All production platforms, distributed microservices, CI/CD automation pipelines, and cloud-native systems engineered by Hasibul Islam Shanto."
+  ogDescription="Explore all production systems, distributed pipelines, and Kubernetes topologies."
+>
+  <Header currentPath="/projects" />
+
+  <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
+    <div class="site-container py-12 md:py-16">
+      {/* Hero / Intro Area */}
+      <div class="max-w-4xl">
+        <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
+          Portfolio Archive // Systems &amp; Delivery
+        </p>
+        <h1 class="mt-4 text-[clamp(32px,4vw,56px)] font-bold leading-[1.1] tracking-tight text-[var(--text)]">
+          All <span class="text-signal">Projects</span> &amp; Systems.
+        </h1>
+        <p class="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed dim">
+          A complete index of distributed microservices, zero-downtime CI/CD pipelines, container
+          orchestration topologies, and full-stack platforms engineered for production resilience.
+        </p>
+      </div>
+
+      {/* Projects Grid */}
+      <div id="projects-grid" class="mt-14 grid gap-8 lg:grid-cols-2">
+        {projectsData.map((p, i) => (
+          <div
+            data-project-item
+            data-reveal
+            data-reveal-managed
+            style={`--reveal-delay: ${(i % 2) * 0.12}s`}
+            class="transition-all duration-300"
+          >
+            <article
+              data-work-card
+              tabindex="0"
+              data-cursor-interactive="true"
+              class="work-card section-surface group flex h-full flex-col justify-between rounded-3xl border hairline p-7 sm:p-8 focus-visible:outline-none transition-all duration-200 hover:border-signal/50"
+            >
+              <CardParticleBackground />
+              <div class="relative z-10 flex flex-1 flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest gap-2">
+                    <span class="flex items-center text-signal font-semibold">
+                      <span class="work-cat-tick" aria-hidden="true" />
+                      <span>{p.category}</span>
+                    </span>
+                    {p.githubUrl && (
+                      <a
+                        href={p.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${p.name} on GitHub`}
+                        class="inline-flex items-center gap-1.5 rounded-full border hairline bg-surface/60 px-3 py-1 font-mono text-[11px] text-[var(--text)]/80 transition-colors hover:border-signal hover:text-signal"
+                      >
+                        <svg
+                          class="h-3.5 w-3.5 shrink-0"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                        </svg>
+                        <span>GitHub</span>
+                        <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                  </div>
+
+                  <h2 class="mt-4 text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]">
+                    {p.name}
+                  </h2>
+
+                  <p class="mt-2 text-sm sm:text-[15px] leading-relaxed dim">{p.summary}</p>
+
+                  <div class="mt-5">
+                    <p class="font-mono text-[10px] uppercase tracking-wider dim font-semibold mb-2">
+                      Tech Stack
+                    </p>
+                    <ul class="flex flex-wrap gap-1.5">
+                      {p.stack.map((t) => (
+                        <li class="rounded-full border hairline bg-surface/40 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--text)]/85 transition-colors group-hover:border-signal/60">
+                          {t.label}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {p.flow && p.flow.length > 0 && (
+                    <div
+                      data-mini-flow
+                      class="mt-6 border-t hairline pt-4 font-mono"
+                      aria-label="Project pipeline stages"
+                    >
+                      <p class="font-mono text-[10px] uppercase tracking-wider dim font-semibold mb-2">
+                        Deployment Flow
+                      </p>
+                      <div class="relative flex items-start justify-between">
+                        <span
+                          class="absolute left-3.5 right-3.5 top-3.5 h-px bg-current opacity-20"
+                          aria-hidden="true"
+                        />
+                        <span
+                          data-flow-line
+                          class="absolute left-3.5 right-3.5 top-3.5 h-px origin-left bg-signal"
+                          style="transform: scaleX(0); transition: transform 220ms linear"
+                          aria-hidden="true"
+                        />
+                        <span
+                          data-flow-dot
+                          hidden
+                          class="flow-dot absolute top-3.5 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                          style="left: 0.875rem; transition: left 220ms linear"
+                          aria-hidden="true"
+                        />
+                        {p.flow.map((label: string, idx: number) => (
+                          <div class="relative z-10 flex flex-col items-center gap-1.5">
+                            <div
+                              data-flow-node
+                              class="flow-node hairline dim flex h-7 w-7 items-center justify-center rounded-lg border bg-surface text-[10px] font-bold"
+                            >
+                              0{idx + 1}
+                            </div>
+                            <span
+                              data-flow-label
+                              class="flow-label dim text-[9px] uppercase tracking-wider text-center"
+                            >
+                              {label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div class="mt-8 flex flex-wrap items-center justify-between gap-3 border-t hairline pt-4">
+                  <a
+                    href={`/case-studies/${p.slug}`}
+                    class="work-case-link group/link inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text)]/70 transition-all duration-200 hover:text-signal group-hover:text-signal focus-visible:text-signal focus-visible:outline-none"
+                  >
+                    <span class="transition-colors duration-200">View case study</span>{" "}
+                    <span
+                      class="inline-block transition-transform duration-200 group-hover/link:translate-x-1.5 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </a>
+
+                  {p.blogHref && (
+                    <a
+                      href={p.blogHref}
+                      class="font-mono text-[11px] font-semibold text-signal hover:underline"
+                    >
+                      {p.blogLabel || "Read guide"} &rarr;
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import { initWork } from "../components/projects/work";
+  initWork();
+</script>

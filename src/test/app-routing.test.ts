@@ -65,12 +65,43 @@ describe("Astro routes", () => {
     for (const h of hashes) expect(ids.has(h)).toBe(true);
   });
 
-  it("/blog renders the real blog articles and links to posts", async () => {
+  it("/projects renders all projects in a grid, without pipeline rail", async () => {
+    const doc = renderPage("projects");
+    expect(doc.title).toContain("Projects");
+    expect(meta(doc, 'meta[name="description"]')).toContain("production platforms");
+    expect(doc.querySelector("h1")?.textContent).toContain("All Projects");
+    expect(doc.querySelector('.nav-link[href="/projects"]')?.getAttribute("aria-current")).toBe("page");
+    expect(doc.querySelectorAll("[data-project-item]").length).toBeGreaterThanOrEqual(2);
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
+  });
+
+  it("/about renders expanded bio, experience timeline, skills, and 3 principles without pipeline rail", async () => {
+    const doc = renderPage("about");
+    expect(doc.title).toContain("About");
+    expect(doc.querySelector("h1")?.textContent).toContain("From product interfaces to production systems");
+    expect(doc.querySelector('.nav-link[href="/about"]')?.getAttribute("aria-current")).toBe("page");
+    expect(doc.querySelector('a[href="/projects"]')).not.toBeNull();
+    expect(doc.querySelector('a[href="/#contact"]')).not.toBeNull();
+    expect(doc.body.textContent).toContain("Design for reliability");
+    expect(doc.body.textContent).toContain("Automate the repeatable");
+    expect(doc.body.textContent).toContain("Keep changes reviewable");
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
+  });
+
+  it("/learnings renders the full curriculum and does not render the pipeline rail", async () => {
+    const doc = renderPage("learnings");
+    expect(doc.title).toContain("DevOps Learnings");
+    expect(doc.querySelector('.nav-link[href="/learnings"]')?.getAttribute("aria-current")).toBe("page");
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
+  });
+
+  it("/blog renders the real blog articles and links to posts without pipeline rail", async () => {
     const doc = renderPage("blog");
     expect(doc.title).toContain("Blog");
     expect(meta(doc, 'meta[name="description"]')).toContain("write-ups");
     expect(doc.querySelector("h1")?.textContent).toContain("Production notes");
     expect(doc.querySelector('.nav-link[href="/blog"]')?.getAttribute("aria-current")).toBe("page");
+    expect(doc.querySelector("[data-pipeline-rail]")).toBeNull();
   });
 
   it("/case-studies renders the case studies placeholder page", async () => {

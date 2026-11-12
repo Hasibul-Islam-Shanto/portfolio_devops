@@ -324,6 +324,14 @@ html[data-theme="light"] {
   background: var(--s-bg);
   color: var(--s-fg);
 }
+section:focus,
+section:focus-visible,
+section[tabindex="-1"]:focus,
+section[tabindex="-1"]:focus-visible,
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible {
+  outline: none !important;
+}
 .hairline {
   border-color: color-mix(in oklab, var(--s-fg) 15%, transparent);
 }

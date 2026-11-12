@@ -212,13 +212,21 @@ export function initSectionNav(
 
   const onAnchorClick = (e: MouseEvent) => {
     const target = e.target as HTMLElement | null;
-    const anchor = target?.closest<HTMLAnchorElement>("a[href^='#']");
+    const anchor = target?.closest<HTMLAnchorElement>("a[href^='#'], a[href^='/#']");
     if (!anchor) return;
 
     const href = anchor.getAttribute("href");
-    if (!href || href === "#") return;
+    if (!href || href === "#" || href === "/#") return;
 
-    const rawId = href.replace(/^#/, "");
+    const isHomePage =
+      typeof window !== "undefined"
+        ? window.location.pathname === "/" || window.location.pathname === ""
+        : true;
+    if (href.startsWith("/#") && !isHomePage) {
+      return;
+    }
+
+    const rawId = href.replace(/^\/?#/, "");
     const canonicalId = TARGET_ALIASES[rawId];
     if (!canonicalId) return;
 
@@ -244,10 +252,35 @@ export function initSectionNav(
       if (window.location.hash !== `#${rawId}`) {
         history.pushState(null, "", `#${rawId}`);
       }
-      targetSection.setAttribute("tabindex", "-1");
-      targetSection.focus({ preventScroll: true });
     });
   };
+
+  const scrollToInitialHash = () => {
+    if (typeof window === "undefined") return;
+    const rawId = window.location.hash.replace(/^\/?#/, "");
+    if (!rawId) return;
+    const canonicalId = TARGET_ALIASES[rawId];
+    if (!canonicalId) return;
+    const targetSection =
+      sectionMap.get(canonicalId) || root.querySelector<HTMLElement>(`#${rawId}`);
+    if (!targetSection) return;
+
+    const execute = () => {
+      const targetY = getTargetScrollY(targetSection);
+      smoothScrollTo(targetY, 700, () => {
+        setActiveEyebrow(canonicalId);
+        pulseEyebrow(canonicalId);
+      });
+    };
+
+    if (document.readyState === "complete") {
+      setTimeout(execute, 80);
+    } else {
+      window.addEventListener("load", () => setTimeout(execute, 80), { once: true });
+    }
+  };
+
+  scrollToInitialHash();
 
   root.addEventListener("click", onAnchorClick as EventListener);
   cleanup.add(() => {
