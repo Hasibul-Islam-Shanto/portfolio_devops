@@ -141,7 +141,7 @@ describe("Astro routes", () => {
     expect(doc.title).toContain("Recognitions & Credentials");
     expect(meta(doc, 'meta[name="description"]')).toContain("credentials");
     expect(doc.querySelector("h1")?.textContent).toContain("Recognitions & Credentials");
-    expect(doc.querySelectorAll("article").length).toBe(8);
+    expect(doc.querySelectorAll("article").length).toBe(7);
     expect(doc.querySelector('a[href="/#certifications"]')).not.toBeNull();
   });
 

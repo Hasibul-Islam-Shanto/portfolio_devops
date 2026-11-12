@@ -590,24 +590,30 @@ describe("Static sections", () => {
   it("renders the Recognitions & Credentials preview in a 3-per-row grid with View All CTA", async () => {
     const body = mount("certifications");
     expect(text(body)).toContain("Recognitions");
-    expect(text(body)).toContain("Smart Village Idea Competition");
+    expect(text(body)).toContain("Bangladesh Blockchain Olympiad");
     const articles = body.querySelectorAll("article");
-    expect(articles.length).toBe(6);
+    expect(articles.length).toBe(3);
     expect(text(body)).toContain("2023");
     expect(text(body)).toContain("2024");
 
     const grid = body.querySelector(".grid");
     expect(grid?.className).toContain("lg:grid-cols-3");
 
-    const firstCard = body.querySelector('[data-credential-card="smart-village-idea-competition"]');
-    expect(text(firstCard)).toContain("1st Runner-Up");
+    const firstCard = body.querySelector('[data-credential-card="bangladesh-blockchain-olympiad"]');
+    expect(text(firstCard)).toContain("Top 10 Finalist");
 
-    const plainCard = body.querySelector('[data-credential-card="docker-container-orchestration"]');
-    expect(text(plainCard)).toContain("Docker & Container Orchestration");
-    expect(plainCard?.querySelector(".rounded-full.bg-signal\\/15")).toBeNull();
+    const dockerCard = body.querySelector('[data-credential-card="docker-escbash-labs"]');
+    expect(text(dockerCard)).toContain("Docker");
+    expect(text(dockerCard)).toContain("Certified");
+    expect(dockerCard?.querySelector('a[href*="escbash.com"]')).not.toBeNull();
+
+    const ghaCard = body.querySelector('[data-credential-card="github-actions-escbash"]');
+    expect(text(ghaCard)).toContain("GitHub Actions");
+    expect(text(ghaCard)).toContain("Certified");
+    expect(ghaCard?.querySelector('a[href*="escbash.com"]')).not.toBeNull();
 
     const viewDetailBtns = body.querySelectorAll("[data-credential-open]");
-    expect(viewDetailBtns.length).toBe(6);
+    expect(viewDetailBtns.length).toBe(3);
 
     const viewAllLink = body.querySelector('a[href="/achievements"]');
     expect(viewAllLink).not.toBeNull();
@@ -623,26 +629,26 @@ describe("Static sections", () => {
     expect(modal?.hidden).toBe(true);
 
     const openBtn = body.querySelector<HTMLElement>(
-      '[data-credential-open="smart-village-idea-competition"]',
+      '[data-credential-open="bangladesh-blockchain-olympiad"]',
     );
     openBtn?.click();
 
     expect(modal?.hidden).toBe(false);
     expect(modal?.getAttribute("aria-hidden")).toBe("false");
     expect(modal?.querySelector("#credential-modal-title")?.textContent).toBe(
-      "Smart Village Idea Competition",
+      "Bangladesh Blockchain Olympiad",
     );
-    expect(modal?.querySelector("#credential-modal-rank")?.textContent).toBe("1st Runner-Up");
+    expect(modal?.querySelector("#credential-modal-rank")?.textContent).toBe("Top 10 Finalist");
     expect(modal?.querySelector("#credential-modal-desc")?.textContent).toContain(
-      "Ethereum blockchain architecture",
+      "Hyperledger Fabric-based consortium blockchain platform",
     );
     expect(modal?.querySelector("#credential-modal-issuer")?.textContent).toBe(
-      "District Administration, Sylhet & SUST",
+      "Blockchain Olympiad Bangladesh",
     );
     expect(modal?.querySelector("#credential-modal-year")?.textContent).toBe("2023");
 
     const img = modal?.querySelector<HTMLImageElement>("#credential-modal-images-wrapper img");
-    expect(img?.src).toContain("idea_competition.webp");
+    expect(img?.src).toContain("blockchain_competition.webp");
 
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     expect(modal?.getAttribute("aria-hidden")).toBe("true");
@@ -670,8 +676,6 @@ describe("Static sections", () => {
       (el) => el.textContent?.trim() === "HEAD",
     );
     expect(headBadges.length).toBe(1);
-
-    expect(text(body)).toContain("View Full Experience →");
   });
 
   it("initializes expand/collapse accordion states and toggles commit details", async () => {

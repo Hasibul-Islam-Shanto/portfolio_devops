@@ -41,6 +41,57 @@
     ]
   },
   {
+    "id": "docker-escbash-labs",
+    "title": "Docker — Hands-on Containerization",
+    "rank": "Certified",
+    "shortDescription": "Container workflows, multi-stage builds, volumes, networking & Docker Compose.",
+    "fullDescription": "Completed practical hands-on Docker training on Escbash Labs covering containerization from fundamentals to production workflows:\n• Docker images, containers, and multi-stage Dockerfiles\n• Volumes, bind mounts, and container networking\n• Multi-container orchestration with Docker Compose\n• Environment variables, health checks, and resource limits\n• Image optimization, debugging, and container registries",
+    "year": "2024",
+    "issuer": "Escbash Labs",
+    "organization": "Escbash Labs",
+    "images": [],
+    "links": [
+      {
+        "label": "Verify Certificate (ESC-DKR-E84261028C)",
+        "url": "https://www.escbash.com/certificates/ESC-DKR-E84261028C"
+      }
+    ]
+  },
+  {
+    "id": "github-actions-escbash",
+    "title": "GitHub Actions — CI/CD Automation",
+    "rank": "Certified",
+    "shortDescription": "Automated workflows, composite actions, caching, artifacts & matrix builds.",
+    "fullDescription": "Completed comprehensive training in GitHub Actions CI/CD automation on Escbash Labs:\n• Workflow anatomy, event triggers, and runner environments\n• Composite actions and modular reusable workflows\n• Build artifact handoff and dependency caching strategies\n• Multi-platform matrix test builds\n• Automated linting, test validation, and deployment pipelines",
+    "year": "2024",
+    "issuer": "Escbash Labs",
+    "organization": "Escbash Labs",
+    "images": [],
+    "links": [
+      {
+        "label": "Verify Certificate (ESC-GHA-E75C3CA8AC)",
+        "url": "https://www.escbash.com/certificates/ESC-GHA-E75C3CA8AC"
+      }
+    ]
+  },
+  {
+    "id": "reactive-accelerator-lws",
+    "title": "Reactive Accelerator — Full-Stack & SSR",
+    "rank": "Certificate of Excellence",
+    "shortDescription": "Advanced JavaScript, React.js, Next.js SSR, Server Components & Tailwind CSS.",
+    "fullDescription": "Earned the Certificate of Excellence for outstanding performance in the Reactive Accelerator Batch 2 program by Learn with Sumit:\n• Deep mastery of advanced JavaScript concepts and React.js architecture\n• Next.js Server-Side Rendering (SSR) and React Server Components (RSC)\n• Responsive UI development with Tailwind CSS\n• Practical project development under mentorship from Sumit Saha and Tapas Adhikary",
+    "year": "2024",
+    "issuer": "Learn with Sumit - LWS",
+    "organization": "Learn with Sumit - LWS",
+    "images": [],
+    "links": [
+      {
+        "label": "Verify Report (LWSEID-BEC41O0K)",
+        "url": "https://learnwithsumit.com/reports/LWSEID-BEC41O0K"
+      }
+    ]
+  },
+  {
     "id": "bsc-computer-science-engineering",
     "title": "B.Sc. in Computer Science & Eng.",
     "rank": "3.35 CGPA",
@@ -49,54 +100,6 @@
     "year": "2024",
     "issuer": "Shahjalal University of Science and Technology",
     "organization": "Shahjalal University of Science and Technology",
-    "images": [],
-    "links": []
-  },
-  {
-    "id": "docker-container-orchestration",
-    "title": "Docker & Container Orchestration",
-    "rank": null,
-    "shortDescription": "Production Container Workloads & Isolation",
-    "fullDescription": "Comprehensive technical mastery in container isolation primitives, multi-stage Docker builds, layer caching optimization, cgroups resource controls, and microservices clustering.",
-    "year": "2023",
-    "issuer": "Cloud Native Computing Lab",
-    "organization": "Cloud Native Computing Lab",
-    "images": [],
-    "links": []
-  },
-  {
-    "id": "automated-cicd-pipeline-engineering",
-    "title": "Automated Pipeline Engineering",
-    "rank": null,
-    "shortDescription": "Zero-Downtime GitHub Actions & Jenkins Delivery",
-    "fullDescription": "Hands-on implementation of end-to-end continuous integration and deployment automation, automated test/lint matrices, vulnerability scans with Trivy and SonarQube, and rolling production deployments.",
-    "year": "2024",
-    "issuer": "DevOps & SRE Practice Lab",
-    "organization": "DevOps & SRE Practice Lab",
-    "images": [],
-    "links": []
-  },
-  {
-    "id": "infrastructure-as-code-terraform",
-    "title": "Infrastructure as Code with Terraform",
-    "rank": null,
-    "shortDescription": "Declarative Cloud Provisioning & State Management",
-    "fullDescription": "Modular infrastructure authoring, remote state locking, resource dependency graphing, and repeatable multi-environment provisioning across cloud providers.",
-    "year": "2024",
-    "issuer": "HashiCorp Stack & Cloud Infrastructure Series",
-    "organization": "HashiCorp Stack & Cloud Infrastructure Series",
-    "images": [],
-    "links": []
-  },
-  {
-    "id": "linux-systems-network-administration",
-    "title": "Linux Systems & Networking",
-    "rank": null,
-    "shortDescription": "Kernel Internals, TCP/IP & System Performance",
-    "fullDescription": "Advanced Linux system operations: POSIX process trees, iptables/nftables packet filtering, DNS resolution paths, systemd unit orchestration, and kernel metric monitoring.",
-    "year": "2023",
-    "issuer": "Enterprise Linux & Networking Initiative",
-    "organization": "Enterprise Linux & Networking Initiative",
     "images": [],
     "links": []
   }
