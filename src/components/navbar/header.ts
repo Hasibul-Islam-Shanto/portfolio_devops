@@ -183,9 +183,12 @@ export function initHeader(
   header.addEventListener("focusout", onHeaderLeave);
 
   const onHeaderNavClick = (e: MouseEvent) => {
-    const anchor = (e.target as HTMLElement)?.closest<HTMLAnchorElement>("a[href*='#contact'], a[href*='#scale']");
+    const anchor = (e.target as HTMLElement)?.closest<HTMLAnchorElement>(
+      "a[href*='#contact'], a[href*='#scale']",
+    );
     if (!anchor) return;
-    const path = typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
+    const path =
+      typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
     if (path === "/") {
       const contactEl = document.getElementById("contact") || document.getElementById("scale");
       if (contactEl) {
@@ -194,8 +197,12 @@ export function initHeader(
         const computed = window.getComputedStyle(contactEl);
         const scrollMarginTop = parseInt(computed.scrollMarginTop, 10);
         const fallbackOffset = header ? header.offsetHeight + 24 : 80;
-        const offset = !isNaN(scrollMarginTop) && scrollMarginTop > 0 ? scrollMarginTop : fallbackOffset;
-        const targetY = Math.max(0, window.scrollY + contactEl.getBoundingClientRect().top - offset);
+        const offset =
+          !isNaN(scrollMarginTop) && scrollMarginTop > 0 ? scrollMarginTop : fallbackOffset;
+        const targetY = Math.max(
+          0,
+          window.scrollY + contactEl.getBoundingClientRect().top - offset,
+        );
         window.scrollTo({ top: targetY, behavior: "smooth" });
         if (window.location.hash !== "#contact") {
           history.pushState(null, "", "/#contact");
@@ -249,7 +256,8 @@ export function initHeader(
   };
 
   const updateActive = () => {
-    const path = typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
+    const path =
+      typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
     const isHome = path === "/";
     const contactActive = isHome && isContactActiveOnHome();
 

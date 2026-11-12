@@ -2,6 +2,8 @@
 import BaseLayout from "../layouts/base-layout.astro";
 import Header from "../components/navbar/header.astro";
 import CardParticleBackground from "../components/shared/card-particle-background.astro";
+import PageHero from "../components/shared/page-hero.astro";
+import RevealOnScroll from "../components/shared/reveal-on-scroll.astro";
 import projectsData from "../data/projects.json";
 ---
 
@@ -14,29 +16,24 @@ import projectsData from "../data/projects.json";
 
   <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
     <div class="site-container py-12 md:py-16">
-      {/* Hero / Intro Area */}
-      <div class="max-w-4xl">
-        <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
-          Portfolio Archive // Systems &amp; Delivery
-        </p>
-        <h1 class="mt-4 text-[clamp(32px,4vw,56px)] font-bold leading-[1.1] tracking-tight text-[var(--text)]">
-          All <span class="text-signal">Projects</span> &amp; Systems.
-        </h1>
-        <p class="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed dim">
-          A complete index of distributed microservices, zero-downtime CI/CD pipelines, container
-          orchestration topologies, and full-stack platforms engineered for production resilience.
-        </p>
-      </div>
+      {/* Hero / Intro Area with Shared Entrance Animation */}
+      <PageHero
+        eyebrow="Portfolio Archive // Systems & Delivery"
+        title="All Projects & Systems."
+        highlightWords={["Projects"]}
+        description="A complete index of distributed microservices, zero-downtime CI/CD pipelines, container orchestration topologies, and full-stack platforms engineered for production resilience."
+      />
 
-      {/* Projects Grid */}
+      {/* Projects Grid with Staggered Scroll Reveal */}
       <div id="projects-grid" class="mt-14 grid gap-8 lg:grid-cols-2">
         {projectsData.map((p, i) => (
-          <div
+          <RevealOnScroll
+            index={i}
+            cols={2}
+            stagger={0.1}
+            maxDelay={0.25}
+            class="h-full"
             data-project-item
-            data-reveal
-            data-reveal-managed
-            style={`--reveal-delay: ${(i % 2) * 0.12}s`}
-            class="transition-all duration-300"
           >
             <article
               data-work-card
@@ -166,7 +163,7 @@ import projectsData from "../data/projects.json";
                 </div>
               </div>
             </article>
-          </div>
+          </RevealOnScroll>
         ))}
       </div>
     </div>

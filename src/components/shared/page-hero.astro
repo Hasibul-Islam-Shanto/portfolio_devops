@@ -1,0 +1,72 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  highlightWords?: string[];
+  description?: string;
+  badge?: string;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  highlightWords = [],
+  description,
+  badge,
+  class: className = "",
+} = Astro.props;
+
+const words = (title || "").split(/\s+/).filter(Boolean);
+
+const isHighlighted = (word: string) => {
+  const clean = word.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return highlightWords.some((h) => {
+    const cleanH = h.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return cleanH === clean || (cleanH.length > 0 && clean.includes(cleanH));
+  });
+};
+---
+
+<div class={`page-hero max-w-4xl ${className}`.trim()}>
+  {eyebrow && (
+    <p class="hero-eyebrow section-eyebrow font-mono text-xs uppercase tracking-[0.25em] text-signal font-semibold">
+      {eyebrow}
+    </p>
+  )}
+
+  <h1 class="mt-4 text-[clamp(32px,4vw,56px)] font-bold leading-[1.1] tracking-tight text-[var(--text)]">
+    {words.map((w, i) => (
+      <Fragment>
+        <span
+          class={`hero-word mr-[0.22em] inline-block last:mr-0 ${isHighlighted(w) ? "text-signal" : ""}`.trim()}
+          style={`--i: ${i}`}
+        >
+          {w}
+        </span>
+        {i < words.length - 1 ? " " : ""}
+      </Fragment>
+    ))}
+  </h1>
+
+  <div class="flex flex-wrap items-end justify-between gap-6">
+    {description && (
+      <p
+        class="hero-description mt-4 max-w-2xl text-base sm:text-lg leading-relaxed dim"
+        style={`--desc-delay: ${(words.length * 0.05 + 0.1).toFixed(2)}s`}
+      >
+        {description}
+      </p>
+    )}
+
+    {badge && (
+      <div class="hero-panel shrink-0 mt-4">
+        <span class="rounded-full border hairline bg-surface/60 px-4 py-2 font-mono text-xs uppercase tracking-wider text-signal inline-block">
+          {badge}
+        </span>
+      </div>
+    )}
+  </div>
+
+  <slot />
+</div>
