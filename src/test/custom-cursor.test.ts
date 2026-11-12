@@ -104,7 +104,9 @@ describe("custom cursor", () => {
 
     mouse("mousemove", window, { clientX: 150, clientY: 250 });
     expect((dot.parentElement as HTMLElement).style.transform).toBe("translate3d(150px, 250px, 0)");
-    expect((ring.parentElement as HTMLElement).style.transform).toBe("translate3d(150px, 250px, 0)");
+    expect((ring.parentElement as HTMLElement).style.transform).toBe(
+      "translate3d(150px, 250px, 0)",
+    );
 
     const cta = body.querySelector("a")!;
     mouse("mousedown", cta, { button: 0 });

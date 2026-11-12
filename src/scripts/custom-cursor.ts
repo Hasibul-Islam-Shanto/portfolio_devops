@@ -50,7 +50,6 @@ export function initCustomCursor(
   const timeouts = new Set<number>();
 
   let currentInteractive: HTMLElement | null = null;
-  let _targetRect: DOMRect | null = null;
 
   const toggle = (el: Element | null | undefined, cls: string, on: boolean) =>
     el?.classList.toggle(cls, on);
@@ -86,20 +85,17 @@ export function initCustomCursor(
 
   const clearHover = () => {
     currentInteractive = null;
-    _targetRect = null;
     setTarget(false, false, null);
   };
 
   const applyHover = (interactive: HTMLElement) => {
     currentInteractive = interactive;
-    _targetRect = interactive.getBoundingClientRect();
+    void interactive.getBoundingClientRect();
     const inverted = Boolean(interactive.closest("[data-cursor-invert]"));
     const explicit = interactive.getAttribute("data-cursor-label");
     const text =
       explicit ??
-      (interactive instanceof HTMLAnchorElement && interactive.target === "_blank"
-        ? "↗"
-        : null);
+      (interactive instanceof HTMLAnchorElement && interactive.target === "_blank" ? "↗" : null);
     setTarget(true, inverted, text);
   };
 

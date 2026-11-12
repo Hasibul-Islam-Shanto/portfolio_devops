@@ -18,7 +18,6 @@ const totalLessons = topics.reduce((sum, t) => sum + t.lessonCount, 0);
   <Header currentPath="/learnings" />
   <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
     <div class="site-container py-12 md:py-16">
-      {/* Hero / Intro Area with Shared Entrance Animation */}
       <PageHero
         eyebrow="Curriculum & Tutorials"
         title="DevOps Learnings & Notes."
@@ -27,13 +26,18 @@ const totalLessons = topics.reduce((sum, t) => sum + t.lessonCount, 0);
         badge={`${totalLessons} lessons · ${topics.length} topics`}
       />
 
-      {/* Topics Grid with Staggered Scroll Reveal */}
-      <div class="mt-14 grid gap-8 lg:grid-cols-2">
+      <div class="mt-14 columns-1 md:columns-2 gap-6">
         {topics.map((topic, i) => (
-          <RevealOnScroll index={i} cols={2} stagger={0.1} maxDelay={0.25} class="h-full">
-            <div class="group relative overflow-hidden flex flex-col justify-between rounded-3xl border hairline bg-surface/30 p-7 transition-all duration-300 hover:border-signal">
+          <RevealOnScroll
+            index={i}
+            cols={2}
+            stagger={0.1}
+            maxDelay={0.25}
+            class="break-inside-avoid mb-6"
+          >
+            <div class="group relative overflow-hidden break-inside-avoid mb-6 flex flex-col justify-between rounded-3xl border hairline bg-surface/30 p-7 transition-all duration-300 hover:border-signal">
               <CardParticleBackground />
-              <div class="relative z-10 flex h-full flex-col justify-between">
+              <div class="relative z-10 flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between gap-4">
                     <h2 class="text-2xl font-bold tracking-tight">{topic.title}</h2>
