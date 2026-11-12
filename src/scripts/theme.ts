@@ -4,21 +4,13 @@ export type Theme = "light" | "dark";
 
 const STORAGE_KEY = "theme";
 
-/**
- * Resolves the preferred theme:
- * 1. Explicit user choice stored in localStorage ("light" or "dark")
- * 2. System OS preference (prefers-color-scheme media query)
- * 3. Fallback to "dark"
- */
 export function getPreferredTheme(): Theme {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "light" || stored === "dark") {
       return stored;
     }
-  } catch {
-    // localStorage unavailable (e.g. sandboxed iframe or private browsing)
-  }
+  } catch {}
 
   if (typeof window !== "undefined" && window.matchMedia) {
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -27,13 +19,6 @@ export function getPreferredTheme(): Theme {
   return "dark";
 }
 
-/**
- * Applies the given theme to the document:
- * - sets data-theme attribute on <html>
- * - toggles .dark class on <html>
- * - persists to localStorage
- * - triggers a smooth cross-fade animation (~350ms) unless reduced motion is preferred
- */
 export function applyTheme(theme: Theme, animate = false): void {
   if (typeof document === "undefined") return;
   const html = document.documentElement;
@@ -48,11 +33,8 @@ export function applyTheme(theme: Theme, animate = false): void {
 
   try {
     localStorage.setItem(STORAGE_KEY, theme);
-  } catch {
-    // localStorage unavailable
-  }
+  } catch {}
 
-  // Update theme toggle buttons aria-label and state
   const toggles = document.querySelectorAll<HTMLElement>("[data-theme-toggle]");
   toggles.forEach((btn) => {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -68,22 +50,16 @@ export function applyTheme(theme: Theme, animate = false): void {
   }
 }
 
-/**
- * Initializes theme listeners and binds theme toggle buttons.
- * Returns a cleanup function removing all listeners and timeouts.
- */
 export function initTheme(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
   if (!root) return () => {};
   const cleanup = createCleanup();
 
-  // Ensure current theme matches preferred on startup if not already initialized
   const current =
     (document.documentElement.getAttribute("data-theme") as Theme) || getPreferredTheme();
   applyTheme(current, false);
 
-  // Bind click handlers to theme toggle buttons
   const toggles = root.querySelectorAll<HTMLElement>("[data-theme-toggle]");
   const handleToggle = (e: Event) => {
     e.preventDefault();
@@ -105,7 +81,6 @@ export function initTheme(
     });
   });
 
-  // Listen for OS scheme change if user hasn't set an explicit localStorage choice
   if (typeof window !== "undefined" && window.matchMedia) {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const handleMediaChange = (e: MediaQueryListEvent) => {

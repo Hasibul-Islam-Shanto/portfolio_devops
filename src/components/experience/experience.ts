@@ -1,6 +1,5 @@
 import { createCleanup, createSpring, prefersReducedMotion } from "@/scripts/util";
 
-/** Scroll-synced coral line draw and accordion expand/collapse on the experience commit timeline. */
 export function initExperience(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -43,7 +42,6 @@ export function initExperience(
     });
   }
 
-  // Commit-card accordion toggles
   const toggles = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-exp-toggle]"));
   toggles.forEach((btn) => {
     const card = btn.closest<HTMLElement>("[data-exp-card]");
@@ -59,7 +57,6 @@ export function initExperience(
         `${isExpanded ? "Collapse" : "Expand"} details for ${role} at ${company}`,
       );
 
-      // Re-measure timeline progress as card expands/collapses
       schedule();
       const timer = window.setTimeout(schedule, 320);
       cleanup.add(() => window.clearTimeout(timer));

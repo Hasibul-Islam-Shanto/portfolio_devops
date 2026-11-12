@@ -11,7 +11,6 @@ const categoryCounts = CATEGORIES.reduce(
 ---
 
 <div class="site-container py-28">
-  {/* Header row */}
   <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
     <div>
       <p>
@@ -40,7 +39,6 @@ const categoryCounts = CATEGORIES.reduce(
   </div>
 
   <div data-toolchain class="mt-12">
-    {/* Filter tabs */}
     <div
       role="tablist"
       aria-label="Tool categories"
@@ -73,7 +71,6 @@ const categoryCounts = CATEGORIES.reduce(
       })}
     </div>
 
-    {/* Tool grid */}
     <div
       data-tool-grid
       class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6"
@@ -90,7 +87,6 @@ const categoryCounts = CATEGORIES.reduce(
               data-cursor-interactive="true"
               class="tool-catalog-card is-active-tool flex aspect-square flex-col justify-between rounded-2xl p-4 sm:p-5 transition-all focus-visible:outline-none"
             >
-              {/* Brand Logo / Icon */}
               <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-xs border border-black/5 p-2 transition-transform duration-200">
                 <svg
                   viewBox={tool.viewBox ?? "0 0 24 24"}
@@ -100,7 +96,6 @@ const categoryCounts = CATEGORIES.reduce(
                 />
               </div>
 
-              {/* Tool name and tag */}
               <div class="mt-auto pt-3">
                 <h3 class="font-display text-sm font-bold tracking-tight text-[var(--text)] leading-snug">
                   {tool.name}

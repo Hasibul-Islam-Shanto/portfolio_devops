@@ -81,7 +81,6 @@ const PROJECTS = [
           <CardParticleBackground />
           <div class="relative z-10 flex flex-1 flex-col justify-between">
             <div>
-              {/* Top Category & Single GitHub Pill */}
               <div class="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest gap-2">
                 <span class="flex items-center text-signal font-semibold">
                   <span class="work-cat-tick" aria-hidden="true" />
@@ -107,15 +106,12 @@ const PROJECTS = [
                 </a>
               </div>
 
-              {/* Title */}
               <h3 class="mt-4 text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]">
                 {p.name}
               </h3>
 
-              {/* Short Description */}
               <p class="mt-2 text-sm sm:text-[15px] leading-relaxed dim">{p.summary}</p>
 
-              {/* Tech Stack */}
               <div class="mt-5">
                 <p class="font-mono text-[10px] uppercase tracking-wider dim font-semibold mb-2">
                   Tech Stack
@@ -129,7 +125,6 @@ const PROJECTS = [
                 </ul>
               </div>
 
-              {/* Deployment flow */}
               <div
                 data-mini-flow
                 class="mt-6 border-t hairline pt-4 font-mono"
@@ -176,7 +171,6 @@ const PROJECTS = [
               </div>
             </div>
 
-            {/* Bottom Action: View Project Details Link (no divider line) */}
             <div class="mt-8 flex items-center">
               <a
                 href={`/case-studies/${p.slug}`}

@@ -1,42 +1,9 @@
 ---
-const EXPERIENCE_ROLES = [
-  {
-    hash: "a3f9c21",
-    period: "Jan 2024 → Jun 2026",
-    company: "Universal Machine Inc.",
-    location: "Remote",
-    context: "Full-time",
-    role: "Front-End Engineer",
-    current: true,
-    bullets: [
-      "Built a carbon credit management platform handling end-to-end project workflows — methodology creation, project setup, and inventory management — serving enterprise clients in sustainability.",
-      "Engineered scalable front-end architecture using Next.js (SSR/SSG), React.js, TypeScript, Jotai, and Tailwind CSS to ensure high performance and maintainability.",
-      "Contributed to Minipay wallet application (200K+ users), implementing smart contract interactions via Ethers.js and wallet authentication via RainbowKit.",
-      "Designed and implemented RESTful APIs with Node.js and Express.js, architecting relational database models with PostgreSQL and Prisma ORM.",
-      "Built CI/CD pipelines with GitHub Actions for automated linting, unit testing, and zero-downtime deployment on merge to production.",
-    ],
-    tags: ["Next.js", "TypeScript", "Node.js", "PostgreSQL", "Prisma", "GitHub Actions", "Docker"],
-  },
-  {
-    hash: "7be41d0",
-    period: "Jun 2022 → Feb 2023",
-    company: "InnovexIT",
-    location: "On-site",
-    context: "Part-time",
-    role: "Junior Web Developer",
-    current: false,
-    bullets: [
-      "Created and maintained responsive web interfaces for appointment and workforce management platforms using React.js, Next.js, TypeScript, and Tailwind CSS.",
-      "Collaborated on front-end architecture and UI implementation, improving usability, load performance, and accessibility.",
-      "Contributed to feature enhancements and bug fixes across multiple client projects, ensuring reliable user experiences.",
-    ],
-    tags: ["React.js", "Next.js", "TypeScript", "Tailwind CSS"],
-  },
-];
+import ExperienceCard from "./experience-card.astro";
+import { EXPERIENCE_ROLES } from "./experience-data";
 ---
 
 <div class="site-container py-28">
-  <!-- Header row -->
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
       <p>
@@ -58,14 +25,11 @@ const EXPERIENCE_ROLES = [
     </span>
   </div>
 
-  <!-- Timeline container -->
   <ol data-timeline class="relative mt-14 space-y-6">
-    <!-- Static muted track line -->
     <span
       class="absolute bottom-4 left-3 md:left-4 top-4 w-px bg-current opacity-20"
       aria-hidden="true"
     ></span>
-    <!-- Dynamic scroll-synced coral progress line -->
     <span
       data-timeline-progress
       class="absolute bottom-4 left-3 md:left-4 top-4 w-px origin-top bg-signal"
@@ -74,142 +38,10 @@ const EXPERIENCE_ROLES = [
     ></span>
 
     {EXPERIENCE_ROLES.map((item, i) => (
-      <li
-        class="relative pl-8 md:pl-11"
-        data-reveal="slide-left"
-        style={`--reveal-delay: ${i * 0.12}s`}
-      >
-        <!-- Commit node marker on the line -->
-        <div
-          class="absolute left-3 md:left-4 top-6 flex -translate-x-1/2 items-center justify-center"
-          aria-hidden="true"
-        >
-          {item.current ? (
-            <span
-              data-reveal="scale"
-              style={`--reveal-delay: ${i * 0.12}s`}
-              class="block h-3.5 w-3.5 rounded-full bg-signal ring-4 ring-signal/25"
-            />
-          ) : (
-            <span
-              data-reveal="scale"
-              style={`--reveal-delay: ${i * 0.12}s`}
-              class="block h-3.5 w-3.5 rounded-full border-2 border-signal bg-[var(--bg)]"
-            />
-          )}
-        </div>
-
-        <!-- Role entry card -->
-        <article
-          id={`exp-card-${i}`}
-          data-exp-card
-          data-role={item.role}
-          data-company={item.company}
-          tabindex="0"
-          data-cursor-interactive="true"
-          class:list={[
-            "exp-card rounded-2xl md:rounded-3xl p-5 md:p-6 transition-all duration-300 focus-visible:border-signal focus-visible:outline-none",
-            item.current ? "is-expanded" : "",
-          ]}
-        >
-          <!-- Top Row (always visible) -->
-          <div class="flex flex-wrap items-start justify-between gap-4">
-            <div class="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
-              <!-- Commit hash tag -->
-              <span
-                class="mt-0.5 font-mono text-xs uppercase tracking-wider text-signal select-none shrink-0"
-                aria-label={`Commit ${item.hash}`}
-              >
-                {item.hash}
-              </span>
-
-              <!-- Title, HEAD badge, and Company / Location line -->
-              <div class="min-w-0 flex-1">
-                <div class="flex flex-wrap items-center gap-2.5">
-                  <h3 class="font-display text-lg font-bold tracking-tight text-[var(--text)] md:text-xl">
-                    {item.role}
-                  </h3>
-                  {item.current && (
-                    <span class="rounded-full bg-signal px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-signal-foreground">
-                      HEAD
-                    </span>
-                  )}
-                </div>
-                <p class="mt-1 font-mono text-xs uppercase tracking-wider text-[var(--text)]/60">
-                  {item.company} · {item.location} · {item.context}
-                </p>
-              </div>
-            </div>
-
-            <!-- Right: Date range & Expand/Collapse toggle -->
-            <div class="flex items-center gap-3 sm:gap-4 shrink-0 ml-auto">
-              <span
-                class:list={[
-                  "font-mono text-xs uppercase tracking-wider",
-                  item.current ? "font-bold text-signal" : "text-[var(--text)]/60",
-                ]}
-              >
-                {item.period}
-              </span>
-              <button
-                type="button"
-                data-exp-toggle
-                aria-expanded={item.current ? "true" : "false"}
-                aria-controls={`exp-content-${i}`}
-                aria-label={`${item.current ? "Collapse" : "Expand"} details for ${item.role} at ${item.company}`}
-                class="exp-toggle flex h-8 w-8 items-center justify-center rounded-full border border-signal/50 text-signal hover:border-signal hover:bg-signal hover:text-signal-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2"
-              >
-                <svg
-                  class="exp-icon h-3.5 w-3.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Expandable Details -->
-          <div id={`exp-content-${i}`} class="exp-content">
-            <div class="overflow-hidden">
-              <div class="pt-5 mt-4 border-t border-[var(--text)]/15">
-                <ul class="grid gap-x-8 gap-y-2.5 text-sm leading-relaxed text-[var(--text)]/85 md:grid-cols-2">
-                  {item.bullets.map((bullet) => (
-                    <li class="flex items-start gap-2.5">
-                      <span
-                        class="font-mono text-xs font-bold text-signal select-none mt-0.5 shrink-0"
-                        aria-hidden="true"
-                      >
-                        +
-                      </span>
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <ul class="mt-5 flex flex-wrap gap-2 pt-2">
-                  {item.tags.map((t) => (
-                    <li class="rounded-full border border-[var(--text)]/20 bg-[var(--text)]/[0.03] px-3 py-1 font-mono text-[10px] uppercase text-[var(--text)]/75 transition-colors hover:border-signal hover:text-signal">
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </article>
-      </li>
+      <ExperienceCard item={item} index={i} />
     ))}
   </ol>
 
-  <!-- CTA -->
   <div class="mt-12 pl-8 md:pl-11">
     <a
       href="#"

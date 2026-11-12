@@ -74,10 +74,8 @@ const personSchema = {
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap"
     />
     <script is:inline>
-      // Marks that JS is running so reveal animations only hide content when they can also show it.
       document.documentElement.classList.add("js");
 
-      // Synchronous theme initialization to prevent flash of unstyled theme (FOUT)
       try {
         const stored = localStorage.getItem("theme");
         const prefersDark =
@@ -95,7 +93,6 @@ const personSchema = {
         document.documentElement.classList.add("dark");
       }
 
-      // Early click listener so theme toggling responds instantly even before JS modules hydrate
       document.addEventListener("click", function (e) {
         if (e.defaultPrevented) return;
         const target = e.target;
@@ -117,9 +114,7 @@ const personSchema = {
         document.documentElement.classList.toggle("dark", next === "dark");
         try {
           localStorage.setItem("theme", next);
-        } catch (_err) {
-          // ignore storage errors
-        }
+        } catch (_err) {}
         const toggles = document.querySelectorAll("[data-theme-toggle]");
         for (let i = 0; i < toggles.length; i++) {
           toggles[i]?.setAttribute(

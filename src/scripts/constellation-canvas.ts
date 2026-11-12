@@ -9,7 +9,6 @@ interface Particle {
   baseAlpha: number;
 }
 
-// Design-system RGB triplets: warm sand (#EFE6D8), ink navy (#10151F), and coral-red (#E8503A)
 const SAND = [239, 230, 216] as const;
 const INK = [16, 21, 31] as const;
 const CORAL = [232, 80, 58] as const;
@@ -21,8 +20,6 @@ const CONFIG = {
 const CURSOR_RADIUS = 140;
 const CURSOR_LERP = 0.16;
 
-// Tracks the currently active card canvas across the entire application to guarantee
-// that only one card instance runs requestAnimationFrame at any time.
 let activeCardCanvas: HTMLCanvasElement | null = null;
 
 function activateCard(canvas: HTMLCanvasElement) {
@@ -57,11 +54,6 @@ function createParticles(count: number, width: number, height: number): Particle
   });
 }
 
-/**
- * Drives one `<canvas data-constellation-canvas="hero|card">`. The animation runs only while
- * `data-constellation-active="true"` (always for the hero; hover/focus only for project cards), so idle
- * cards never run a rAF loop. Reduced motion draws a single static frame.
- */
 function initCanvas(canvas: HTMLCanvasElement): () => void {
   const container = canvas.parentElement;
   if (!container) return () => {};

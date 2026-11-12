@@ -145,7 +145,6 @@ describe("HeroTerminal", () => {
       expect(history.textContent).toContain("kubectl get pods");
       expect(history.textContent).toContain("inspect live cluster workloads");
       expect(history.querySelector(".terminal-help-grid")).not.toBeNull();
-      // Fresh empty prompt line ($ _) is ready below output
       expect(document.querySelector<HTMLElement>("[data-terminal-placeholder]")!.hidden).toBe(true);
       const cursor = document.querySelector<HTMLElement>("[data-terminal-cursor]")!;
       expect(cursor.dataset["cursorBlinking"]).toBe("true");
@@ -201,12 +200,10 @@ describe("Work", () => {
           ?.getAttribute("data-constellation-active"),
       ).toBe("false");
 
-      // Single GitHub logo + text link on top
       const ghLinks = card.querySelectorAll('a[href^="https://github.com/"]');
       expect(ghLinks.length).toBe(1);
       expect(text(ghLinks[0]!)).toContain("GitHub");
 
-      // CLI command elements are completely removed
       expect(card.querySelector("[data-work-cmd]")).toBeNull();
       expect(card.querySelector("[data-work-res]")).toBeNull();
       expect(text(card)).not.toContain("$ gh workflow run");
@@ -249,7 +246,6 @@ describe("Work", () => {
   });
 
   it("ensures all card types share the particle background and enforces only one active card canvas sitewide", async () => {
-    // 1. Mount Certifications cards
     const certsBody = mount("certifications");
     track(initConstellationCanvases(certsBody));
     const certCards = certsBody.querySelectorAll<HTMLElement>("article.work-card");
@@ -260,27 +256,22 @@ describe("Work", () => {
         .querySelector('[data-constellation-canvas="card"]')
         ?.getAttribute("data-constellation-active");
 
-    // All certification cards should have the particle canvas
     certCards.forEach((c) => {
       expect(c.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
       expect(canvasOf(c)).toBe("false");
     });
 
-    // Hovering card 0 activates it
     certCards[0]!.dispatchEvent(new MouseEvent("mouseenter"));
     expect(canvasOf(certCards[0]!)).toBe("true");
     expect(canvasOf(certCards[1]!)).toBe("false");
 
-    // Hovering card 1 deactivates card 0 and activates card 1
     certCards[1]!.dispatchEvent(new MouseEvent("mouseenter"));
     expect(canvasOf(certCards[0]!)).toBe("false");
     expect(canvasOf(certCards[1]!)).toBe("true");
 
-    // Leaving card 1 deactivates it
     certCards[1]!.dispatchEvent(new MouseEvent("mouseleave"));
     expect(canvasOf(certCards[1]!)).toBe("false");
 
-    // 2. Blog cards also render the particle canvas
     const blogDoc = mount("blog");
     const blogCards = blogDoc.querySelectorAll("article");
     expect(blogCards.length).toBeGreaterThan(0);
@@ -288,7 +279,6 @@ describe("Work", () => {
       expect(b.querySelector('[data-constellation-canvas="card"]')).not.toBeNull();
     });
 
-    // 3. Learnings cards also render the particle canvas
     const learningsDoc = mount("learnings");
     const learningCards = learningsDoc.querySelectorAll(".group.relative.overflow-hidden");
     expect(learningCards.length).toBeGreaterThan(0);
@@ -349,7 +339,6 @@ describe("Toolchain", () => {
     const cards = body.querySelectorAll<HTMLElement>("[data-tool-card]");
     expect(cards.length).toBe(18);
 
-    // Initial state: "All" selected, all cards active
     const allTab = body.querySelector<HTMLButtonElement>('[data-filter-tab="All"]')!;
     expect(allTab).toHaveClass("is-active");
     expect(allTab.getAttribute("aria-selected")).toBe("true");
@@ -372,7 +361,6 @@ describe("Toolchain", () => {
     expect(containersTab.getAttribute("aria-selected")).toBe("true");
     expect(body.querySelector('[data-filter-tab="All"]')).not.toHaveClass("is-active");
 
-    // Counter updates to 3 tools
     expect(text(body.querySelector("[data-tool-counter]"))).toContain("3 tools");
 
     const cards = Array.from(body.querySelectorAll<HTMLElement>("[data-tool-card]"));
@@ -394,11 +382,9 @@ describe("Toolchain", () => {
       expect(c.getAttribute("aria-hidden")).toBe("true");
     });
 
-    // Check stagger delay applied
     const firstNonMatching = nonMatching[0]!;
     expect(firstNonMatching.style.getPropertyValue("--filter-delay")).toMatch(/ms$/);
 
-    // Switch back to "All"
     const allTab = body.querySelector<HTMLButtonElement>('[data-filter-tab="All"]')!;
     allTab.click();
 
@@ -420,11 +406,9 @@ describe("Toolchain", () => {
     allTab.focus();
     allTab.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
 
-    // Moved to CI/CD tab
     expect(tabs[1]).toHaveClass("is-active");
     expect(text(body.querySelector("[data-tool-counter]"))).toContain("4 tools");
 
-    // Space/Enter activation
     tabs[2]!.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
     expect(tabs[2]).toHaveClass("is-active");
     expect(text(body.querySelector("[data-tool-counter]"))).toContain("2 tools");
@@ -455,29 +439,23 @@ describe("Static sections", () => {
     const cards = body.querySelectorAll<HTMLElement>("ol > li[data-flow-card]");
     expect(cards.length).toBe(6);
 
-    // Verify terminal structure in each of the 5 step cards
     const stepCards = Array.from(cards).slice(0, 5);
     stepCards.forEach((card) => {
-      // 3 dots window chrome
       const dots = card.querySelectorAll("span.rounded-full");
       expect(dots.length).toBe(3);
 
-      // Coral mono command line
       const cmd = card.querySelector(".text-signal");
       expect(cmd).not.toBeNull();
       expect(text(cmd).trim()).toMatch(/^\$ /);
 
-      // Step title & description
       expect(card.querySelector("h3")).not.toBeNull();
       expect(card.querySelector("p")).not.toBeNull();
 
-      // Green result confirmation
       const res = card.querySelector("[data-flow-result]");
       expect(res).not.toBeNull();
       expect(text(res)).toContain("✓");
     });
 
-    // Verify Resolution card
     const resolutionCard = body.querySelector<HTMLElement>("[data-flow-resolution]");
     expect(resolutionCard).not.toBeNull();
     expect(text(resolutionCard)).toContain("INCIDENT RESOLVED");
@@ -491,7 +469,6 @@ describe("Static sections", () => {
     expect(text(resolutionCard)).toContain("99.95%");
     expect(text(resolutionCard)).toContain("SLO held");
 
-    // Verify 5 connectors
     const connectors = body.querySelectorAll("[data-flow-connector]");
     expect(connectors.length).toBe(5);
   });
@@ -508,7 +485,6 @@ describe("Static sections", () => {
       const connectors = body.querySelectorAll<HTMLElement>("[data-flow-connector]");
       const resCard = body.querySelector<HTMLElement>("[data-flow-resolution]");
 
-      // Initially on setup before first card activates: all cards and bodies are unrevealed/invisible
       cards.forEach((c) => {
         expect(c.getAttribute("data-revealed")).toBeNull();
         expect(c.getAttribute("data-state")).toBeNull();
@@ -523,47 +499,35 @@ describe("Static sections", () => {
         expect(conn.getAttribute("data-drawn")).toBeNull();
       });
 
-      // Advance past initial reset pause (250ms)
       await vi.advanceTimersByTimeAsync(260);
-      // Card 0 fades/slides in as active, but subsequent cards are completely unrevealed
       expect(cards[0]?.getAttribute("data-revealed")).toBe("true");
       expect(cards[0]?.getAttribute("data-state")).toBe("active");
       expect(cards[1]?.getAttribute("data-revealed")).toBeNull();
       expect(cards[2]?.getAttribute("data-revealed")).toBeNull();
-      // At container appearance, inner title/desc and result are not yet visible
       expect(bodies[0]?.getAttribute("data-visible")).toBeNull();
       expect(results[0]?.getAttribute("data-visible")).toBeNull();
 
-      // Card 0 container appearance pause (250ms) + command typing (~33 chars * 22ms = 726ms)
       await vi.advanceTimersByTimeAsync(250 + 33 * 22 + 10);
       const cmdText0 = cards[0]?.querySelector("[data-flow-cmd-text]");
       expect(text(cmdText0 ?? null)).toBe("$ runbook understand --incident");
 
-      // Cursor hides (80ms) -> title and description fade in
       await vi.advanceTimersByTimeAsync(90);
       expect(bodies[0]?.getAttribute("data-visible")).toBe("true");
       expect(results[0]?.getAttribute("data-visible")).toBeNull();
 
-      // Body fade pause (300ms) -> green result line fades in last
       await vi.advanceTimersByTimeAsync(310);
       expect(results[0]?.getAttribute("data-visible")).toBe("true");
 
-      // Result pause (250ms) + settle pause (100ms) -> Card 0 settles and connector 0 draws
       await vi.advanceTimersByTimeAsync(360);
       expect(cards[0]?.getAttribute("data-state")).toBe("settled");
       expect(connectors[0]?.getAttribute("data-drawn")).toBe("true");
-      // Card 1 is STILL not revealed while connector is drawing
       expect(cards[1]?.getAttribute("data-revealed")).toBeNull();
 
-      // After connector finish delay (380ms), Card 1 begins step 1
       await vi.advanceTimersByTimeAsync(390);
       expect(cards[1]?.getAttribute("data-revealed")).toBe("true");
       expect(cards[1]?.getAttribute("data-state")).toBe("active");
       expect(cards[2]?.getAttribute("data-revealed")).toBeNull();
 
-      // Advance through remaining steps (Cards 1, 2, 3, 4)
-      // Each step takes approx: 250 + 720 + 80 + 300 + 250 + 100 + 380 = ~2080ms
-      // For remaining 4 step cards: ~4 * 2100 = ~8400ms
       await vi.advanceTimersByTimeAsync(8500);
       for (let i = 0; i < 5; i++) {
         expect(cards[i]?.getAttribute("data-revealed")).toBe("true");
@@ -573,20 +537,16 @@ describe("Static sections", () => {
         expect(connectors[i]?.getAttribute("data-drawn")).toBe("true");
       }
 
-      // Sixth Element (Resolution Card) container reveals with active glow
       expect(resCard?.getAttribute("data-revealed")).toBe("true");
       expect(resCard?.getAttribute("data-state")).toBe("active");
 
-      // Resolution stats body fades in after container reveal pause (250ms)
       await vi.advanceTimersByTimeAsync(260);
       const resBody = resCard?.querySelector("[data-flow-body]");
       expect(resBody?.getAttribute("data-visible")).toBe("true");
 
-      // Active glow holds for ~1800ms
       await vi.advanceTimersByTimeAsync(1850);
       expect(resCard?.getAttribute("data-state")).toBe("settled");
 
-      // After pause (1400ms) + reset (250ms), loop restarts and Card 0 begins again
       await vi.advanceTimersByTimeAsync(1700);
       expect(cards[0]?.getAttribute("data-revealed")).toBe("true");
       expect(cards[0]?.getAttribute("data-state")).toBe("active");
@@ -631,30 +591,24 @@ describe("Static sections", () => {
     const body = mount("certifications");
     expect(text(body)).toContain("Recognitions");
     expect(text(body)).toContain("Smart Village Idea Competition");
-    // Limits preview to 6 cards on the homepage section
     const articles = body.querySelectorAll("article");
     expect(articles.length).toBe(6);
     expect(text(body)).toContain("2023");
     expect(text(body)).toContain("2024");
 
-    // Grid layout: 3 cards per row
     const grid = body.querySelector(".grid");
     expect(grid?.className).toContain("lg:grid-cols-3");
 
-    // Check rank badge is present for items with rank, omitted when empty
     const firstCard = body.querySelector('[data-credential-card="smart-village-idea-competition"]');
     expect(text(firstCard)).toContain("1st Runner-Up");
 
     const plainCard = body.querySelector('[data-credential-card="docker-container-orchestration"]');
     expect(text(plainCard)).toContain("Docker & Container Orchestration");
-    // Plain certification has no rank pill
     expect(plainCard?.querySelector(".rounded-full.bg-signal\\/15")).toBeNull();
 
-    // View details button present on all cards
     const viewDetailBtns = body.querySelectorAll("[data-credential-open]");
     expect(viewDetailBtns.length).toBe(6);
 
-    // Centered "View all" link navigates to /achievements
     const viewAllLink = body.querySelector('a[href="/achievements"]');
     expect(viewAllLink).not.toBeNull();
     expect(text(viewAllLink)).toContain("View all recognitions & credentials");
@@ -668,7 +622,6 @@ describe("Static sections", () => {
     expect(modal).not.toBeNull();
     expect(modal?.hidden).toBe(true);
 
-    // Click "View details" on Smart Village item
     const openBtn = body.querySelector<HTMLElement>(
       '[data-credential-open="smart-village-idea-competition"]',
     );
@@ -688,11 +641,9 @@ describe("Static sections", () => {
     );
     expect(modal?.querySelector("#credential-modal-year")?.textContent).toBe("2023");
 
-    // Scanned certificate image is rendered
     const img = modal?.querySelector<HTMLImageElement>("#credential-modal-images-wrapper img");
     expect(img?.src).toContain("idea_competition.webp");
 
-    // Press Escape to close modal
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     expect(modal?.getAttribute("aria-hidden")).toBe("true");
   });
@@ -736,13 +687,11 @@ describe("Static sections", () => {
     expect(toggles[0]?.getAttribute("aria-expanded")).toBe("true");
     expect(toggles[1]?.getAttribute("aria-expanded")).toBe("false");
 
-    // Click toggle on past role 1 to expand
     toggles[1]?.click();
     expect(cards[1]?.classList.contains("is-expanded")).toBe(true);
     expect(toggles[1]?.getAttribute("aria-expanded")).toBe("true");
     expect(toggles[1]?.getAttribute("aria-label")).toContain("Collapse details");
 
-    // Click again to collapse
     toggles[1]?.click();
     expect(cards[1]?.classList.contains("is-expanded")).toBe(false);
     expect(toggles[1]?.getAttribute("aria-expanded")).toBe("false");
@@ -851,7 +800,6 @@ describe("Header", () => {
     expect(menu.getAttribute("aria-hidden")).toBe("true");
     expect(menu).toHaveClass("hidden");
 
-    // Open menu
     toggle.click();
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
     expect(menu.getAttribute("aria-hidden")).toBe("false");
@@ -860,14 +808,12 @@ describe("Header", () => {
     expect(openIcon).toHaveClass("hidden");
     expect(closeIcon).not.toHaveClass("hidden");
 
-    // Clicking a nav link inside mobile menu closes it
     const firstLink = menu.querySelector<HTMLAnchorElement>("[data-mobile-nav-link]")!;
     firstLink.click();
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     expect(menu.getAttribute("aria-hidden")).toBe("true");
     expect(menu).toHaveClass("hidden");
 
-    // Open again and close with Escape key
     toggle.click();
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
@@ -888,41 +834,33 @@ describe("Header", () => {
       track(initHeader(body));
       const header = body.querySelector<HTMLElement>("[data-site-header]")!;
 
-      // 1. Within hero (scrollY <= 800) -> always visible
       Object.defineProperty(window, "scrollY", { value: 400, configurable: true });
       window.dispatchEvent(new Event("scroll"));
       expect(header).not.toHaveClass("header-hidden");
 
-      // 2. Scrolling down past hero (800 -> 1000) -> auto-hides immediately
       Object.defineProperty(window, "scrollY", { value: 1000, configurable: true });
       window.dispatchEvent(new Event("scroll"));
       expect(header).toHaveClass("header-hidden");
 
-      // 3. Scrolling up past hero (1000 -> 900) -> reappears
       Object.defineProperty(window, "scrollY", { value: 900, configurable: true });
       window.dispatchEvent(new Event("scroll"));
       expect(header).not.toHaveClass("header-hidden");
 
-      // 4. Idle timeout: after 1.8s of no scroll -> hides
       vi.advanceTimersByTime(1850);
       expect(header).toHaveClass("header-hidden");
 
-      // 5. Scroll up again -> reappears
       Object.defineProperty(window, "scrollY", { value: 850, configurable: true });
       window.dispatchEvent(new Event("scroll"));
       expect(header).not.toHaveClass("header-hidden");
 
-      // 6. Hover over header -> cancels/pauses idle timer
       header.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
       vi.advanceTimersByTime(2500);
-      expect(header).not.toHaveClass("header-hidden"); // Still visible because hovered!
+      expect(header).not.toHaveClass("header-hidden");
 
-      // 7. Mouse leaves header -> resumes idle timer and hides after delay
       header.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
       vi.advanceTimersByTime(1850);
       expect(header).toHaveClass("header-hidden");
 
-      // 8. Scrolling back up into hero section -> reappears immediately
       Object.defineProperty(window, "scrollY", { value: 200, configurable: true });
       window.dispatchEvent(new Event("scroll"));
       expect(header).not.toHaveClass("header-hidden");
@@ -977,7 +915,6 @@ describe("PipelineRail", () => {
     expect(rail.dataset["visible"]).toBe("false");
     expect(rail.getAttribute("aria-hidden")).toBe("true");
 
-    // Scroll past 50% of #hero (400px) so midpoint (scrollY + 400 = 900) crosses #projects (800)
     Object.defineProperty(window, "scrollY", { value: 500, configurable: true });
     let rafCb: FrameRequestCallback | null = null;
     const origRaf = window.requestAnimationFrame;
@@ -1026,7 +963,6 @@ describe("TechMarquee", () => {
     expect(labels).toContain("Grafana");
     expect(labels).toContain("HashiCorp Vault");
 
-    // Each pill contains a circular badge with SVG
     const firstPill = pills?.[0];
     const badge = firstPill?.querySelector("div");
     expect(badge?.className).toContain("rounded-full");
@@ -1108,7 +1044,6 @@ describe("SectionNav", () => {
     Object.defineProperty(window, "scrollY", { value: 100, configurable: true });
 
     const targetY = getTargetScrollY(section);
-    // targetY = scrollY (100) + rect.top (500) - offset (96) = 504
     expect(targetY).toBe(504);
   });
 });

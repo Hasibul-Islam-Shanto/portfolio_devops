@@ -1,0 +1,57 @@
+---
+import type { ConnectorItem } from "./how-i-work-data";
+
+interface Props {
+  connector: ConnectorItem;
+}
+
+const { connector } = Astro.props;
+---
+
+<li
+  data-flow-connector={connector.index}
+  aria-hidden="true"
+  class={`flow-connector hidden min-[860px]:flex h-full w-full items-center justify-center ${connector.gridClass}`}
+>
+  {connector.direction === "right" && (
+    <svg viewBox="0 0 34 24" class="h-6 w-[34px] overflow-visible" aria-hidden="true">
+      <path
+        data-connector-line
+        d="M 0 12 L 24 12"
+        stroke="#E8503A"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none"
+      />
+      <polygon data-connector-arrow points="23,7 33,12 23,17" fill="#E8503A" />
+    </svg>
+  )}
+
+  {connector.direction === "down" && (
+    <svg viewBox="0 0 24 34" class="h-[34px] w-6 overflow-visible" aria-hidden="true">
+      <path
+        data-connector-line
+        d="M 12 0 L 12 24"
+        stroke="#E8503A"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none"
+      />
+      <polygon data-connector-arrow points="7,23 12,33 17,23" fill="#E8503A" />
+    </svg>
+  )}
+
+  {connector.direction === "left" && (
+    <svg viewBox="0 0 34 24" class="h-6 w-[34px] overflow-visible" aria-hidden="true">
+      <path
+        data-connector-line
+        d="M 34 12 L 10 12"
+        stroke="#E8503A"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none"
+      />
+      <polygon data-connector-arrow points="11,7 1,12 11,17" fill="#E8503A" />
+    </svg>
+  )}
+</li>

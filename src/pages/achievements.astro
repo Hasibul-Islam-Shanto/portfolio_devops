@@ -4,7 +4,7 @@ import Header from "../components/navbar/header.astro";
 import CredentialCard from "../components/certifications/credential-card.astro";
 import CredentialModal from "../components/certifications/credential-modal.astro";
 import achievementsData from "../data/achievements.json";
-import type { CredentialItem } from "../components/certifications/credential-card.astro";
+import type { CredentialItem } from "../components/certifications/credential-types";
 
 const ACHIEVEMENTS: CredentialItem[] = achievementsData;
 ---
@@ -16,7 +16,6 @@ const ACHIEVEMENTS: CredentialItem[] = achievementsData;
   <Header currentPath="/achievements" />
   <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
     <div class="site-container py-12 md:py-16">
-      <!-- Back navigation link -->
       <p class="mb-4">
         <a
           href="/#certifications"
@@ -43,14 +42,12 @@ const ACHIEVEMENTS: CredentialItem[] = achievementsData;
         in distributed systems, cloud computing, and DevOps engineering.
       </p>
 
-      <!-- All items in the same 3-per-row card grid -->
       <div class="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {ACHIEVEMENTS.map((item, i) => (
           <CredentialCard item={item} index={i} />
         ))}
       </div>
 
-      <!-- Detail Modal -->
       <CredentialModal items={ACHIEVEMENTS} />
     </div>
   </main>

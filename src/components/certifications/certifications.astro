@@ -2,10 +2,9 @@
 import CredentialCard from "./credential-card.astro";
 import CredentialModal from "./credential-modal.astro";
 import achievementsData from "../../data/achievements.json";
-import type { CredentialItem } from "./credential-card.astro";
+import type { CredentialItem } from "./credential-types";
 
 const ACHIEVEMENTS: CredentialItem[] = achievementsData;
-// Show only the first 6 items on the homepage section (2 rows of 3)
 const displayedItems = ACHIEVEMENTS.slice(0, 6);
 ---
 
@@ -24,14 +23,12 @@ const displayedItems = ACHIEVEMENTS.slice(0, 6);
     Recognitions &amp; Credentials
   </h2>
 
-  <!-- 3 cards per row grid matching Projects card system -->
   <div class="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
     {displayedItems.map((item, i) => (
       <CredentialCard item={item} index={i} />
     ))}
   </div>
 
-  <!-- Single centered "View all →" button/link -->
   <div class="mt-12 flex justify-center">
     <a
       href="/achievements"
@@ -47,7 +44,6 @@ const displayedItems = ACHIEVEMENTS.slice(0, 6);
     </a>
   </div>
 
-  <!-- Animated details modal -->
   <CredentialModal items={ACHIEVEMENTS} />
 </div>
 

@@ -1,10 +1,5 @@
 import { prefersReducedMotion } from "./util";
 
-/**
- * Scroll-reveal for every `[data-reveal]` element (the CSS hides them only when `html.js` is set and
- * motion is allowed). Elements marked `data-reveal-managed` are revealed by their own script
- * (e.g. project cards). Reduced motion shows everything immediately.
- */
 export function initReveal(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {

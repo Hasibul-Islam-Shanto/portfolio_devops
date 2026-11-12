@@ -11,7 +11,6 @@ export function isTouchOnlyDevice(): boolean {
   );
 }
 
-/** Collects teardown callbacks so each init function can return a single cleanup. */
 export function createCleanup() {
   const fns: Array<() => void> = [];
   return {
@@ -24,10 +23,6 @@ export function createCleanup() {
   };
 }
 
-/**
- * Types `text` into `el` once `start()` is called. Reduced motion shows the text instantly.
- * Resolves `onDone` after the last character.
- */
 export function typeInto(
   el: HTMLElement,
   text: string,
@@ -53,7 +48,6 @@ export function typeInto(
   return () => window.clearInterval(id);
 }
 
-/** Critically-tuned damped spring matching framer-motion's useSpring(stiffness, damping), mass 1. */
 export function createSpring(
   stiffness: number,
   damping: number,

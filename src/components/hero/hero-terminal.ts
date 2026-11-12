@@ -27,7 +27,6 @@ const dim = (t: string) => `<span class="text-[var(--terminal-dim)]">${t}</span>
 const bold = (t: string) => `<span class="font-bold text-[var(--terminal-fg)]">${t}</span>`;
 const row = (inner: string) => `<div>${inner}</div>`;
 
-/** Returns the HTML for a command's output, "CLEAR" for `clear`, or the not-found message. */
 export function renderCommandOutput(rawCommand: string): string {
   const cmd = rawCommand.trim().toLowerCase().replace(/\s+/g, " ");
 
@@ -83,11 +82,6 @@ export function renderCommandOutput(rawCommand: string): string {
   }
 }
 
-/**
- * Interactive hero terminal: preset command pills type their command at 35ms/char then run it,
- * free typing + Enter runs any command, `clear` empties history. Reduced motion runs instantly and
- * stops the cursor blinking.
- */
 export function initHeroTerminal(
   root: Document | HTMLElement | undefined = typeof document === "undefined" ? undefined : document,
 ): () => void {
@@ -116,9 +110,9 @@ export function initHeroTerminal(
     typed.textContent = value;
     typed.hidden = value.length === 0;
     input.value = value;
-    const blinking = !reduce && !isTyping;
-    cursor.dataset["cursorBlinking"] = String(blinking);
-    cursor.classList.toggle("terminal-cursor-blink", blinking);
+    const isBlinking = !reduce && !isTyping;
+    cursor.dataset["cursorBlinking"] = String(isBlinking);
+    cursor.classList.toggle("terminal-cursor-blink", isBlinking);
     if (placeholder) placeholder.hidden = !(value.length === 0 && !isTyping && historyCount === 0);
     body.scrollTop = body.scrollHeight;
   };
