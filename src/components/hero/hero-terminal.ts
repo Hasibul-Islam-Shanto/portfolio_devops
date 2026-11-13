@@ -16,7 +16,7 @@ export const COMMAND_LIST = [
   { cmd: "deploy", desc: "run production rollout pipeline" },
   { cmd: "docker compose", desc: "start local demo stack" },
   { cmd: "terraform plan", desc: "preview infrastructure state diff" },
-  { cmd: "sudo hire shanto", desc: "provision a platform engineer" },
+  { cmd: "sudo hire shanto", desc: "provision a DevOps engineer" },
   { cmd: "clear", desc: "clear terminal screen history" },
 ] as const;
 
@@ -74,7 +74,7 @@ export function renderCommandOutput(rawCommand: string): string {
     case "sudo hire shanto":
       return `<div class="space-y-1.5 text-[var(--terminal-fg)]">
         <div class="text-[var(--terminal-dim)]">[sudo] password for recruiter: ********</div>
-        <div class="font-bold text-signal">ACCESS GRANTED — Shanto provisioned for Platform / DevOps leadership.</div>
+        <div class="font-bold text-signal">ACCESS GRANTED — Shanto provisioned for DevOps & Software Engineering leadership.</div>
         <div>→ <a href="mailto:mdhasibulislamshanto007@gmail.com" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">mdhasibulislamshanto007@gmail.com</a> ${dim("or")} <a href="#scale" class="font-bold text-signal underline hover:text-[var(--terminal-fg)]">jump to contact ↓</a></div>
       </div>`;
     default:

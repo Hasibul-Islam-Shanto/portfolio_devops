@@ -47,7 +47,7 @@ const BIO_CHAPTERS = [
     label: "The Shift to DevOps",
     paragraphs: [
       "From January 2024 to June 2026, I worked as a Front-End Engineer at Universal Machine Inc. I engineered the front-end architecture for an enterprise carbon credit platform handling end-to-end workflows from methodology creation to carbon inventory management. I also contributed to a Web3 Minipay wallet platform used by 200,000+ people, implementing smart contract interactions via Ethers.js and wallet integrations with RainbowKit. To keep systems performant and unified, I designed backend REST APIs using Node.js and Express, managed relational database schemas with PostgreSQL and Prisma ORM, and set up automated GitHub Actions CI/CD pipelines to lint, test, and validate every merge.",
-      "Working across both application code and production delivery showed me how much developer speed and reliability depend on what happens between commit and deploy. That experience drove my focus into DevOps, containerization, and platform engineering. In projects like OrderFirst, I designed an event-driven microservices architecture backed by selective git-diff Jenkins builds, RabbitMQ messaging, zero-downtime rolling container updates, and hardened network isolation.",
+      "Working across both application code and production delivery showed me how much developer speed and reliability depend on what happens between commit and deploy. That experience drove my focus into DevOps, containerization, and reliable infrastructure. In projects like OrderFirst, I designed an event-driven microservices architecture backed by selective git-diff Jenkins builds, RabbitMQ messaging, zero-downtime rolling container updates, and hardened network isolation.",
     ],
   },
   {
@@ -55,7 +55,7 @@ const BIO_CHAPTERS = [
     label: "Recognition",
     paragraphs: [
       "In competitive research and hackathons, I led initiatives that secured 1st Runner-Up at the Smart Village Idea Competition, a Top-10 ranking at the Bangladesh Blockchain Olympiad, and a published paper at IEEE ICCIT on decentralized stakeholder collaboration.",
-      "Today, I am based in Dhaka, Bangladesh, and actively open to work for DevOps, Cloud, and Platform Engineering roles—combining a developer's empathy for user experience with a systems engineer's obsession for resilient, automated production platforms.",
+      "Today, I am based in Dhaka, Bangladesh, and actively open to work for DevOps Engineer and Software Engineer roles—combining a Frontend Engineer's empathy for user experience with a systems engineer's obsession for resilient, automated production platforms.",
     ],
   },
 ];
@@ -64,11 +64,16 @@ const BIO_CHAPTERS = [
 <BaseLayout
   title="About — Hasibul Islam Shanto | DevOps Engineer"
   description={intro.lede}
+  canonical="https://shanto-devops.vercel.app/about"
   ogImage={photo.src}
 >
   <Header currentPath="/about" />
 
-  <main class="section-surface min-h-screen pt-28 md:pt-24 pb-28 md:pb-36">
+  <main
+    id="main-content"
+    tabindex="-1"
+    class="section-surface min-h-screen pt-28 md:pt-24 pb-28 md:pb-36 outline-none focus:outline-none"
+  >
     <div class="site-container py-12 md:py-16">
       {/* Top Hero & Narrative Section with Sticky Facts Sidebar */}
       <div class="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
@@ -142,7 +147,7 @@ const BIO_CHAPTERS = [
                   </h3>
                   <p class="mt-1 font-mono text-xs text-signal">Dhaka, Bangladesh</p>
                   <p class="mt-0.5 font-mono text-xs text-[var(--text)]/70">
-                    DevOps &amp; Platform Engineer
+                    DevOps &amp; Software Engineer
                   </p>
                 </div>
               </div>

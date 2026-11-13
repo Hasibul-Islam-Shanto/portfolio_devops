@@ -5,50 +5,62 @@ import CustomCursor from "../components/shared/custom-cursor.astro";
 interface Props {
   title: string;
   description: string;
+  canonical?: string;
+  robots?: string;
   ogTitle?: string;
   ogDescription?: string;
   ogType?: string;
+  ogUrl?: string;
   ogImage?: string;
+  siteName?: string;
   twitterCard?: "summary" | "summary_large_image";
 }
 
 const {
   title,
   description,
+  canonical = "https://shanto-devops.vercel.app/",
+  robots = "index, follow",
   ogTitle = title,
   ogDescription = description,
   ogType = "website",
-  ogImage = "/images/shanto_dp.webp",
+  ogUrl = canonical,
+  ogImage = "https://shanto-devops.vercel.app/og-image.png",
+  siteName = "Shanto.devOps",
   twitterCard = "summary_large_image",
 } = Astro.props;
 
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "@id": "https://www.hi-shanto.me/#person",
   name: "Hasibul Islam Shanto",
-  givenName: "Hasibul",
-  familyName: "Shanto",
+  alternateName: "Shanto",
+  url: "https://shanto-devops.vercel.app/",
+  email: "mailto:mdhasibulislamshanto007@gmail.com",
   jobTitle: "DevOps Engineer",
   description:
-    "I started in product UI, then followed the work into APIs, databases, and the pipelines that keep them shipping. Today I build CI/CD, containers, and cloud infrastructure so production stays boring.",
-  url: "https://www.hi-shanto.me",
-  image: "https://www.hi-shanto.me/images/shanto_dp.webp",
-  email: "mailto:mdhasibulislamshanto007@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Dhaka",
-    addressCountry: "BD",
-  },
-  alumniOf: {
-    "@type": "CollegeOrUniversity",
-    name: "Shahjalal University of Science and Technology",
-  },
+    "DevOps Engineer and Software Engineer specializing in CI/CD, Kubernetes, and cloud infrastructure, with a background in front-end engineering.",
   sameAs: [
     "https://github.com/Hasibul-Islam-Shanto",
     "https://www.linkedin.com/in/hasibul-islam-shanto-80487a217/",
-    "https://x.com/hi_shanto078",
   ],
+  knowsAbout: [
+    "DevOps",
+    "Software Engineering",
+    "Kubernetes",
+    "CI/CD",
+    "Docker",
+    "Terraform",
+    "AWS",
+    "Frontend Engineering",
+  ],
+};
+
+const webSiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Shanto.devOps — Portfolio",
+  url: "https://shanto-devops.vercel.app/",
 };
 ---
 
@@ -59,13 +71,20 @@ const personSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={ogDescription} />
     <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={ogUrl} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={siteName} />
     <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={ogDescription} />
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(webSiteSchema)} />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -119,17 +138,23 @@ const personSchema = {
         for (let i = 0; i < toggles.length; i++) {
           toggles[i]?.setAttribute(
             "aria-label",
-            "Switch to " + (next === "dark" ? "light" : "dark") + " theme",
+            "Switch to " + (next === "dark" ? "light" : "dark") + " mode",
           );
           toggles[i]?.setAttribute(
             "title",
-            "Switch to " + (next === "dark" ? "light" : "dark") + " theme",
+            "Switch to " + (next === "dark" ? "light" : "dark") + " mode",
           );
         }
       });
     </script>
   </head>
   <body>
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-signal focus:px-5 focus:py-2.5 focus:font-mono focus:text-xs focus:font-bold focus:uppercase focus:text-signal-foreground focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-[var(--bg)]"
+    >
+      Skip to main content
+    </a>
     <CustomCursor />
     <slot />
     <script>

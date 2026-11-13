@@ -1,4 +1,4 @@
-# Shanto — DevOps & Platform Engineer Portfolio (Astro)
+# Shanto — DevOps & Software Engineer Portfolio (Astro)
 
 Static-first portfolio built with **Astro**, **TypeScript**, and **Tailwind CSS v4**. All routes are pre-rendered to static HTML at build time with zero client-side React runtime, using small modular browser TypeScript controllers for interactive animations, canvas effects, and the interactive hero terminal.
 

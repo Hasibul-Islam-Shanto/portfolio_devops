@@ -38,8 +38,8 @@ export function applyTheme(theme: Theme, animate = false): void {
   const toggles = document.querySelectorAll<HTMLElement>("[data-theme-toggle]");
   toggles.forEach((btn) => {
     const nextTheme = theme === "dark" ? "light" : "dark";
-    btn.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
-    btn.setAttribute("title", `Switch to ${nextTheme} theme`);
+    btn.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+    btn.setAttribute("title", `Switch to ${nextTheme} mode`);
     btn.setAttribute("data-current-theme", theme);
   });
 

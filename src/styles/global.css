@@ -332,11 +332,27 @@ section[tabindex="-1"]:focus-visible,
 [tabindex="-1"]:focus-visible {
   outline: none !important;
 }
+
+:is(
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [tabindex="0"],
+  [role="button"],
+  [role="tab"],
+  [role="link"]
+):focus-visible {
+  outline: 2px solid #e8503a !important;
+  outline-offset: 2px !important;
+}
+
 .hairline {
   border-color: color-mix(in oklab, var(--s-fg) 15%, transparent);
 }
 .dim {
-  color: color-mix(in oklab, var(--s-fg) 62%, transparent);
+  color: color-mix(in oklab, var(--s-fg) 70%, transparent);
 }
 .panel {
   background: color-mix(in oklab, var(--s-fg) 4%, transparent);

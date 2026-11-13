@@ -3,10 +3,15 @@ import BaseLayout from "../layouts/base-layout.astro";
 ---
 
 <BaseLayout
-  title="Page not found — Shanto, DevOps & Platform Engineer"
+  title="Page not found — Shanto, DevOps & Software Engineer"
   description="The page you're looking for doesn't exist or has been moved."
+  robots="noindex, nofollow"
 >
-  <main class="flex min-h-screen items-center justify-center bg-background px-4">
+  <main
+    id="main-content"
+    tabindex="-1"
+    class="flex min-h-screen items-center justify-center bg-background px-4 outline-none focus:outline-none"
+  >
     <div class="max-w-md text-center">
       <h1 class="text-7xl font-bold text-foreground">404</h1>
       <h2 class="mt-4 text-xl font-semibold text-foreground">Page not found</h2>

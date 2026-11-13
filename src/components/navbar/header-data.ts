@@ -9,12 +9,12 @@ export const NAV_LINKS = [
 
 export const SOCIAL_LINKS = [
   {
-    label: "LinkedIn",
+    label: "LinkedIn profile",
     href: "https://www.linkedin.com/in/hasibul-islam-shanto-80487a217/",
     icon: "Linkedin",
   },
   {
-    label: "GitHub",
+    label: "GitHub profile",
     href: "https://github.com/Hasibul-Islam-Shanto",
     icon: "Github",
   },

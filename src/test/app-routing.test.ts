@@ -8,12 +8,16 @@ describe("Astro routes", () => {
   it("/ renders all eight sections in order with the stage anchors and SEO metadata", async () => {
     const doc = renderPage("index");
 
-    expect(doc.title).toBe("Shanto — DevOps & Platform Engineer");
+    expect(doc.title).toBe("Hasibul Islam Shanto — DevOps Engineer & Software Engineer");
     expect(meta(doc, 'meta[name="description"]')).toContain("Kubernetes platforms");
-    expect(meta(doc, 'meta[property="og:title"]')).toBe("Shanto — DevOps & Platform Engineer");
+    expect(meta(doc, 'meta[property="og:title"]')).toBe(
+      "Hasibul Islam Shanto — DevOps Engineer & Software Engineer",
+    );
     expect(meta(doc, 'meta[name="twitter:card"]')).toBe("summary_large_image");
     expect(doc.documentElement.lang).toBe("en");
-    expect(doc.querySelector('link[rel="canonical"]')).toBeNull();
+    expect(doc.querySelector('link[rel="canonical"]')?.getAttribute("href")).toBe(
+      "https://shanto-devops.vercel.app/",
+    );
 
     const sections = Array.from(doc.querySelectorAll("main > section"));
     expect(sections.map((s) => s.id)).toEqual([

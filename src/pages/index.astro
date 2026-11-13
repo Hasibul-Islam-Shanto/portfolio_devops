@@ -17,14 +17,20 @@ const sectionClass = (mode: string = "dark") =>
 ---
 
 <BaseLayout
-  title="Shanto — DevOps & Platform Engineer"
-  description="Pipelines, Kubernetes platforms and observability that let teams ship safely. Portfolio of a DevOps / Platform Engineer."
-  ogDescription="Build → Test → Deploy → Monitor → Scale. Six production systems, told as a pipeline."
+  title="Hasibul Islam Shanto — DevOps Engineer & Software Engineer"
+  description="Hasibul Islam Shanto (Shanto) is a DevOps Engineer and Software Engineer building CI/CD pipelines, Kubernetes platforms, and reliable infrastructure. View projects and get in touch."
+  canonical="https://shanto-devops.vercel.app/"
+  ogTitle="Hasibul Islam Shanto — DevOps Engineer & Software Engineer"
+  ogDescription="Hasibul Islam Shanto (Shanto) is a DevOps Engineer and Software Engineer building CI/CD pipelines, Kubernetes platforms, and reliable infrastructure. View projects and get in touch."
+  ogType="website"
+  ogUrl="https://shanto-devops.vercel.app/"
+  ogImage="https://shanto-devops.vercel.app/og-image.png"
+  siteName="Shanto.devOps"
   twitterCard="summary_large_image"
 >
   <Header currentPath="/" />
   <PipelineRail />
-  <main class="overflow-x-clip">
+  <main id="main-content" tabindex="-1" class="overflow-x-clip outline-none focus:outline-none">
     <section id="hero" class={sectionClass("dark")}>
       <span id="build" class="section-stage-anchor" aria-hidden="true"></span>
       <Hero />

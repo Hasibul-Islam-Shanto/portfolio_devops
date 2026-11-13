@@ -127,7 +127,7 @@ describe("HeroTerminal", () => {
 
     pill("sudo hire shanto").click();
     expect(document.body.textContent).toMatch(
-      /ACCESS GRANTED — Shanto provisioned for Platform \/ DevOps leadership/i,
+      /ACCESS GRANTED — Shanto provisioned for DevOps & Software Engineering leadership/i,
     );
     expect(
       document.querySelector('a[href="mailto:mdhasibulislamshanto007@gmail.com"]'),
@@ -723,9 +723,9 @@ describe("Static sections", () => {
     expect(text(body)).toContain("mdhasibulislamshanto007@gmail.com");
     expect(text(body)).toContain("Start a conversation →");
     expect(text(body)).toContain("Download résumé ↓");
-    expect(body.querySelector('a[aria-label="GitHub"]')).not.toBeNull();
-    expect(body.querySelector('a[aria-label="LinkedIn"]')).not.toBeNull();
-    expect(body.querySelector('a[aria-label="X (Twitter)"]')).not.toBeNull();
+    expect(body.querySelector('a[aria-label="GitHub profile"]')).not.toBeNull();
+    expect(body.querySelector('a[aria-label="LinkedIn profile"]')).not.toBeNull();
+    expect(body.querySelector('a[aria-label="X (Twitter) profile"]')).not.toBeNull();
     expect(text(body)).toContain("© 2026 Hasibul Islam Shanto · Dhaka, Bangladesh");
     expect(text(body)).toContain("BST");
     expect(text(body)).toContain("Bangladesh");
@@ -775,14 +775,14 @@ describe("Header", () => {
   it("links to dedicated pages and contact anchor, keeping active link in sync", async () => {
     const body = mount("header");
     track(initHeader(body));
-    const hrefs = Array.from(body.querySelectorAll("nav[aria-label='Main'] a")).map((a) =>
+    const hrefs = Array.from(body.querySelectorAll("nav[aria-label='Primary'] a")).map((a) =>
       a.getAttribute("href"),
     );
     expect(hrefs).toEqual(["/", "/projects", "/about", "/learnings", "/blog", "/#contact"]);
 
     const current = () =>
-      Array.from(body.querySelectorAll("nav[aria-label='Main'] a[aria-current='page']")).map((a) =>
-        a.getAttribute("href"),
+      Array.from(body.querySelectorAll("nav[aria-label='Primary'] a[aria-current='page']")).map(
+        (a) => a.getAttribute("href"),
       );
     expect(current()).toEqual(["/"]);
 

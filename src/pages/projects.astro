@@ -8,13 +8,18 @@ import projectsData from "../data/projects.json";
 ---
 
 <BaseLayout
-  title="Projects — Hasibul Islam Shanto | DevOps & Platform Engineer"
+  title="Projects — Hasibul Islam Shanto | DevOps & Software Engineer"
   description="All production platforms, distributed microservices, CI/CD automation pipelines, and cloud-native systems engineered by Hasibul Islam Shanto."
+  canonical="https://shanto-devops.vercel.app/projects"
   ogDescription="Explore all production systems, distributed pipelines, and Kubernetes topologies."
 >
   <Header currentPath="/projects" />
 
-  <main class="section-surface min-h-screen pt-28 md:pt-24 pb-24">
+  <main
+    id="main-content"
+    tabindex="-1"
+    class="section-surface min-h-screen pt-28 md:pt-24 pb-24 outline-none focus:outline-none"
+  >
     <div class="site-container py-12 md:py-16">
       {/* Hero / Intro Area with Shared Entrance Animation */}
       <PageHero
