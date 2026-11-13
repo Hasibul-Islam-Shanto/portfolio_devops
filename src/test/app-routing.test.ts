@@ -50,7 +50,7 @@ describe("Astro routes", () => {
       "OrderFirst",
       "DevTalk",
       "Universal Machine Inc.",
-      "Production platforms",
+      "Hands-on systems",
       "Every layer,",
       "Calm systems are",
       "mailto:mdhasibulislamshanto007@gmail.com",
